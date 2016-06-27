@@ -3,8 +3,6 @@ var jobID; // string to hold job ID
 var sherlockEndpoint = "http://calhadoop-vip-a.slc.paypal.com/regex/request/"; // generic sherlock search endpoint url
 
 submitRequest();
-//setTimeout(getStatus, 1000);
-//getStatus();
 
 function submitRequest() {
 request.post(
@@ -34,7 +32,7 @@ request.post(
                 }
 
                 else {
-                        console.log(response.statusCode); // error cod
+                        console.log(response.statusCode); // error code
                 }
         }
 
@@ -81,7 +79,6 @@ function getDetail(endpoint)
         if (!error && response.statusCode == 200) {
 
             //console.log(sherlockEndpoint+jobID);
-            //console.log(response.statusCode);
             
             var details = JSON.parse(body);
 
