@@ -8,7 +8,7 @@ function submitRequest() {
 request.post(
         'http://calhadoop-vip-a.slc.paypal.com/regex/request',
         {
-        json: {
+        json: { // example search input
                 "startTime":"2016/06/26 18:00",
                 "endTime":"2016/06/26 18:30",
                 "environment":"paypal",
@@ -82,7 +82,7 @@ function getDetail(endpoint)
             
             var details = JSON.parse(body);
 
-            console.log(details); // print information
+            console.log(JSON.stringify(details, null, 4)); // print information in a formatted way
 
         }
 
