@@ -5,3 +5,8 @@ var simpleApiCallSchema = new mongoose.Schema({
 	partner_id: String,
 	payload: String
 });
+var ApiCall = mongoose.model('ApiCall', simpleApiCallSchema);
+
+module.exports = {
+	ApiCall: ApiCall
+}
