@@ -1,6 +1,24 @@
 var request = require('request'); // require request
 var jobID; // string to hold job ID
 var sherlockEndpoint = "http://calhadoop-vip-a.slc.paypal.com/regex/request/"; // generic sherlock search endpoint url
+var mongoose = require('mongoose');
+var db = mongoose.connection;
+   
+var dataSchema = new mongoose.Schema({
+        
+    values : {
+        Command : String,
+        Status : Number,
+        Machine : String,
+        Type : String,
+        Class : String,
+        Duration : String,
+        Pool : String,
+        Timestamp : String
+    },
+    url : String,
+    payload : String
+});
 
 submitRequest();
 
@@ -25,7 +43,7 @@ function submitRequest() {
             },
             function (error, response, body) {
                 if (!error && response.statusCode == 200) { // no errors
-                    console.log(body); // prints out job ID
+                    console.log("Job ID : " + body); // prints out job ID
                     jobID = body; // store job ID
 
                     getStatus();
@@ -46,18 +64,18 @@ function getStatus() {
 
         if (!error && response.statusCode == 200) {
 
-            console.log(sherlockEndpoint+jobID); // print out the url
+            // console.log(sherlockEndpoint+jobID); // print out the url
 
 
             var responseObj = JSON.parse(body); // turn into JSON object
-            console.log(responseObj.requestState); // debug
+            console.log("Status : " + responseObj.requestState); // debug
 
             if (responseObj.requestState != "SUCCEEDED") {
                 setTimeout(getStatus, 1000); // if not succeeded yet, wait one second and call method again
             }
 
             else {
-                // console.log("is it succeeded"); // to debug
+                
                 console.log(body); 
                 getDetail(sherlockEndpoint + jobID); // get results
 
@@ -81,16 +99,16 @@ function getDetail(endpoint)
             //console.log(sherlockEndpoint+jobID);
 
             var details = JSON.parse(body);
-            console.log(JSON.stringify(details, null, 4)); // print information in a formatted way
+            console.log("Details : " + JSON.stringify(details, null, 4)); // print information in a formatted way
 
 
             var eventDetailURL = details.records[0].url; // gets url field from first response (for testing)
 
             var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs"); // new url leads to plain text raw logs page instead of html page
 
-            console.log(rawLogsURL); 
+            // console.log(rawLogsURL); 
 
-            getRawLogs(rawLogsURL); // get the raw logs page
+            getRawLogs(details, rawLogsURL); // get the raw logs page
 
         }
 
@@ -100,13 +118,14 @@ function getDetail(endpoint)
     })
 }
 
-function getRawLogs(url) {
+function getRawLogs(details, url) {
 
     request(url, function(error, response, body) {
 
         if(!error && response.statusCode == 200){
 
-            console.log(body); // print page
+            // console.log(body); // print page
+            insertMongo(details, body); // insert everything into mongodb
 
         }
 
@@ -115,5 +134,33 @@ function getRawLogs(url) {
         }
 
     });
+    
+}
 
+function insertMongo(response, p) {
+
+    mongoose.connect('mongodb://localhost/test'); 
+
+    db.on('error', console.error);
+    db.once('open', function() {
+
+        var Element = mongoose.model('Element', dataSchema);
+
+        var sampleResponse = new Element(response.records[0]); // gets the first element from the list of responses (for testing)
+
+        sampleResponse.payload = p; // add payload onto the response JSON object
+
+        sampleResponse.save(function(err, sampleResponse) { // save to mongoDB
+ 
+            if (err) {
+                return console.error(err);
+            }
+
+            console.log("Element inserted into mongoDB database : " + JSON.stringify(sampleResponse, null, 4));
+
+
+            db.close();
+        });
+
+    });
 }
