@@ -60,8 +60,6 @@ function submitRequest() {
 function getStatus() {
     request(sherlockEndpoint + jobID, function (error, response, body) {
 
-        // console.log("i am here"); // to debug
-
         if (!error && response.statusCode == 200) {
 
             // console.log(sherlockEndpoint+jobID); // print out the url
