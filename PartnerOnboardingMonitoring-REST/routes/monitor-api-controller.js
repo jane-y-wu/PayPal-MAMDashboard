@@ -36,6 +36,19 @@ module.exports = function module(app) {
           message : err.message
         });
       });
+    },
+
+    awaitSherlock : function awaitSherlock(req, res, next) {
+      // parse jobID from req
+      // copy code from getStatus() which calls getDetails()
+    },
+
+    getDetails : function getDetails(req, res, next) {
+      //
     }
+
+    // getRawLogs()
+
+    // insertMongo()
   };
 };
