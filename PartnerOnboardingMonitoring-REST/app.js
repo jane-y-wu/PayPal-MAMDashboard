@@ -6,7 +6,7 @@ var path = require('path');
 var fs = require('fs');
 var app = express();
 
-app.set('port', process.env.PORT || 3000);
+app.set('port', process.env.PORT || 3003);
 app.use(express.json());
 app.use(express.urlencoded());
 app.use(express.methodOverride());

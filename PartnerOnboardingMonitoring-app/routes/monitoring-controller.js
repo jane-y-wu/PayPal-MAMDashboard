@@ -2,8 +2,7 @@
 
 module.exports = function module(app) {
 
-	var service = require('../services/monitoring-service.js')
-			(app.locals.todos);
+	var service = require('../services/monitoring-service.js')();
 
 	return {
 		showDashboard : function showDashboard(req, res, next) {
