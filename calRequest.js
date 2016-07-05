@@ -27,8 +27,8 @@ function submitRequest() {
             'http://calhadoop-vip-a.slc.paypal.com/regex/request',
             {
                 json: { // example search input
-                          "startTime":"2016/06/27 18:00",
-        "endTime":"2016/06/27 18:30",
+                          "startTime":"2016/06/30 18:00",
+        "endTime":"2016/06/30 18:30",
         "environment":"paypal",
         "pool": "partnerapiplatformserv",
         "dataCenter":"all",

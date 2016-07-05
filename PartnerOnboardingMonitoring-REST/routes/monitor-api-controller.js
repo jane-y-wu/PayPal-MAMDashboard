@@ -58,26 +58,34 @@ module.exports = function module(app) {
 	    }*/
 
 
-    	/*getDetails : function() {
-    		var getRawLogs = function getRawLogs() {
-	    		console.log("getRawLogs called");
+    	getDetails : function getDetailsClosure(req, res, next) {
+    		var insertMongo = function(details, payload) {
+    			console.log("insertMongo called!");
+    			res.end("Inserting into MongoDB!");
+    			service.insertMongo(details, payload);
+    		};
+
+    		var getRawLogs = function getRawLogs(details, rawLogsURL) {
+	    		console.log("getRawLogs called!");
+	    		service.getRawLogs(details, rawLogsURL, function onGetRawLogs(details, payload) {
+	    			insertMongo(details, payload);
+	    		});
 	    	};
 
 	    	var getDetails = function(req, res, next) {
-	    		console.log("getDetails called with jobid: " + req.params.jobid + " !");
-		    	service.getDetails(function onGetDetails(err, result) {
-		      		if (!err) {
-						getRawLogs();
-					} else {
-						res.json({
-							message : err.message
-						});
-					}
+	    		console.log("getDetails called with job id: " + req.params.jobID);
+		    	service.getDetails(req.params.jobID, function onGetDetails(details, rawLogsURL) {
+		      		getRawLogs(details, rawLogsURL);
 		    	});
 		    }
-		    return getDetails();
-    	}*/
-    	getDetails : service.makeGetDetails()
+		    return getDetails(req, res, next);
+    	},
+
+    	testCall : function testCall(req, res, next) {
+    		console.log("got a test call");
+    		res.end("got a test call");
+    	}
+
 
     	// insertMongo()
 	};
