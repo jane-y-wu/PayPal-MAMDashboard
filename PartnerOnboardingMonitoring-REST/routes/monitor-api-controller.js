@@ -73,7 +73,7 @@ module.exports = function module(app) {
 	    	};
 
 	    	var getDetails = function(req, res, next) {
-	    		console.log("getDetails called!");
+	    		console.log("getDetails called with job id: " + req.params.jobID);
 		    	service.getDetails(req.params.jobID, function onGetDetails(details, rawLogsURL) {
 		      		getRawLogs(details, rawLogsURL);
 		    	});
