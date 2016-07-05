@@ -10,5 +10,5 @@ module.exports = function module(app) {
   app.get('/api/logs/all', monitorApiController.getAllCalLogs);
   // app.get('/api/querysent', monitorApiController.awaitSherlock); this function should not be necessary
   
-  app.get('/api/queryready', monitorApiController.getDetails);
+  app.get('/api/queryready/:jobid', monitorApiController.getDetails);
 };

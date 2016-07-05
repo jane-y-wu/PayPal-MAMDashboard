@@ -43,16 +43,41 @@ module.exports = function module(app) {
 				});
 			});
 		},
-	    awaitSherlock : function awaitSherlock(req, res, next) {
-	      // parse jobID from req
-	      // copy code from getStatus() which calls getDetails()
-	    },
 
-	    getDetails : function getDetails(req, res, next) {
-	      //
-	    }
+	    /*getDetails : function getDetails(req, res, next) {
+	    	console.log("getDetails called with jobid: " + req.params.jobid + " !");
+	    	service.getDetails(function onGetDetails(err, result) {
+	      		if (!err) {
+					console.log("callback called")
+				} else {
+					res.json({
+						message : err.message
+					});
+				}
+	    	});
+	    }*/
 
-    	// getRawLogs()
+
+    	/*getDetails : function() {
+    		var getRawLogs = function getRawLogs() {
+	    		console.log("getRawLogs called");
+	    	};
+
+	    	var getDetails = function(req, res, next) {
+	    		console.log("getDetails called with jobid: " + req.params.jobid + " !");
+		    	service.getDetails(function onGetDetails(err, result) {
+		      		if (!err) {
+						getRawLogs();
+					} else {
+						res.json({
+							message : err.message
+						});
+					}
+		    	});
+		    }
+		    return getDetails();
+    	}*/
+    	getDetails : service.makeGetDetails()
 
     	// insertMongo()
 	};
