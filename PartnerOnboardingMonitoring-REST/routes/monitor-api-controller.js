@@ -82,6 +82,7 @@ module.exports = function module(app) {
     	},
 
     	testCall : function testCall(req, res, next) {
+    		console.log("got a test call");
     		res.end("got a test call");
     	}
 
