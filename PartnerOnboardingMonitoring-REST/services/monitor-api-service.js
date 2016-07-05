@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 var db = mongoose.connection;
 var mongodb = require('mongodb');
 var url = 'mongodb://partner-self-service-6103.ccg21.dev.paypalcorp.com:12345/';
+//var url = 'mongodb://localhost:12345/';
 var MongoClient = mongodb.MongoClient;
 var assert = require('assert');
 
@@ -79,43 +80,46 @@ module.exports = function module() {
 		},
 
 		insertMongo: function insertMongo(details, payload) {
-			console.log("insert mongo called");
-		// mongoose.connect(url); 
+		mongoose.connect(url); 
 
-		//  	db.on('error', console.error);
-		//  	db.once('open', function() {
+		 	db.on('error', console.error);
+		 	db.once('open', function() {
 
-		//  		var Log = mongoose.model('Log', logSchema);
+		 		var Log = mongoose.model('Log', logSchema);
 
-		//  		var sampleResponse = new Log(details.records[0]); // gets the first element from the list of responses (for testing)
+		 		var sampleResponse = new Log(details.records[0]); // gets the first element from the list of responses (for testing)
 
-		//  		sampleResponse.payload = payload; // add payload onto the response JSON object
+		 		sampleResponse.payload = payload; // add payload onto the response JSON object
 
-		//  		var sandbox_col = db.collection('sandbox_col');
-		//  		var Test = mongoose.model('Test', testSchema);
-		// 		var testResponse = new Test({TestKey : "Test Value"});
-		// 		//console.log(JSON.stringify(testResponse));
+		 		//var sandbox_col = db.collection('sandbox_col');
+		 		//var Test = mongoose.model('Test', testSchema);
+				//var testResponse = new Test({TestKey : "Test Value"});
+				//console.log(JSON.stringify(testResponse));
 
-		// 		testResponse.save(function(err, result) {
-		// 		//sandbox_col.save(testResponse, function(err, result) {
-		// 			//assert.equal(err, null);
-		// 			console.log("Inserted Document Result: " + JSON.stringify(result));
-		// 			db.close();
-		// 		});
+				sampleResponse.save(function(err, result) {
+				//sandbox_col.save(testResponse, function(err, result) {
+					//assert.equal(err, null);
+					//console.log("Inserted Document Result: " + JSON.stringify(result));
+					Log.find(function(err, logs){
+						if (err) return console.error(err);
+						console.dir(JSON.stringify(logs, null, 4));
+						db.close();
+					});
+				});
 
-		// 		// sampleResponse.save(function(err, sampleResponse) { // save to mongoDB
+				// sampleResponse.save(function(err, sampleResponse) { // save to mongoDB
 		 
-		// 		// 	 if (err) {
-		// 		// 		 return console.error(err);
-		// 		// 	 }
+				// 	 if (err) {
+				// 		 return console.error(err);
+				// 	 }
 
-		// 		// 	 console.log("Element inserted into mongoDB database : " + JSON.stringify(sampleResponse, null, 4));
+				// 	 console.log("Element inserted into mongoDB database : " + JSON.stringify(sampleResponse, null, 4));
 
 
-		// 		// 	 db.close();
-		// 		// });
+				// 	 db.close();
+				// });
 
-		// 	});
+			});
 
 			// MongoClient.connect(url, function(err, db){
 			// 	if(err) {
