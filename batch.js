@@ -1,35 +1,38 @@
 var request = require('request'); // require request
 var schedule = require('node-schedule');
 var jobID; // string to hold job ID
-var start = 00;
-var end = 01;
 
 var date = new Date();
 
+// variables to hold the current time, up to the hour
+// will be used as end time
 var currentYear;
 var currentMonth;
 var currentDate;
 var currentHour;
 
+// variables to hold the time that will be used as start time
 var startYear;
 var startMonth;
 var startDate;
 var startHour;
 
-var endTime = getEndTime();
-var startTime = getStartTime();
+var endTime;
+var startTime;
 
-//console.log(endTime);
-//console.log(startTime);
-//getEndTime();
-//getStartTime();
+var rule = new schedule.RecurrenceRule();
+rule.minute = 0; // runs every hour when the minute hits 0
 
-// var interval = schedule.scheduleJob('*/10 * * * * *', submitRequest);
+var interval = schedule.scheduleJob(rule, process);
 
 
-submitRequest();
+function process() { // runs all the needed functions
 
+	endTime = getEndTime();
+	startTime = getStartTime();
+	submitRequest(startTime, endTime);
 
+}
 
 
 function getEndTime() {
@@ -39,18 +42,10 @@ function getEndTime() {
 	currentDate = date.getDate();
 	currentHour = date.getHours();
 
-	// TEST
-
-	/*currentYear = 2015;
-	currentMonth = 5;
-	currentDate = 25;
-	currentHour = 20;*/
+	var currentTime = currentYear.toString() + "/" + currentMonth.toString() + "/" + currentDate.toString() + " " + currentHour.toString() + ":00";
 
 
-	endTime = currentYear.toString() + "/" + currentMonth.toString() + "/" + currentDate.toString() + " " + currentHour.toString() + ":00";
-
-
-	return endTime;
+	return currentTime;
 }
 
 function getStartTime() {
@@ -80,7 +75,7 @@ function getStartTime() {
 
 	// DATE
 	if (currentDate == 1 && currentHour == 0) {
-		if (currentMonth == 5 || currentMonth == 7 || currentMonth == 10 || currentMonth == 12) {
+		if (currentMonth == 5 || currentMonth == 7 || currentMonth == 10 || currentMonth == 12) { // the month before has 30 days
 			startDate = 30;
 		}
 		else if (currentMonth == 1 || currentMonth == 2 || currentMonth == 4 || currentMonth == 6 || currentMonth == 8 || currentMonth == 9 || currentMonth == 11) {
@@ -111,21 +106,21 @@ function getStartTime() {
 	}
 
 	
-	startTime = startYear.toString() + "/" + startMonth.toString() + "/" + startDate.toString() + " " + startHour.toString() + ":00";
+	var time = startYear.toString() + "/" + startMonth.toString() + "/" + startDate.toString() + " " + startHour.toString() + ":00";
 
-	return startTime;
+	return time;
 }
 	
 
 
 
-function submitRequest() {
+function submitRequest(start, end) {
     request.post(
             'http://calhadoop-vip-a.slc.paypal.com/regex/request',
             {
                 json: { // example search input
-			"startTime": startTime,
-        		"endTime": endTime,
+			"startTime": start,
+        		"endTime": end,
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
 			"dataCenter":"all",
