@@ -79,6 +79,10 @@ module.exports = function module(app) {
 		    	});
 		    }
 		    return getDetails(req, res, next);
+    	},
+
+    	testCall : function testCall(req, res, next) {
+    		res.end("got a test call");
     	}
 
     	// insertMongo()
