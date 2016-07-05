@@ -43,16 +43,43 @@ module.exports = function module(app) {
 				});
 			});
 		},
-	    awaitSherlock : function awaitSherlock(req, res, next) {
-	      // parse jobID from req
-	      // copy code from getStatus() which calls getDetails()
-	    },
 
-	    getDetails : function getDetails(req, res, next) {
-	      //
-	    }
+	    /*getDetails : function getDetails(req, res, next) {
+	    	console.log("getDetails called with jobid: " + req.params.jobid + " !");
+	    	service.getDetails(function onGetDetails(err, result) {
+	      		if (!err) {
+					console.log("callback called")
+				} else {
+					res.json({
+						message : err.message
+					});
+				}
+	    	});
+	    }*/
 
-    	// getRawLogs()
+
+    	getDetails : function getDetailsClosure(req, res, next) {
+    		var insertMongo = function(details, payload) {
+    			console.log("insertMongo called!");
+    			res.end("Inserting into MongoDB!");
+    			service.insertMongo(details, payload);
+    		};
+
+    		var getRawLogs = function getRawLogs(details, rawLogsURL) {
+	    		console.log("getRawLogs called!");
+	    		service.getRawLogs(details, rawLogsURL, function onGetRawLogs(details, payload) {
+	    			insertMongo(details, payload);
+	    		});
+	    	};
+
+	    	var getDetails = function(req, res, next) {
+	    		console.log("getDetails called!");
+		    	service.getDetails(req.params.jobID, function onGetDetails(details, rawLogsURL) {
+		      		getRawLogs(details, rawLogsURL);
+		    	});
+		    }
+		    return getDetails(req, res, next);
+    	}
 
     	// insertMongo()
 	};
