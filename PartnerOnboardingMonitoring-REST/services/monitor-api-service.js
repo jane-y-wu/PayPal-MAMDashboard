@@ -95,5 +95,6 @@ module.exports = function module() {
 			});
 
 		}
+
 	};
 };
