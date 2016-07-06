@@ -44,40 +44,31 @@ module.exports = function module(app) {
 			});
 		},
 
-	    /*getDetails : function getDetails(req, res, next) {
-	    	console.log("getDetails called with jobid: " + req.params.jobid + " !");
-	    	service.getDetails(function onGetDetails(err, result) {
-	      		if (!err) {
-					console.log("callback called")
-				} else {
-					res.json({
-						message : err.message
-					});
-				}
-	    	});
-	    }*/
-
 
     	getDetails : function getDetailsClosure(req, res, next) {
-    		var insertMongo = function(details, payload) {
-    			console.log("insertMongo called!");
-    			res.end("Inserting into MongoDB!");
-    			service.insertMongo(details, payload);
-    		};
+    		// This is a closure, which allows you to pass in any of these functions in a callback when calling a function in
+    		// monitor-api-services. 
 
-    		var getRawLogs = function getRawLogs(details, rawLogsURL) {
+	    	var getDetails = function(req, res, next) { // Starts here. Calls service.getDetails with onGetDetails as a callback
+	    		console.log("getDetails called with job id: " + req.params.jobID);
+		    	service.getDetails(req.params.jobID, function onGetDetails(details, rawLogsURL) {
+		      		getRawLogs(details, rawLogsURL);
+		    	});
+		    }
+
+		    var getRawLogs = function getRawLogs(details, rawLogsURL) {
 	    		console.log("getRawLogs called!");
 	    		service.getRawLogs(details, rawLogsURL, function onGetRawLogs(details, payload) {
 	    			insertMongo(details, payload);
 	    		});
 	    	};
 
-	    	var getDetails = function(req, res, next) {
-	    		console.log("getDetails called with job id: " + req.params.jobID);
-		    	service.getDetails(req.params.jobID, function onGetDetails(details, rawLogsURL) {
-		      		getRawLogs(details, rawLogsURL);
-		    	});
-		    }
+	    	var insertMongo = function(details, payload) {
+    			console.log("insertMongo called!");
+    			res.end("Inserting into MongoDB!");
+    			service.insertMongo(details, payload);
+    		};
+
 		    return getDetails(req, res, next);
     	},
 
@@ -85,7 +76,5 @@ module.exports = function module(app) {
     		console.log("got a test call");
     		res.end("got a test call");
     	}
-
-    	// insertMongo()
 	};
 };
