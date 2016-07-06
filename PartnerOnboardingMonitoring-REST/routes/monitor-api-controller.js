@@ -53,8 +53,9 @@ module.exports = function module(app) {
 	    		if (req.query.status == "SUBMITTED") {
 	    			console.log("Query with job id: " + req.query.id + " submitted.");
 	    			res.end();
-	    		} else if (req.query.status == "SUCCESS") {
+	    		} else if (req.query.status == "SUCCEEDED") {
 	    			console.log("Query with job id: " + req.query.id + " succeeded.");
+	    			res.end();
 			    	service.getDetails(req.params.jobID, function onGetDetails(details, rawLogsURL) {
 			      		getRawLogs(details, rawLogsURL);
 			    	});

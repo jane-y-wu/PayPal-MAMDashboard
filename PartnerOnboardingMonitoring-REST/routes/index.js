@@ -10,5 +10,4 @@ module.exports = function module(app) {
   app.get('/api/logs/all', monitorApiController.getAllCalLogs);
 
   app.get('/api/queryready/*', monitorApiController.getDetails);
-  app.get('/api/test', monitorApiController.testCall);
 };
