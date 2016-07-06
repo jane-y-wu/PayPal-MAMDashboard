@@ -50,10 +50,15 @@ module.exports = function module(app) {
     		// monitor-api-services. 
 
 	    	var getDetails = function(req, res, next) { // Starts here. Calls service.getDetails with onGetDetails as a callback
-	    		console.log("getDetails called with job id: " + req.params.jobID);
-		    	service.getDetails(req.params.jobID, function onGetDetails(details, rawLogsURL) {
-		      		getRawLogs(details, rawLogsURL);
-		    	});
+	    		if (req.query.status == "SUBMITTED") {
+	    			console.log("Query with job id: " + req.query.id + " submitted.");
+	    			res.end();
+	    		} else if (req.query.status == "SUCCESS") {
+	    			console.log("Query with job id: " + req.query.id + " succeeded.");
+			    	service.getDetails(req.params.jobID, function onGetDetails(details, rawLogsURL) {
+			      		getRawLogs(details, rawLogsURL);
+			    	});
+			    }
 		    }
 
 		    var getRawLogs = function getRawLogs(details, rawLogsURL) {
@@ -70,19 +75,6 @@ module.exports = function module(app) {
     		};
 
 		    return getDetails(req, res, next);
-    	},
-
-    	getDetails2 : function getDetails2(req, res, next) {
-    		console.log("job id from getDetails2: " + req.jobID);
-    	},
-
-    	getDetails3 : function getDetails3(req, res, next) {
-    		console.log("job id from getDetails3: " + req.jobID);
-    	},
-
-    	testCall : function testCall(req, res, next) {
-    		console.log("got a test call");
-    		res.end("got a test call");
     	}
 	};
 };
