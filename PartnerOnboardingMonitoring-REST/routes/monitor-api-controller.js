@@ -73,7 +73,11 @@ module.exports = function module(app) {
     	},
 
     	getDetails2 : function getDetails2(req, res, next) {
-    		console.log("job id: " + req.jobID);
+    		console.log("job id from getDetails2: " + req.jobID);
+    	},
+
+    	getDetails3 : function getDetails3(req, res, next) {
+    		console.log("job id from getDetails3: " + req.jobID);
     	},
 
     	testCall : function testCall(req, res, next) {

@@ -12,8 +12,9 @@ module.exports = function module(app) {
   app.get('/api/queryready/:jobID', monitorApiController.getDetails);
   app.get('/api/test', monitorApiController.testCall);
   app.get('/api/queryready/{jobID}', monitorApiController.getDetails2);
+  app.get('/api/queryready/?id={jobID}', monitorApiController.getDetails3);
 
-  app.param('id', function (req, res, next, id){
-  	console.log("job id in param: " + id);
-  });
+  // app.param('id', function (req, res, next, id){
+  // 	console.log("job id in param: " + id);
+  // });
 };
