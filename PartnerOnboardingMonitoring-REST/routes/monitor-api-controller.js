@@ -72,6 +72,10 @@ module.exports = function module(app) {
 		    return getDetails(req, res, next);
     	},
 
+    	getDetails2 : function getDetails2(req, res, next) {
+    		console.log("job id: " + req.jobID);
+    	},
+
     	testCall : function testCall(req, res, next) {
     		console.log("got a test call");
     		res.end("got a test call");

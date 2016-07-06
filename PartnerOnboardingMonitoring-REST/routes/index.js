@@ -11,4 +11,5 @@ module.exports = function module(app) {
 
   app.get('/api/queryready/:jobID', monitorApiController.getDetails);
   app.get('/api/test', monitorApiController.testCall);
+  app.get('/api/queryread/{jobID}', monitorApiController.getDetails2);
 };
