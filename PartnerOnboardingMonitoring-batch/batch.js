@@ -1,6 +1,7 @@
 var request = require('request'); // require request
 var schedule = require('node-schedule');
 var jobID; // string to hold job ID
+var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT'];
 
 var date = new Date();
 
@@ -117,21 +118,21 @@ function getStartTime() {
 
 function submitRequest(start, end) {
     request.post(
-            'http://calhadoop-vip-a.slc.paypal.com/regex/request',
-            {
-                json: { // example search input
+    	'http://calhadoop-vip-a.slc.paypal.com/regex/request',
+    	{
+    	json: { // example search input
 			"startTime": start,
-        		"endTime": end,
+        	"endTime": end,
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
 			"dataCenter":"all",
-        		"machine":"",
-        		"sampling":"100",
-        		"regexs":["ResponseCode=200"], // CHANGE
-        		"isTransactionSearch":"false",
-        		"searchMode":"simple",
-        		"httpCallback":"http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3003/api/queryready/?id=$id&status=$status",
-        		"email":"janwu@paypal.com"
+        	"machine":"",
+        	"sampling":"100",
+        	"regexs": ["ResponseCode=200"],
+        	"isTransactionSearch":"false",
+        	"searchMode":"simple",
+        	"httpCallback":"http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3003/api/queryready/?id=$id&status=$status",
+        	"email":"janwu@paypal.com"
 		}
 	},
 	function (error, response, body) {
@@ -146,17 +147,20 @@ function submitRequest(start, end) {
 				
 			}
 
-                	else {
+            else {
 				console.log(response.statusCode); // error code
-                		// TODO what to do when we get an error code bac
+                // TODO what to do when we get an error code bac
 				// send it again a few times
 				// or this is an error and put into mongodb
+
+				submitRequest(start, end);
 				
 			}
 		}
 
 		else { // if response is null
 			// TODO
+			submitRequest(start, end);
 		}
 	}
 
