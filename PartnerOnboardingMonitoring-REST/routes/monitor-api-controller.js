@@ -56,24 +56,24 @@ module.exports = function module(app) {
 	    		} else if (req.query.status == "SUCCEEDED") {
 	    			console.log("Query with job id: " + req.query.id + " succeeded.");
 	    			res.end();
-			    	service.getDetails(req.params.jobID, function onGetDetails(details, rawLogsURL) {
-			      		getRawLogs(details, rawLogsURL);
+			    	service.getDetails(req.params.jobID, function onGetDetails(details) {
+			      		getRawLogs(details);
 			    	});
 			    }
 		    }
 
-		    var getRawLogs = function getRawLogs(details, rawLogsURL) {
+		    var getRawLogs = function getRawLogs(details) {
 	    		console.log("getRawLogs called!");
-	    		service.getRawLogs(details, rawLogsURL, function onGetRawLogs(details, payload) {
-	    			insertMongo(details, payload);
+	    		service.getRawLogs(details, rawLogsURL, function onGetRawLogs(/*details*/) {
+	    			//insertMongo(metadata, payload);
+	    			console("COMPLETE");
 	    		});
 	    	};
 
-	    	var insertMongo = function(details, payload) {
-    			console.log("insertMongo called!");
-    			res.end("Inserting into MongoDB!");
-    			service.insertMongo(details, payload);
-    		};
+	    	// var insertMongo = function(record, payload) {
+    		// 	console.log("insertMongo called!");
+    		// 	service.insertMongo(record, payload);
+    		// };
 
 		    return getDetails(req, res, next);
     	}

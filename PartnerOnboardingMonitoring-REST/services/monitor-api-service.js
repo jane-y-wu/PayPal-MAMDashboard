@@ -26,6 +26,10 @@ var logSchema = new mongoose.Schema({
 	payload : String
 });
 
+var testSchema = new mongoose.Schema({
+	TestKey : String
+});
+
 module.exports = function module() {
 
 	return {
@@ -54,47 +58,75 @@ module.exports = function module() {
 			request(sherlockEndpoint + jobID + "/output", function (error, response, body){
 				if (!error && response.statusCode == 200) {
 					var details = JSON.parse(body);
-					//console.log("Details: " + JSON.stringify(details, null, 4));
-					var eventDetailURL = details.records[0].url;
-					var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs");
-					callback(details, rawLogsURL);
+					if (details.records.length == 0) {
+						console.log("No results!");
+					} else {
+						//var eventDetailURL = details.records[0].url;
+						//var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs");
+						callback(details);
+					}
 				} else {
 					console.log("Connection error when getting details: " + response.statusCode);
 				}
 			});
 		},
 
-		getRawLogs : function getRawLogs(details, url, callback) {
-			request(url, function(error, response, body){
-				if(!error && response.statusCode == 200) {
-					console.log("raw logs successfully retrieved!");
-					//console.log(body);
-					callback(details, body);
-				} else {
-					console.log("Network error in getRawLogs: " + response.statusCode);
-				}
+		getRawLogs : function getRawLogs(details, callback) {
+			db.on('error', console.error);
+			db.once('open', function() {
+				var Log = mongoose.model('Log', logSchema);
+
+				async.each(details.records, function(record, asyncCallback){
+					var eventDetailURL = record.url;
+					var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs");
+					request(rawLogsURL, function(error, response, body){
+						if(!error && response.statusCode == 200) {
+							console.log("raw logs successfully retrieved!");
+							// create schema instance from record, add body
+							var toStore = new Log(record);
+							toStore.payload = body;
+							toStore.save(function(err, result){
+								console.log("Inserted Document: " + JSON.stringify(result));
+								asyncCallback();
+							});
+						} else {
+							console.log("Network error in getRawLogs: " + response.statusCode);
+						}
+					});
+				}, function(err){
+					db.close();
+					callback();
+				});
 			});
+			// request(url, function(error, response, body){
+			// 	if(!error && response.statusCode == 200) {
+			// 		console.log("raw logs successfully retrieved!");
+			// 		//console.log(body);
+			// 		callback(details, body);
+			// 	} else {
+			// 		console.log("Network error in getRawLogs: " + response.statusCode);
+			// 	}
+			// });
 		},
 
-		insertMongo: function insertMongo(details, payload) {
-		mongoose.connect(url); 
+		insertMongo: function insertMongo(record, payload) {
+			   mongoose.connect(url);
 
-		 	db.on('error', console.error);
-		 	db.once('open', function() {
-		 		var Log = mongoose.model('Log', logSchema);
+				db.on('error', console.error);
+				db.once('open', function() {
+					var Log = mongoose.model('Log', logSchema);
 
-		 		async.each(details.records, function(record, callback){
-		 			var toStore = new Log(record);
-		 			toStore.save(function(err, result){
-		 				console.log("Inserted Document Result: " + JSON.stringify(result));
-		 				callback();
-		 			});
-		 		}, function(err){
-		 			db.close();
-		 		});
-			});
+					async.each(details.records, function(record, callback){
+						var toStore = new Log(record);
+						toStore.save(function(err, result){
+							console.log("Inserted Document Result: " + JSON.stringify(result));
+							callback();
+						});
+					}, function(err){
+						db.close();
+					});
+				});
 
 		}
-
 	};
 };
