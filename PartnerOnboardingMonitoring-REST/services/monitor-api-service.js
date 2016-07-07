@@ -67,11 +67,13 @@ module.exports = function module() {
 					}
 				} else {
 					console.log("Connection error when getting details: " + response.statusCode);
+					console.log(sherlockEndpoint + jobID + "/output");
 				}
 			});
 		},
 
 		getRawLogs : function getRawLogs(details, callback) {
+			mongoose.connect(url);
 			db.on('error', console.error);
 			db.once('open', function() {
 				var Log = mongoose.model('Log', logSchema);
@@ -91,6 +93,7 @@ module.exports = function module() {
 							});
 						} else {
 							console.log("Network error in getRawLogs: " + response.statusCode);
+							asyncCallback();
 						}
 					});
 				}, function(err){
