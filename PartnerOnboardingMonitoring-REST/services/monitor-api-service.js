@@ -57,10 +57,14 @@ module.exports = function module() {
 			request(sherlockEndpoint + jobID + "/output", function (error, response, body){
 				if (!error && response.statusCode == 200) {
 					var details = JSON.parse(body);
-					//console.log("Details: " + JSON.stringify(details, null, 4));
-					var eventDetailURL = details.records[0].url;
-					var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs");
-					callback(details, rawLogsURL);
+					if (details.records.length == 0) {
+						console.log("No results!");
+					} else {
+						//console.log("Details: " + JSON.stringify(details, null, 4));
+						var eventDetailURL = details.records[0].url;
+						var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs");
+						callback(details, rawLogsURL);
+					}
 				} else {
 					console.log("Connection error when getting details: " + response.statusCode);
 				}
