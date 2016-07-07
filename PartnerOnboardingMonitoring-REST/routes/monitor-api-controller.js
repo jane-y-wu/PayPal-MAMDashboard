@@ -71,7 +71,6 @@ module.exports = function module(app) {
 
 	    	var insertMongo = function(details, payload) {
     			console.log("insertMongo called!");
-    			res.end("Inserting into MongoDB!");
     			service.insertMongo(details, payload);
     		};
 
