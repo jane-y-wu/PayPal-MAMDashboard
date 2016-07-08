@@ -1,6 +1,9 @@
 var request = require('request'); // require request
 var schedule = require('node-schedule');
 var jobID; // string to hold job ID
+var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT']; // expressions to search for in the CAL log
+var errorCodes = 0; // number of times CAL returns an error code
+var nullResponse = 0; // number of times the response is null 
 
 var date = new Date();
 
@@ -21,18 +24,20 @@ var endTime;
 var startTime;
 
 var rule = new schedule.RecurrenceRule();
-rule.minute = 0; // runs every hour when the minute hits 0
+rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
 
-//var interval = schedule.scheduleJob(rule, process);
+//var interval = schedule.scheduleJob('*/3 * * * * *', process);
+var interval = schedule.scheduleJob(rule, process);
 
-process();
+//process();
 
 function process() { // runs all the needed functions
 
 	endTime = getEndTime();
 	startTime = getStartTime();
 	submitRequest(startTime, endTime);
-
+	nullResponse = 0;
+	errorCodes = 0;	
 }
 
 
@@ -117,27 +122,33 @@ function getStartTime() {
 
 function submitRequest(start, end) {
     request.post(
-            'http://calhadoop-vip-a.slc.paypal.com/regex/request',
-            {
-                json: { // example search input
+    	'http://calhadoop-vip-a.slc.paypal.com/regex/request',
+    	{
+    	json: { // example search input
 			"startTime": start,
-        		"endTime": end,
+        	"endTime": end,
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
 			"dataCenter":"all",
-        		"machine":"",
-        		"sampling":"100",
-        		"regexs":["ResponseCode=200"], // CHANGE
-        		"isTransactionSearch":"false",
-        		"searchMode":"simple",
-        		"httpCallback":"http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3003/api/queryready/?id=$id&status=$status",
-        		"email":"janwu@paypal.com"
+        	"machine":"",
+        	"sampling":"100",
+        	"regexs": ["ResponseCode=200"],
+        	"isTransactionSearch":"false",
+        	"searchMode":"simple",
+        	"httpCallback":"http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3003/api/queryready/?id=$id&status=$status",
+        	"email":"janwu@paypal.com"
 		}
 	},
 	function (error, response, body) {
 
 		if (response) {
+
+
+
 			if (!error && response.statusCode == 200) { // no errors
+
+				
+
 				console.log("Job ID : " + body); // prints out job ID
 				jobID = body; // store job ID
 
@@ -146,17 +157,34 @@ function submitRequest(start, end) {
 				
 			}
 
-                	else {
-				console.log(response.statusCode); // error code
-                		// TODO what to do when we get an error code bac
+            else {
+				
+                // TODO what to do when we get an error code bac
 				// send it again a few times
 				// or this is an error and put into mongodb
+
+				while (errorCodes < 3) { // while there has not been three error codes returned yet
+					console.log(response.statusCode); // error code
+					errorCodes++; // give up after three times
+					console.log("error code trying again : " + errorCodes);
+					submitRequest(start, end); // resubmit request
+					
+				}
 				
 			}
 		}
 
 		else { // if response is null
 			// TODO
+			while (nullResponse < 3 ) { // same as error codes
+
+				nullResponse++;
+				console.log("null trying again : " + nullResponse);
+				submitRequest(start, end);
+				
+			}
+			
+
 		}
 	}
 
