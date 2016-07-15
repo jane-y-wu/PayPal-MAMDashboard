@@ -4,6 +4,8 @@ var jobID; // string to hold job ID
 var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT']; // expressions to search for in the CAL log
 var errorCodes = 0; // number of times CAL returns an error code
 var nullResponse = 0; // number of times the response is null 
+var alexC3 = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com'; // for testing purposes
+var c3URL = 'http://partner-onboarding-monitor-9745.ccg21.dev.paypalcorp.com';
 
 var date = new Date();
 
@@ -26,10 +28,7 @@ var startTime;
 var rule = new schedule.RecurrenceRule();
 rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
 
-//var interval = schedule.scheduleJob('*/3 * * * * *', process);
 var interval = schedule.scheduleJob(rule, process);
-
-//process();
 
 function process() { // runs all the needed functions
 
@@ -129,13 +128,13 @@ function submitRequest(start, end) {
         	"endTime": end,
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
-			"dataCenter":"all",
+			"Data-Center":"all",
         	"machine":"",
         	"sampling":"100",
         	"regexs": ["ResponseCode=200"],
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback":"http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": c3URL + ":3003/api/queryready/?id=$id&status=$status",
         	"email":"janwu@paypal.com"
 		}
 	},
@@ -158,10 +157,6 @@ function submitRequest(start, end) {
 			}
 
             else {
-				
-                // TODO what to do when we get an error code bac
-				// send it again a few times
-				// or this is an error and put into mongodb
 
 				while (errorCodes < 3) { // while there has not been three error codes returned yet
 					console.log(response.statusCode); // error code
@@ -175,7 +170,7 @@ function submitRequest(start, end) {
 		}
 
 		else { // if response is null
-			// TODO
+			
 			while (nullResponse < 3 ) { // same as error codes
 
 				nullResponse++;
