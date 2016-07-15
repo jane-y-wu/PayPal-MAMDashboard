@@ -26,10 +26,6 @@ var logSchema = new mongoose.Schema({
 	payload : String
 });
 
-var testSchema = new mongoose.Schema({
-	TestKey : String
-});
-
 module.exports = function module() {
 
 	return {
@@ -121,6 +117,7 @@ module.exports = function module() {
 
 					async.each(details.records, function(record, callback){
 						var toStore = new Log(record);
+						toStore.payload = payload
 						toStore.save(function(err, result){
 							console.log("Inserted Document Result: " + JSON.stringify(result));
 							callback();

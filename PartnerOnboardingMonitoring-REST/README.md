@@ -21,7 +21,7 @@ Our API code is decomposed into 3 files:
 
 Any get request sent to an address of the form /api/queryready/... will prompt our service to run the `getDetails` function defined in `routes/monitor-api-controller.js`. This URL is called twice by the Sherlock API after recieving a query request. The first acknowledges that Sherlock has recieved a query with this URL passed in, the second informs us that the logs have been collected and are ready to access, as well as providing a Job ID through which we can access the logs. Using the Job ID we construct a URL that returns metadata about our query, as well as another URL. Calling this URL then returns the actual log.
 
-Note that `getDetails` actually defines a function containing several functions, all of which are called sequentially in the workflow. Each of these functions calls a corresponding function in `services/monitor-api-service.js`, passing in a callback function that calls the next function in the workflow. For example, `getRawLogs` calls `service.getRawLogs`, which in turn is passed a callback function that calls `insertMongo`.
+Note that `getDetails` actually defines a function containing several functions, all of which are called sequentially in the workflow. Each of these functions calls a corresponding function in `services/monitor-api-service.js`, passing in a callback function that calls the next function in the workflow.
 
 
 
