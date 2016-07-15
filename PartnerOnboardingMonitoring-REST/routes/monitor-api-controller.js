@@ -2,7 +2,8 @@
 
 module.exports = function module(app) {
 
-	var service = require('../services/monitor-api-service.js')();
+	// var service = require('../services/monitor-api-service.js')();
+	var service = require('../services/monitor-api-service-parse-test.js')();
 
 	return {
 		processCalResult : function processCalResult(req, res, next) {

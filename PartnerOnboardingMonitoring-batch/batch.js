@@ -28,7 +28,8 @@ var startTime;
 var rule = new schedule.RecurrenceRule();
 rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
 
-var interval = schedule.scheduleJob(rule, process);
+//var interval = schedule.scheduleJob(rule, process);
+process();
 
 function process() { // runs all the needed functions
 
@@ -124,8 +125,8 @@ function submitRequest(start, end) {
     	'http://calhadoop-vip-a.slc.paypal.com/regex/request',
     	{
     	json: { // example search input
-			"startTime": start,
-        	"endTime": end,
+			"startTime": "2016/07/15 11:00",
+        	"endTime": "2016/07/15 11:01",
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
 			"Data-Center":"all",
@@ -134,7 +135,7 @@ function submitRequest(start, end) {
         	"regexs": ["ResponseCode=200"],
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": c3URL + ":3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": alexC3 + ":3003/api/queryready/?id=$id&status=$status",
         	"email":"janwu@paypal.com"
 		}
 	},
