@@ -4,16 +4,15 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var fs = require('fs');
+var bodyParser = require('body-parser');
+var errorHandler = require('errorhandler');
 var app = express();
 
 app.set('port', process.env.PORT || 3003);
-app.use(express.json());
-app.use(express.urlencoded());
-app.use(express.methodOverride());
-app.use(app.router);
+app.use(bodyParser);
 
 if ('development' === app.get('env')) {
-	app.use(express.errorHandler());
+	app.use(errorHandler);
 	app.locals.pretty = true;
 }
 
