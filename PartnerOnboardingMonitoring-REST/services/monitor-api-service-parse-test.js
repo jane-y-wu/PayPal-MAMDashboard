@@ -38,7 +38,7 @@ var logSchema = new mongoose.Schema({
 		Duration : {type: String},
 		Pool : {type: String},
 		Data_Center : {type: String},
-		Timestamp : {type: Date}
+		Timestamp : {type: String}/*{type: Date}*/
 	},
 	payload: {
 		corr_id_: {type: String},
