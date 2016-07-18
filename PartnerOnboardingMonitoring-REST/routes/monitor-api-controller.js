@@ -71,7 +71,7 @@ module.exports = function module(app) {
 	    		console.log("getRawLogs called!");
 	    		service.getRawLogs(details, function onGetRawLogs(/*details*/) {
 	    			//insertMongo(metadata, payload);
-	    			console("COMPLETE");
+	    			console.log("COMPLETE");
 	    		});
 	    	};
 

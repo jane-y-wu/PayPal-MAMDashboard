@@ -81,7 +81,7 @@ mongoose.connect(url);
 db.on('error', console.error);
 db.once('open', function() {
 	var Log = mongoose.model('Log', logSchema);
-	var localLog = { payload: {} };
+	var localLog = { metaData : {}, payload: {} };
 
 	for (var fieldNum in errorFields[errNum]) {
 		var start = errorFields[errNum][fieldNum] + "=";
@@ -103,6 +103,10 @@ db.once('open', function() {
 
 		localLog.payload[fieldName] = fieldVal;
 	}
+
+	localLog.metaData["Timestamp"] = Date.parse("07/15/2016 10:00:43.26")
+
+
 	var toStore = new Log(localLog);
 	console.log(JSON.stringify(toStore, null, 4));
 	db.close();

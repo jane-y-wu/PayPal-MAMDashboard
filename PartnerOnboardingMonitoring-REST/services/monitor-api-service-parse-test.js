@@ -38,7 +38,7 @@ var logSchema = new mongoose.Schema({
 		Duration : {type: String},
 		Pool : {type: String},
 		Data_Center : {type: String},
-		Timestamp : {type: String}/*{type: Date}*/
+		Timestamp : {type: Date}
 	},
 	payload: {
 		corr_id_: {type: String},
@@ -114,7 +114,6 @@ module.exports = function module() {
 						if(!error && response.statusCode == 200) {
 							console.log("raw logs successfully retrieved!");
 							// create schema instance from record, add body
-							//var toStore = new Log;
 							var localLog = { metaData : {}, payload: {} };
 							// rawLogsURL from rawLogsURL
 							localLog.rawLogsURL = rawLogsURL;
@@ -128,7 +127,7 @@ module.exports = function module() {
 							localLog.metaData["Duration"] = record.values.Duration;
 							localLog.metaData["Pool"] = record.values.Pool;
 							localLog.metaData["Data_Center"] = record.values.dataCenter;
-							localLog.metaData["Timestamp"] = record.values.Timestamp; // Date
+							localLog.metaData["Timestamp"] = Date.parse(record.values.Timestamp); // Date
 							// payload object from body
 							// until the planned payload goes live we will just parse hardcoded strings
 							var toParse = "VALIDATION_ERROR\n corr_id_=2f51e107f2ec1&partnerAccount=1177032420632337513&method=POST&isLoginable=true&hasPartnerRelationships=true&channel=API&operation=VALIDATE_US&type=Input Validation Error&service=PartnerApiPlatformServ&path=#/owner_info/phones/@type=='HOME'/national_number&issue=National number must be between 1 to 14 digits long"
