@@ -126,7 +126,7 @@ module.exports = function module() {
 							toStore.metaData.Class = record.Class;
 							toStore.metaData.Duration = record.Duration;
 							toStore.metaData.Pool = record.Pool;
-							toStore.metaData.Data_Center = record.Data-Center;
+							toStore.metaData.Data_Center = record.dataCenter;
 							toStore.metaData.Timestamp = record.Timestamp; // Date
 							// payload object from body
 							// until the planned payload goes live we will just parse hardcoded strings
