@@ -125,11 +125,11 @@ function submitRequest(start, end) {
     	'http://calhadoop-vip-a.slc.paypal.com/regex/request',
     	{
     	json: { // example search input
-			"startTime": "2016/07/15 11:00",
-        	"endTime": "2016/07/15 11:01",
+			"startTime": "2016/07/15 10:00",
+			"endTime": "2016/07/15 10:01",
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
-			"Data-Center":"all",
+			"dataCenter":"all",
         	"machine":"",
         	"sampling":"100",
         	"regexs": ["ResponseCode=200"],

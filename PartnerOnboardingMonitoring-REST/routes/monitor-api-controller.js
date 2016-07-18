@@ -6,6 +6,10 @@ module.exports = function module(app) {
 	var service = require('../services/monitor-api-service-parse-test.js')();
 
 	return {
+		test : function test(req, res, next) {
+			console.log("test called");
+		},
+
 		processCalResult : function processCalResult(req, res, next) {
 			console.log("processCalResult called with " + req.params.id)
 			
