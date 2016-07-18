@@ -115,20 +115,20 @@ module.exports = function module() {
 							console.log("raw logs successfully retrieved!");
 							// create schema instance from record, add body
 							//var toStore = new Log;
-							var localLog = { metadata : {}, payload: {} };
+							var localLog = { metaData : {}, payload: {} };
 							// rawLogsURL from rawLogsURL
 							localLog.rawLogsURL = rawLogsURL;
 							// metaData object from record
 							// toStore.metaData = record; // this will probably need more parsing
-							localLog.metaData["Command"] = record.Command;
-							localLog.metaData["Status"] = parseInt(record.Status);
-							localLog.metaData["Machine"] = record.Machine;
-							localLog.metaData["Type"] = record.Type;
-							localLog.metaData["Class"] = record.Class;
-							localLog.metaData["Duration"] = record.Duration;
-							localLog.metaData["Pool"] = record.Pool;
-							localLog.metaData["Data_Center"] = record.dataCenter;
-							localLog.metaData["Timestamp"] = record.Timestamp; // Date
+							localLog.metaData["Command"] = record.values.Command;
+							localLog.metaData["Status"] = parseInt(record.values.Status);
+							localLog.metaData["Machine"] = record.values.Machine;
+							localLog.metaData["Type"] = record.values.Type;
+							localLog.metaData["Class"] = record.values.Class;
+							localLog.metaData["Duration"] = record.values.Duration;
+							localLog.metaData["Pool"] = record.values.Pool;
+							localLog.metaData["Data_Center"] = record.values.dataCenter;
+							localLog.metaData["Timestamp"] = record.values.Timestamp; // Date
 							// payload object from body
 							// until the planned payload goes live we will just parse hardcoded strings
 							var toParse = "VALIDATION_ERROR\n corr_id_=2f51e107f2ec1&partnerAccount=1177032420632337513&method=POST&isLoginable=true&hasPartnerRelationships=true&channel=API&operation=VALIDATE_US&type=Input Validation Error&service=PartnerApiPlatformServ&path=#/owner_info/phones/@type=='HOME'/national_number&issue=National number must be between 1 to 14 digits long"
