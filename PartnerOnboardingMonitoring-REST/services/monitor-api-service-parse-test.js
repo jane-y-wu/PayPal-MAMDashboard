@@ -168,7 +168,7 @@ module.exports = function module() {
 								var fieldName = errorFields[errNum][fieldNum];
 
 								if (fieldName.localeCompare("isLoginable") == 0 || fieldName.localeCompare("hasPartnerRelationships") == 0) {
-									localLog.payload[fieldName] = (fieldVal === "true");
+									toStore.payload[fieldName] = (fieldVal === "true");
 								}
 
 								toStore.payload[fieldName] = fieldVal;
