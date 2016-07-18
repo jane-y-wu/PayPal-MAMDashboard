@@ -5,7 +5,23 @@ var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOU
 var errorCodes = 0; // number of times CAL returns an error code
 var nullResponse = 0; // number of times the response is null 
 var alexC3 = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com'; // for testing purposes
-var c3URL = 'http://partner-onboarding-monitor-9745.ccg21.dev.paypalcorp.com';
+var madhavC3 = 'http://partner-onboarding-monitor-9745.ccg21.dev.paypalcorp.com';
+var httpCallbackURL;
+var option = process.argv[2];
+
+// for testing purposes: option a to use alex's C3, m for madhav's
+if (option == 'a') {
+	httpCallbackURL = alexC3;
+}
+else if (option == 'm') {
+	httpCallbackURL = madhavC3;
+}
+else { // default
+    httpCallbackURL = madhavC3;
+} 
+
+// TEST
+console.log(httpCallbackURL);
 
 var date = new Date();
 
@@ -28,9 +44,10 @@ var startTime;
 var rule = new schedule.RecurrenceRule();
 rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
 
-var interval = schedule.scheduleJob(rule, process);
+var interval = schedule.scheduleJob(rule, run);
+//run();
 
-function process() { // runs all the needed functions
+function run() { // runs all the needed functions
 
 	endTime = getEndTime();
 	startTime = getStartTime();
@@ -128,13 +145,13 @@ function submitRequest(start, end) {
         	"endTime": end,
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
-			"Data-Center":"all",
+			"dataCenter":"all",
         	"machine":"",
         	"sampling":"100",
         	"regexs": ["ResponseCode=200"],
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": c3URL + ":3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": httpCallbackURL + ":3003/api/queryready/?id=$id&status=$status",
         	"email":"janwu@paypal.com"
 		}
 	},
@@ -145,8 +162,6 @@ function submitRequest(start, end) {
 
 
 			if (!error && response.statusCode == 200) { // no errors
-
-				
 
 				console.log("Job ID : " + body); // prints out job ID
 				jobID = body; // store job ID
