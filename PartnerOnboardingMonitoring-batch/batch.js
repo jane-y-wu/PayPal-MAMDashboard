@@ -120,7 +120,7 @@ function getStartTime() {
 
 
 
-function submitRequest(start, end) {
+function submitRequest(start, end) { // submit 3 queries for 3 different errors. create list of errors to loop through
     request.post(
     	'http://calhadoop-vip-a.slc.paypal.com/regex/request',
     	{
@@ -132,7 +132,7 @@ function submitRequest(start, end) {
 			"dataCenter":"all",
         	"machine":"",
         	"sampling":"100",
-        	"regexs": ["ResponseCode=200"], // some common starting string to query for
+        	"regexs": ["ResponseCode=200"], // put real query regex
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
         	"httpCallback": alexC3 + ":3003/api/queryready/?id=$id&status=$status",
