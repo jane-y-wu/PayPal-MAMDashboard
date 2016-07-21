@@ -141,7 +141,10 @@ module.exports = function module() {
 							localLog.metaData["Pool"] = record.values.Pool;
 							localLog.metaData["Data_Center"] = record.values.dataCenter;
 							// payload from body
+							console.log("body");
+							console.log(body);
 							var logSegments = body.split("\t");
+							console.log(JSON.stringify(logSegments, null, 4));
 							var match = logSegments[0].match(/[a-zA-Z]+/);
 							logSegments[0] = logSegments[0].substring(match.index, logSegments[0].length);
 							logSegments.unshift(logSegments[0][0]);
