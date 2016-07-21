@@ -132,7 +132,7 @@ function submitRequest(start, end) {
 			"dataCenter":"all",
         	"machine":"",
         	"sampling":"100",
-        	"regexs": ["ResponseCode=200"],
+        	"regexs": ["ResponseCode=200"], // some common starting string to query for
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
         	"httpCallback": alexC3 + ":3003/api/queryready/?id=$id&status=$status",

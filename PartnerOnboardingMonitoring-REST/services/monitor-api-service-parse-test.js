@@ -29,16 +29,16 @@ var NUM_ERRORS = 3;
 
 var logSchema = new mongoose.Schema({
 	rawLogsUrl : String,
-	metaData : {
-		Command : {type: String},
-		Status : {type: Number},
-		Machine : {type: String},
-		Type : {type: String},
-		Class : {type: String},
-		Duration : {type: String},
-		Pool : {type: String},
-		Data_Center : {type: String},
-		Timestamp : {type: Date}
+	metaData : { // not all of this is necessary. is this just an echo of the search parameters?
+		Command : {type: String}, //?
+		Status : {type: Number}, //?
+		Machine : {type: String}, //*
+		Type : {type: String}, //?
+		Class : {type: String}, //?
+		Duration : {type: String}, //x
+		Pool : {type: String}, //*
+		Data_Center : {type: String}, //*
+		Timestamp : {type: Date} // useful information move to payload
 	},
 	payload: {
 		corr_id_: {type: String},
@@ -54,7 +54,11 @@ var logSchema = new mongoose.Schema({
 		partnerAccount: {type: String},
 		message: {type: String},
 		exception: {type: String}
+		// merchantAccountNumber
 	}
+	// error name
+	// event type
+	// event time/date
 });
 
 module.exports = function module() {
@@ -118,7 +122,6 @@ module.exports = function module() {
 							// rawLogsURL from rawLogsURL
 							localLog.rawLogsURL = rawLogsURL;
 							// metaData object from record
-							// toStore.metaData = record; // this will probably need more parsing
 							localLog.metaData["Command"] = record.values.Command;
 							localLog.metaData["Status"] = parseInt(record.values.Status);
 							localLog.metaData["Machine"] = record.values.Machine;
@@ -127,11 +130,12 @@ module.exports = function module() {
 							localLog.metaData["Duration"] = record.values.Duration;
 							localLog.metaData["Pool"] = record.values.Pool;
 							localLog.metaData["Data_Center"] = record.values.dataCenter;
-							localLog.metaData["Timestamp"] = Date.parse(record.values.Timestamp); // Date
+							localLog.metaData["Timestamp"] = Date.parse(record.values.Timestamp);
 							// payload object from body
 							// until the planned payload goes live we will just parse hardcoded strings
 							var toParse = "VALIDATION_ERROR\n corr_id_=2f51e107f2ec1&partnerAccount=1177032420632337513&method=POST&isLoginable=true&hasPartnerRelationships=true&channel=API&operation=VALIDATE_US&type=Input Validation Error&service=PartnerApiPlatformServ&path=#/owner_info/phones/@type=='HOME'/national_number&issue=National number must be between 1 to 14 digits long"
 
+							// use & and = characters to delimit
 							var NUM_ERRORS = 3;
 							var errors = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"];
 							var errorFields = [
