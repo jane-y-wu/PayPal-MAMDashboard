@@ -4,7 +4,6 @@ var db = mongoose.connection;
 //var url = 'mongodb://partner-self-service-6103.ccg21.dev.paypalcorp.com:12345/';
 var url = 'mongodb://localhost:12345';
 
-var NUM_ERRORS = 3;
 var logSchema = new mongoose.Schema({
 	rawLogsUrl : String,
 	metaData : { // not all of this is necessary. is this just an echo of the search parameters?
@@ -16,7 +15,7 @@ var logSchema = new mongoose.Schema({
 		Class : {type: String},
 		Timestamp : {type: String},
 		Type : {type: String},
-		Status : {type: String}, // type number
+		Status : {type: Number}, // type number
 		// Name
 		// Duration
 		corr_id_: {type: String},
@@ -44,8 +43,8 @@ var match = logSegments[0].match(/[a-zA-Z]+/);
 logSegments[0] = logSegments[0].substring(match.index, logSegments[0].length);
 logSegments.unshift(logSegments[0][0]);
 logSegments[1] = logSegments[1].substring(1, logSegments[1].length);
-//console.log(logSegments);
-var fields = ["Class", "Timestamp", "Type", "Status"]; //, "Data"
+logSegments[4] = parseInt(logSegments[4]);
+var fields = ["Class", "Timestamp", "Type", "Name", "Status", "Duration"]; //, "Data"
 
 
 mongoose.connect(url);
@@ -71,6 +70,7 @@ db.once('open', function() {
 	var toStore = new Log(localLog);
 	console.log(JSON.stringify(toStore, null, 4));
 	toStore.save(function(err, result){
+		if (err) console.log(err);
 		console.log("Inserted Document: " + JSON.stringify(result));
 		db.close();
 	});
