@@ -46,7 +46,7 @@ var NUM_ERRORS = 3;
 // });
 
 var logSchema = new mongoose.Schema({
-	rawLogsUrl : String,
+	rawLogsURL : String,
 	metaData : { // not all of this is necessary. is this just an echo of the search parameters?
 		Machine : {type: String}, //*
 		Pool : {type: String}, //*
@@ -139,7 +139,8 @@ module.exports = function module() {
 							// metaData object from record
 							localLog.metaData["Machine"] = record.values.Machine;
 							localLog.metaData["Pool"] = record.values.Pool;
-							localLog.metaData["Data_Center"] = record.values.dataCenter;
+							var dataCenter = "Data-Center";
+							localLog.metaData["Data_Center"] = record.values[dataCenter];
 							// payload from body
 							if (body !== "") {
 								var logSegments = body.split("\t");
