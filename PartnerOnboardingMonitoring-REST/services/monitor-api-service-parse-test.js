@@ -141,25 +141,39 @@ module.exports = function module() {
 							localLog.metaData["Pool"] = record.values.Pool;
 							localLog.metaData["Data_Center"] = record.values.dataCenter;
 							// payload from body
-							console.log("body");
-							console.log(body);
-							var logSegments = body.split("\t");
-							console.log(JSON.stringify(logSegments, null, 4));
-							var match = logSegments[0].match(/[a-zA-Z]+/);
-							logSegments[0] = logSegments[0].substring(match.index, logSegments[0].length);
-							logSegments.unshift(logSegments[0][0]);
-							logSegments[1] = logSegments[1].substring(1, logSegments[1].length);
-							logSegments[4] = parseInt(logSegments[4]);
-							var fields = ["Class", "Timestamp", "Type", "Name", "Status", "Duration"]; //, "Data"
-							console.log(JSON.stringify(logSegments, null, 4));
-							asyncCallback();
+							if (body !== "") {
+								var logSegments = body.split("\t");
+								console.log(JSON.stringify(logSegments, null, 4));
+								var match = logSegments[0].match(/[a-zA-Z]+/);
+								logSegments[0] = logSegments[0].substring(match.index, logSegments[0].length);
+								logSegments.unshift(logSegments[0][0]);
+								logSegments[1] = logSegments[1].substring(1, logSegments[1].length);
+								logSegments[4] = parseInt(logSegments[4]);
+								var fields = ["Class", "Timestamp", "Type", "Name", "Status", "Duration"]; //, "Data"
 
-							
+								for (var field in fields) {
+									localLog.payload[fields[field]] = logSegments[field];
+								}
+								//console.log(JSON.stringify(localLog));
 
-							// toStore.save(function(err, result){
-							// 	console.log("Inserted Document: " + JSON.stringify(result));
-							// 	asyncCallback();
-							// });
+								var payloadSegments = logSegments[6].split("&");
+								//console.log(payloadSegments);
+
+								for (var i in payloadSegments) { // skip duration field
+									var split = payloadSegments[i].split("=");
+									localLog.payload[split[0]] = split[1]
+								}
+								//console.log(JSON.stringify(localLog, null, 4));
+
+								var toStore = new Log(localLog);
+
+								toStore.save(function(err, result){
+									console.log("Inserted Document: " + JSON.stringify(result));
+									asyncCallback();
+								});
+							} else {
+								asyncCallback();
+							}							
 						} else {
 							console.log("Network error in getRawLogs: " + response.statusCode);
 							asyncCallback();
