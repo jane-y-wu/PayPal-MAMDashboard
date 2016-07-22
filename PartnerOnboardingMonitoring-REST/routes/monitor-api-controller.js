@@ -4,6 +4,7 @@ module.exports = function module(app) {
 
 	// var service = require('../services/monitor-api-service.js')();
 	var service = require('../services/monitor-api-service-parse-test.js')();
+	var Log = require('../models/log').Log;
 
 	return {
 		test : function test(req, res, next) {

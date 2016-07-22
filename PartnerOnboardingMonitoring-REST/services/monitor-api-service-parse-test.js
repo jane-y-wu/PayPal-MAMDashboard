@@ -9,22 +9,22 @@ var url = 'mongodb://partner-self-service-6103.ccg21.dev.paypalcorp.com:12345/';
 var MongoClient = mongodb.MongoClient;
 var assert = require('assert');
 var async = require('async');
-var NUM_ERRORS = 3;
 
 // var logSchema = new mongoose.Schema({
-// 	rawLogsUrl : String,
+// 	rawLogsURL : String,
+// 	// eventDetailURL: String,
 // 	metaData : { // not all of this is necessary. is this just an echo of the search parameters?
-// 		Command : {type: String}, //?
-// 		Status : {type: Number}, //?
 // 		Machine : {type: String}, //*
-// 		Type : {type: String}, //?
-// 		Class : {type: String}, //?
-// 		Duration : {type: String}, //x
 // 		Pool : {type: String}, //*
 // 		Data_Center : {type: String}, //*
-// 		Timestamp : {type: Date} // useful information move to payload
 // 	},
 // 	payload: {
+// 		Class : {type: String},
+// 		Timestamp : {type: String},
+// 		Type : {type: String},
+// 		Status : {type: Number},
+// 		// Name
+// 		// Duration
 // 		corr_id_: {type: String},
 // 		method: {type: String},
 // 		isLoginable: {type: Boolean},
@@ -37,44 +37,10 @@ var NUM_ERRORS = 3;
 // 		issue: {type: String},
 // 		partnerAccount: {type: String},
 // 		message: {type: String},
-// 		exception: {type: String}
-// 		// merchantAccountNumber
+// 		exception: {type: String},
+// 		merchantAccountNumber : {type: Number}
 // 	}
-// 	// error name
-// 	// event type
-// 	// event time/date
 // });
-
-var logSchema = new mongoose.Schema({
-	rawLogsURL : String,
-	metaData : { // not all of this is necessary. is this just an echo of the search parameters?
-		Machine : {type: String}, //*
-		Pool : {type: String}, //*
-		Data_Center : {type: String}, //*
-	},
-	payload: {
-		Class : {type: String},
-		Timestamp : {type: String},
-		Type : {type: String},
-		Status : {type: String}, // type number
-		// Name
-		// Duration
-		corr_id_: {type: String},
-		method: {type: String},
-		isLoginable: {type: Boolean},
-		hasPartnerRelationships: {type: Boolean},
-		channel: {type: String},
-		operation: {type: String},
-		type: {type: String},
-		service: {type: String},
-		path: {type: String},
-		issue: {type: String},
-		partnerAccount: {type: String},
-		message: {type: String},
-		exception: {type: String},
-		merchantAccountNumber : {type: Number}
-	}
-});
 
 module.exports = function module() {
 
@@ -122,7 +88,7 @@ module.exports = function module() {
 			mongoose.connect(url);
 			db.on('error', console.error);
 			db.once('open', function() {
-				var Log = mongoose.model('Log', logSchema);
+				//var Log = mongoose.model('Log', logSchema);
 
 				async.each(details.records, function(record, asyncCallback){
 
@@ -162,7 +128,7 @@ module.exports = function module() {
 
 								for (var i in payloadSegments) { // skip duration field
 									var split = payloadSegments[i].split("=");
-									localLog.payload[split[0]] = split[1]
+									localLog.payload[split[0]] = split[1] // TODO: check if field is not of String type and parse accordingly
 								}
 								//console.log(JSON.stringify(localLog, null, 4));
 
