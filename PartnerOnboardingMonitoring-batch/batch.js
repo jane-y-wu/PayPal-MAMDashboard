@@ -172,7 +172,7 @@ function submitRequest(start, end) { // submit 3 queries for 3 different errors.
 
             else {
 
-				while (errorCodes < 3) { // while there has not been three error codes returned yet
+				if (errorCodes < 3) { // while there has not been three error codes returned yet
 					console.log(response.statusCode); // error code
 					errorCodes++; // give up after three times
 					console.log("error code trying again : " + errorCodes);
@@ -185,7 +185,7 @@ function submitRequest(start, end) { // submit 3 queries for 3 different errors.
 
 		else { // if response is null
 			
-			while (nullResponse < 3 ) { // same as error codes
+			if (nullResponse < 3 ) { // same as error codes
 
 				nullResponse++;
 				console.log("null trying again : " + nullResponse);

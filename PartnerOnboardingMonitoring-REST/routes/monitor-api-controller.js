@@ -82,7 +82,7 @@ module.exports = function module(app) {
     		// };
 
 		    return getDetails(req, res, next);
-    	}
+    	},
 
     	displayAll : function displayAll(req, res, next) {
     		console.log("displayAll called!");

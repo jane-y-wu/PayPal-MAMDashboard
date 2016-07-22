@@ -104,7 +104,15 @@ module.exports = function module() {
 
 								toStore.save(function(err, result){
 									console.log("Inserted Document: " + JSON.stringify(result));
-									asyncCallback();
+
+									Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
+										console.log("mongodb query returned!");
+										if (err) console.log(err);
+										console.log(JSON.stringify(result, null, 4));
+										asyncCallback();
+									});
+
+									//asyncCallback();
 								});
 							} else {
 								asyncCallback();
@@ -143,7 +151,12 @@ module.exports = function module() {
 		},
 
 		displayAll : function displayAll(callback) {
-			callback();
+			Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
+				console.log("mongodb query returned!");
+				if (err) console.log(err);
+				console.log(JSON.stringify(result, null, 4));
+				callback();
+			});
 		}
 	};
 };
