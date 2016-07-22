@@ -5,7 +5,23 @@ var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOU
 var errorCodes = 0; // number of times CAL returns an error code
 var nullResponse = 0; // number of times the response is null 
 var alexC3 = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com'; // for testing purposes
-var c3URL = 'http://partner-onboarding-monitor-9745.ccg21.dev.paypalcorp.com';
+var madhavC3 = 'http://partner-onboarding-monitor-9745.ccg21.dev.paypalcorp.com';
+var httpCallbackURL;
+var option = process.argv[2];
+
+// for testing purposes: option a to use alex's C3, m for madhav's
+if (option == 'a') {
+	httpCallbackURL = alexC3;
+}
+else if (option == 'm') {
+	httpCallbackURL = madhavC3;
+}
+else { // default
+    httpCallbackURL = madhavC3;
+} 
+
+// TEST
+console.log(httpCallbackURL);
 
 var date = new Date();
 
@@ -28,10 +44,15 @@ var startTime;
 var rule = new schedule.RecurrenceRule();
 rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
 
+<<<<<<< HEAD
 //var interval = schedule.scheduleJob(rule, process);
 process();
+=======
+var interval = schedule.scheduleJob(rule, run);
+//run();
+>>>>>>> upstream/master
 
-function process() { // runs all the needed functions
+function run() { // runs all the needed functions
 
 	endTime = getEndTime();
 	startTime = getStartTime();
@@ -146,8 +167,6 @@ function submitRequest(start, end) { // submit 3 queries for 3 different errors.
 
 
 			if (!error && response.statusCode == 200) { // no errors
-
-				
 
 				console.log("Job ID : " + body); // prints out job ID
 				jobID = body; // store job ID
