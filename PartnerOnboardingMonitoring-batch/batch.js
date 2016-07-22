@@ -44,13 +44,7 @@ var startTime;
 var rule = new schedule.RecurrenceRule();
 rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
 
-<<<<<<< HEAD
-//var interval = schedule.scheduleJob(rule, process);
-process();
-=======
-var interval = schedule.scheduleJob(rule, run);
-//run();
->>>>>>> upstream/master
+run();
 
 function run() { // runs all the needed functions
 

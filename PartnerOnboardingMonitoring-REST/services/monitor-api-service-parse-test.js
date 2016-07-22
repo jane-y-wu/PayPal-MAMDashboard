@@ -9,38 +9,7 @@ var url = 'mongodb://partner-self-service-6103.ccg21.dev.paypalcorp.com:12345/';
 var MongoClient = mongodb.MongoClient;
 var assert = require('assert');
 var async = require('async');
-
-// var logSchema = new mongoose.Schema({
-// 	rawLogsURL : String,
-// 	// eventDetailURL: String,
-// 	metaData : { // not all of this is necessary. is this just an echo of the search parameters?
-// 		Machine : {type: String}, //*
-// 		Pool : {type: String}, //*
-// 		Data_Center : {type: String}, //*
-// 	},
-// 	payload: {
-// 		Class : {type: String},
-// 		Timestamp : {type: String},
-// 		Type : {type: String},
-// 		Status : {type: Number},
-// 		// Name
-// 		// Duration
-// 		corr_id_: {type: String},
-// 		method: {type: String},
-// 		isLoginable: {type: Boolean},
-// 		hasPartnerRelationships: {type: Boolean},
-// 		channel: {type: String},
-// 		operation: {type: String},
-// 		type: {type: String},
-// 		service: {type: String},
-// 		path: {type: String},
-// 		issue: {type: String},
-// 		partnerAccount: {type: String},
-// 		message: {type: String},
-// 		exception: {type: String},
-// 		merchantAccountNumber : {type: Number}
-// 	}
-// });
+var Log = require('../../models/log').Log;
 
 module.exports = function module() {
 
@@ -84,11 +53,10 @@ module.exports = function module() {
 			});
 		},
 
-		getRawLogs : function getRawLogs(details, callback) {
+		getRawLogs : function getRawLogs(details, callback) { // TODO: decompose
 			mongoose.connect(url);
 			db.on('error', console.error);
 			db.once('open', function() {
-				//var Log = mongoose.model('Log', logSchema);
 
 				async.each(details.records, function(record, asyncCallback){
 
@@ -154,25 +122,28 @@ module.exports = function module() {
 			});
 		},
 
-		insertMongo: function insertMongo(record, payload) {
-			   mongoose.connect(url);
+		insertMongo : function insertMongo(record, payload) {
+		   mongoose.connect(url);
 
-				db.on('error', console.error);
-				db.once('open', function() {
-					var Log = mongoose.model('Log', logSchema);
+			db.on('error', console.error);
+			db.once('open', function() {
+				var Log = mongoose.model('Log', logSchema);
 
-					async.each(details.records, function(record, callback){
-						var toStore = new Log(record);
-						toStore.payload = payload
-						toStore.save(function(err, result){
-							console.log("Inserted Document Result: " + JSON.stringify(result));
-							callback();
-						});
-					}, function(err){
-						db.close();
+				async.each(details.records, function(record, callback){
+					var toStore = new Log(record);
+					toStore.payload = payload
+					toStore.save(function(err, result){
+						console.log("Inserted Document Result: " + JSON.stringify(result));
+						callback();
 					});
+				}, function(err){
+					db.close();
 				});
+			});
+		},
 
+		displayAll : function displayAll(callback) {
+			callback();
 		}
 	};
 };
