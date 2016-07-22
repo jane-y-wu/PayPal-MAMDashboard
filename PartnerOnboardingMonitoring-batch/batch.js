@@ -44,8 +44,13 @@ var startTime;
 var rule = new schedule.RecurrenceRule();
 rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
 
+<<<<<<< HEAD
+//var interval = schedule.scheduleJob(rule, process);
+process();
+=======
 var interval = schedule.scheduleJob(rule, run);
 //run();
+>>>>>>> upstream/master
 
 function run() { // runs all the needed functions
 
@@ -136,22 +141,22 @@ function getStartTime() {
 
 
 
-function submitRequest(start, end) {
+function submitRequest(start, end) { // submit 3 queries for 3 different errors. create list of errors to loop through
     request.post(
     	'http://calhadoop-vip-a.slc.paypal.com/regex/request',
     	{
     	json: { // example search input
-			"startTime": start,
-        	"endTime": end,
+			"startTime": "2016/07/15 10:00",
+			"endTime": "2016/07/15 10:01",
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
 			"dataCenter":"all",
         	"machine":"",
         	"sampling":"100",
-        	"regexs": ["ResponseCode=200"],
+        	"regexs": ["ResponseCode=200"], // put real query regex
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": httpCallbackURL + ":3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": alexC3 + ":3003/api/queryready/?id=$id&status=$status",
         	"email":"janwu@paypal.com"
 		}
 	},

@@ -2,9 +2,14 @@
 
 module.exports = function module(app) {
 
-	var service = require('../services/monitor-api-service.js')();
+	// var service = require('../services/monitor-api-service.js')();
+	var service = require('../services/monitor-api-service-parse-test.js')();
 
 	return {
+		test : function test(req, res, next) {
+			console.log("test called");
+		},
+
 		processCalResult : function processCalResult(req, res, next) {
 			console.log("processCalResult called with " + req.params.id)
 			
@@ -66,7 +71,7 @@ module.exports = function module(app) {
 	    		console.log("getRawLogs called!");
 	    		service.getRawLogs(details, function onGetRawLogs(/*details*/) {
 	    			//insertMongo(metadata, payload);
-	    			console("COMPLETE");
+	    			console.log("COMPLETE");
 	    		});
 	    	};
 

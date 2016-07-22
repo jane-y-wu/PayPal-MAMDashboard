@@ -12,35 +12,53 @@ var async = require('async');
 var NUM_ERRORS = 3;
 
 // var logSchema = new mongoose.Schema({
-		
-// 	values : {
-// 		Command : String,
-// 		Status : Number,
-// 		Machine : String,
-// 		Type : String,
-// 		Class : String,
-// 		Duration : String,
-// 		Pool : String,
-// 		Timestamp : String
+// 	rawLogsUrl : String,
+// 	metaData : { // not all of this is necessary. is this just an echo of the search parameters?
+// 		Command : {type: String}, //?
+// 		Status : {type: Number}, //?
+// 		Machine : {type: String}, //*
+// 		Type : {type: String}, //?
+// 		Class : {type: String}, //?
+// 		Duration : {type: String}, //x
+// 		Pool : {type: String}, //*
+// 		Data_Center : {type: String}, //*
+// 		Timestamp : {type: Date} // useful information move to payload
 // 	},
-// 	url : String,
-// 	payload : String
+// 	payload: {
+// 		corr_id_: {type: String},
+// 		method: {type: String},
+// 		isLoginable: {type: Boolean},
+// 		hasPartnerRelationships: {type: Boolean},
+// 		channel: {type: String},
+// 		operation: {type: String},
+// 		type: {type: String},
+// 		service: {type: String},
+// 		path: {type: String},
+// 		issue: {type: String},
+// 		partnerAccount: {type: String},
+// 		message: {type: String},
+// 		exception: {type: String}
+// 		// merchantAccountNumber
+// 	}
+// 	// error name
+// 	// event type
+// 	// event time/date
 // });
 
 var logSchema = new mongoose.Schema({
-	rawLogsUrl : String,
-	metaData : {
-		Command : {type: String},
-		Status : {type: Number},
-		Machine : {type: String},
-		Type : {type: String},
-		Class : {type: String},
-		Duration : {type: String},
-		Pool : {type: String},
-		Data_Center : {type: String},
-		Timestamp : {type: String}/*{type: Date}*/
+	rawLogsURL : String,
+	metaData : { // not all of this is necessary. is this just an echo of the search parameters?
+		Machine : {type: String}, //*
+		Pool : {type: String}, //*
+		Data_Center : {type: String}, //*
 	},
 	payload: {
+		Class : {type: String},
+		Timestamp : {type: String},
+		Type : {type: String},
+		Status : {type: String}, // type number
+		// Name
+		// Duration
 		corr_id_: {type: String},
 		method: {type: String},
 		isLoginable: {type: Boolean},
@@ -53,7 +71,8 @@ var logSchema = new mongoose.Schema({
 		issue: {type: String},
 		partnerAccount: {type: String},
 		message: {type: String},
-		exception: {type: String}
+		exception: {type: String},
+		merchantAccountNumber : {type: Number}
 	}
 });
 
@@ -114,71 +133,48 @@ module.exports = function module() {
 						if(!error && response.statusCode == 200) {
 							console.log("raw logs successfully retrieved!");
 							// create schema instance from record, add body
-							var toStore = new Log;
+							var localLog = { metaData : {}, payload: {} };
 							// rawLogsURL from rawLogsURL
-							toStore.rawLogsURL = rawLogsURL;
+							localLog.rawLogsURL = rawLogsURL;
 							// metaData object from record
-							// toStore.metaData = record; // this will probably need more parsing
-							toStore.metaData.Command = record.Command;
-							toStore.metaData.Status = parseInt(record.Status);
-							toStore.metaData.Machine = record.Machine;
-							toStore.metaData.Type = record.Type;
-							toStore.metaData.Class = record.Class;
-							toStore.metaData.Duration = record.Duration;
-							toStore.metaData.Pool = record.Pool;
-							toStore.metaData.Data_Center = record.Data-Center;
-							toStore.metaData.Timestamp = record.Timestamp; // Date
-							// payload object from body
-							// until the planned payload goes live we will just parse hardcoded strings
-							var toParse = "VALIDATION_ERROR\n corr_id_=2f51e107f2ec1&partnerAccount=1177032420632337513&method=POST&isLoginable=true&hasPartnerRelationships=true&channel=API&operation=VALIDATE_US&type=Input Validation Error&service=PartnerApiPlatformServ&path=#/owner_info/phones/@type=='HOME'/national_number&issue=National number must be between 1 to 14 digits long"
+							localLog.metaData["Machine"] = record.values.Machine;
+							localLog.metaData["Pool"] = record.values.Pool;
+							var dataCenter = "Data-Center";
+							localLog.metaData["Data_Center"] = record.values[dataCenter];
+							// payload from body
+							if (body !== "") {
+								var logSegments = body.split("\t");
+								console.log(JSON.stringify(logSegments, null, 4));
+								var match = logSegments[0].match(/[a-zA-Z]+/);
+								logSegments[0] = logSegments[0].substring(match.index, logSegments[0].length);
+								logSegments.unshift(logSegments[0][0]);
+								logSegments[1] = logSegments[1].substring(1, logSegments[1].length);
+								logSegments[4] = parseInt(logSegments[4]);
+								var fields = ["Class", "Timestamp", "Type", "Name", "Status", "Duration"]; //, "Data"
 
-							var NUM_ERRORS = 3;
-							var errors = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"];
-							var errorFields = [
-								["corr_id_", "partnerAccount", "method", "isLoginable", "hasPartnerRelationships", "channel", "operation", "type", "service", "path"/*, "message", "exception"*/], // VALIDATION_ERROR
-								["corr_id_", "partnerAccount", "method", "isLoginable", "hasPartnerRelationships", "channel", "operation", /*"type", */"service", /*"path", */"message"], // INTERNAL_SERVICE_ERROR
-								["corr_id_", "partnerAccount", "method", "isLoginable", "hasPartnerRelationships", "channel", "operation", /*"type", */"service", /*"path", */"message", "exception"] // SERVICE_TIMEOUT
-							];
-
-							var lines = toParse.split("\n");
-
-							var errNum = 0;
-							for (; errNum < NUM_ERRORS; errNum++) {
-								if (lines[0].localeCompare(errors[errNum]) == 0) break;
-							}
-
-							if (errNum == NUM_ERRORS) {
-								console.log("Error does not match PartnerApiPlatformServ's list of errors.");
-								return;
-							}
-
-
-							for (var fieldNum in errorFields[errNum]) {
-								var start = errorFields[errNum][fieldNum] + "=";
-								var end = "&";
-								var fieldVal = lines[1].match(new RegExp(start + "(.*?)" + end));
-								if (fieldVal == null) { // edge case: if field is last
-									fieldVal = lines[1].match(new RegExp(start + "(.*)"));
+								for (var field in fields) {
+									localLog.payload[fields[field]] = logSegments[field];
 								}
-								fieldVal = fieldVal[1];
-								console.log("field: " + errorFields[errNum][fieldNum]);
-								console.log(fieldVal);
-								console.log(" ");
+								//console.log(JSON.stringify(localLog));
 
-								var fieldName = errorFields[errNum][fieldNum];
+								var payloadSegments = logSegments[6].split("&");
+								//console.log(payloadSegments);
 
-								if (fieldName.localeCompare("isLoginable") == 0 || fieldName.localeCompare("hasPartnerRelationships") == 0) {
-									localLog.payload[fieldName] = (fieldVal === "true");
+								for (var i in payloadSegments) { // skip duration field
+									var split = payloadSegments[i].split("=");
+									localLog.payload[split[0]] = split[1]
 								}
+								//console.log(JSON.stringify(localLog, null, 4));
 
-								toStore.payload[fieldName] = fieldVal;
-							}
-							console.log(JSON.stringify(toStore, null, 4));
+								var toStore = new Log(localLog);
 
-							toStore.save(function(err, result){
-								console.log("Inserted Document: " + JSON.stringify(result));
+								toStore.save(function(err, result){
+									console.log("Inserted Document: " + JSON.stringify(result));
+									asyncCallback();
+								});
+							} else {
 								asyncCallback();
-							});
+							}							
 						} else {
 							console.log("Network error in getRawLogs: " + response.statusCode);
 							asyncCallback();
