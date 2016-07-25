@@ -8,6 +8,7 @@ module.exports = function module(app) {
 	return {
 		test : function test(req, res, next) {
 			console.log("test called");
+			res.end("test called");
 		},
 
 		processCalResult : function processCalResult(req, res, next) {
@@ -81,6 +82,13 @@ module.exports = function module(app) {
     		// };
 
 		    return getDetails(req, res, next);
+    	},
+
+    	displayAll : function displayAll(req, res, next) {
+    		console.log("displayAll called!");
+    		service.displayAll(function onDisplayAll(){
+    			console.log("ALL DISPLAYED");
+    		});
     	}
 	};
 };
