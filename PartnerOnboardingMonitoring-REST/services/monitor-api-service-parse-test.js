@@ -83,7 +83,7 @@ module.exports = function module() {
 								logSegments[0] = logSegments[0].substring(match.index, logSegments[0].length);
 								logSegments.unshift(logSegments[0][0]);
 								logSegments[1] = logSegments[1].substring(1, logSegments[1].length);
-								logSegments[4] = parseInt(logSegments[4]);
+								//logSegments[4] = parseInt(logSegments[4]);
 								var fields = ["Class", "Timestamp", "Type", "Name", "Status", "Duration"]; //, "Data"
 
 								for (var field in fields) {
@@ -103,6 +103,7 @@ module.exports = function module() {
 								var toStore = new Log(localLog);
 
 								toStore.save(function(err, result){
+									if(err) console.log(err);
 									console.log("Inserted Document: " + JSON.stringify(result));
 
 									Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
