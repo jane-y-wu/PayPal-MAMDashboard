@@ -64,6 +64,8 @@ module.exports = function module() {
 					var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs");
 
 					// TODO: decompose
+					// TODO: rearrange. body !== "" check should be higher
+					// TODO: check on log level that it is a relevant log
 					request(rawLogsURL, function(error, response, body){ // use an async each for each row in the response
 						if(!error && response.statusCode == 200) {
 							console.log("raw logs successfully retrieved!");
@@ -76,7 +78,7 @@ module.exports = function module() {
 							async.each(lines, function(singleLog, async2Callback){
 								// if the line does not start with 't' or 'T' parse as normal
 								if (body !== "") {
-									var logSegments = body.split("\t");
+									var logSegments = singleLog.split("\t");
 									console.log(JSON.stringify(logSegments, null, 4));
 									var match = logSegments[0].match(/[a-zA-Z]+/);
 									logSegments[0] = logSegments[0].substring(match.index, logSegments[0].length);
@@ -100,7 +102,7 @@ module.exports = function module() {
 										}
 										//console.log(JSON.stringify(localLog));
 
-										var payloadSegments = logSegments[6].split("&");
+										var payloadSegments = logSegments[5].split("&");
 										//console.log(payloadSegments);
 
 										for (var i in payloadSegments) { // skip duration field
@@ -114,13 +116,14 @@ module.exports = function module() {
 										toStore.save(function(err, result){
 											if(err) console.log(err);
 											console.log("Inserted Document: " + JSON.stringify(result));
+											async2Callback();
 
-											Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
-												console.log("mongodb query returned!");
-												if (err) console.log(err);
-												console.log(JSON.stringify(result, null, 4));
-												async2Callback();
-											});
+											// Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
+											// 	console.log("mongodb query returned!");
+											// 	if (err) console.log(err);
+											// 	console.log(JSON.stringify(result, null, 4));
+											// 	async2Callback();
+											// });
 										});
 									} else {
 										async2Callback();
@@ -128,8 +131,9 @@ module.exports = function module() {
 								} else {
 									async2Callback();
 								}
-							});
-							asyncCallback();						
+							}, function(err) {
+								asyncCallback();
+							});					
 						} else {
 							console.log("Network error in getRawLogs: " + response.statusCode);
 							asyncCallback();
