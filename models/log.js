@@ -15,7 +15,7 @@ var logSchema = new mongoose.Schema({
 		Timestamp : {type: String},
 		Type : {type: String},
 		Status : {type: Number},
-		// Name
+		Name : {type: String},
 		// Duration
 		corr_id_: {type: String},
 		method: {type: String},
