@@ -11,6 +11,8 @@ var assert = require('assert');
 var async = require('async');
 var Log = require('../../models/log').Log;
 
+var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"];
+
 module.exports = function module() {
 
 	return {
@@ -67,27 +69,23 @@ module.exports = function module() {
 					// TODO: rearrange. body !== "" check should be higher
 					// TODO: check on log level that it is a relevant log
 					request(rawLogsURL, function(error, response, body){ // use an async each for each row in the response
-						if(!error && response.statusCode == 200) {
+						if(!error && response.statusCode == 200 && body !== "") {
 							console.log("raw logs successfully retrieved!");
-							// Parse response into array of separate lines
-							// Async for each line
-								// parse as normal
-								// create schema instance from record, add body
 
 							var lines = body.split("\r\n");
 							async.each(lines, function(singleLog, async2Callback){
-								// if the line does not start with 't' or 'T' parse as normal
-								if (body !== "") {
+								if (singleLog !== "") {
 									var logSegments = singleLog.split("\t");
 									//console.log(JSON.stringify(logSegments, null, 4));
 									var match = logSegments[0].match(/[a-zA-Z]+/);
 									logSegments[0] = logSegments[0].substring(match.index, logSegments[0].length);
 									logSegments.unshift(logSegments[0][0]);
 									logSegments[1] = logSegments[1].substring(1, logSegments[1].length);
-									//logSegments[4] = parseInt(logSegments[4]);
+									logSegments[4] = parseInt(logSegments[4]);
 									var fields = ["Class", "Timestamp", "Type", "Name", "Status", "Duration"]; //, "Data"
 
-									if (logSegments[0] !== 't' && logSegments[0] !== 'T') {
+									// if the line's name matches the array of valid names
+									if (errorNames.indexOf(logSegments[4]) >= 0) {
 										var localLog = { metaData : {}, payload: {} };
 										// rawLogsURL from rawLogsURL
 										localLog.rawLogsURL = rawLogsURL;
