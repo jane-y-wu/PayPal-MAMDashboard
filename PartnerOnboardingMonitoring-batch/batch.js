@@ -1,5 +1,6 @@
 var request = require('request'); // require request
 var schedule = require('node-schedule');
+var async = require('async');
 var jobID; // string to hold job ID
 var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT']; // expressions to search for in the CAL log
 var errorCodes = 0; // number of times CAL returns an error code
@@ -44,14 +45,18 @@ var startTime;
 var rule = new schedule.RecurrenceRule();
 rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
 
-var interval = schedule.scheduleJob(rule, run);
-//run();
+//var interval = schedule.scheduleJob(rule, run);
+run();
 
 function run() { // runs all the needed functions
 
 	endTime = getEndTime();
 	startTime = getStartTime();
-	submitRequest(startTime, endTime);
+
+	async.each(regexsField, function(searchString, callback) {
+		submitRequest(startTime, endTime, searchString);
+		}, 
+		function(err) {});
 	nullResponse = 0;
 	errorCodes = 0;	
 }
@@ -134,24 +139,26 @@ function getStartTime() {
 }
 	
 
+function submitRequest(start, end, searchString) { // submit 3 queries for 3 different errors. create list of errors to loop through
+    
+    var searchArray = [searchString];
+    console.log('submitting request : ' + searchArray);
 
-
-function submitRequest(start, end) { // submit 3 queries for 3 different errors. create list of errors to loop through
     request.post(
     	'http://calhadoop-vip-a.slc.paypal.com/regex/request',
     	{
     	json: { // example search input
-			"startTime": "2016/07/15 10:00",
-			"endTime": "2016/07/15 10:01",
+			"startTime": start,
+			"endTime": end,
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
 			"dataCenter":"all",
         	"machine":"",
         	"sampling":"100",
-        	"regexs": ["ResponseCode=200"], // put real query regex
+        	"regexs": searchArray,
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": alexC3 + ":3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": httpCallbackURL + ":3003/api/queryready/?id=$id&status=$status",
         	"email":"janwu@paypal.com"
 		}
 	},
@@ -177,7 +184,7 @@ function submitRequest(start, end) { // submit 3 queries for 3 different errors.
 					console.log(response.statusCode); // error code
 					errorCodes++; // give up after three times
 					console.log("error code trying again : " + errorCodes);
-					submitRequest(start, end); // resubmit request
+					submitRequest(start, end, searchArray); // resubmit request
 					
 				}
 				
@@ -190,7 +197,7 @@ function submitRequest(start, end) { // submit 3 queries for 3 different errors.
 
 				nullResponse++;
 				console.log("null trying again : " + nullResponse);
-				submitRequest(start, end);
+				submitRequest(start, end, searchArray);
 				
 			}
 			
