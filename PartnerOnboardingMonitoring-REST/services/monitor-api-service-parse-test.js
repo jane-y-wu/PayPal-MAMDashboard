@@ -63,7 +63,7 @@ module.exports = function module() {
 					var eventDetailURL = record.url;
 					var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs");
 
-					request(rawLogsURL, function(error, response, body){
+					request(rawLogsURL, function(error, response, body){ // use an async each for each row in the response
 						if(!error && response.statusCode == 200) {
 							console.log("raw logs successfully retrieved!");
 							// create schema instance from record, add body
