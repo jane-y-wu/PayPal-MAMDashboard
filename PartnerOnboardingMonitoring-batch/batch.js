@@ -150,7 +150,7 @@ function submitRequest(start, end) { // submit 3 queries for 3 different errors.
         	"regexs": ["ResponseCode=200"], // put real query regex
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": alexC3 + ":3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": alexC3 + ":3004/api/queryready/?id=$id&status=$status",
         	"email":"janwu@paypal.com"
 		}
 	},

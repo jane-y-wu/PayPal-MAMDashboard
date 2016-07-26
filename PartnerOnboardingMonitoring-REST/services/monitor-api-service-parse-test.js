@@ -66,8 +66,6 @@ module.exports = function module() {
 					var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs");
 
 					// TODO: decompose
-					// TODO: rearrange. body !== "" check should be higher
-					// TODO: check on log level that it is a relevant log
 					request(rawLogsURL, function(error, response, body){ // use an async each for each row in the response
 						if(!error && response.statusCode == 200 && body !== "") {
 							console.log("raw logs successfully retrieved!");
@@ -82,10 +80,10 @@ module.exports = function module() {
 									logSegments.unshift(logSegments[0][0]);
 									logSegments[1] = logSegments[1].substring(1, logSegments[1].length);
 									logSegments[4] = parseInt(logSegments[4]);
-									var fields = ["Class", "Timestamp", "Type", "Name", "Status", "Duration"]; //, "Data"
+									var fields = ["Class", "Timestamp", "Type", "Name", "Status"]; //"Duration", "Data" | Duration is only a field with 't', 'T' or 'A' TODO: account for possibility of 'A'
 
 									// if the line's name matches the array of valid names
-									if (errorNames.indexOf(logSegments[4]) >= 0) {
+									if (errorNames.indexOf(logSegments[3]) >= 0) {
 										var localLog = { metaData : {}, payload: {} };
 										// rawLogsURL from rawLogsURL
 										localLog.rawLogsURL = rawLogsURL;
@@ -105,11 +103,12 @@ module.exports = function module() {
 
 										for (var i in payloadSegments) { // skip duration field
 											var split = payloadSegments[i].split("=");
-											localLog.payload[split[0]] = split[1] // TODO: check if field is not of String type and parse accordingly
+											localLog.payload[split[0]] = split[1] // TODO: does node parse into Boolean or Number automatically based on schema?
 										}
 										//console.log(JSON.stringify(localLog, null, 4));
 
 										var toStore = new Log(localLog);
+										console.log("toStore: " + JSON.stringify(toStore, null, 4));
 
 										toStore.save(function(err, result){
 											if(err) console.log(err);
@@ -133,7 +132,7 @@ module.exports = function module() {
 								asyncCallback();
 							});					
 						} else {
-							console.log("Network error in getRawLogs: " + response.statusCode);
+							if (error) console.log("Network error in getRawLogs: " + response.statusCode);
 							asyncCallback();
 						}
 					});
