@@ -11,7 +11,7 @@ var assert = require('assert');
 var async = require('async');
 var Log = require('../../models/log').Log;
 
-var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"];
+var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT", "HEADERS_STATUS_DELIVERED"];
 
 module.exports = function module() {
 
