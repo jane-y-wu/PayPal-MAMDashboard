@@ -13,9 +13,9 @@ var logSchema = new mongoose.Schema({
 	payload: {
 		Class : {type: String},
 		Timestamp : {type: String},
-		Type : {type: String},
+		Type : {type: String}, // typically ERROR, INFO or WARNING
 		Status : {type: Number},
-		// Name
+		Name : {type: String},
 		// Duration
 		corr_id_: {type: String},
 		method: {type: String},
