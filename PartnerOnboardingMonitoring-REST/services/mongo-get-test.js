@@ -11,6 +11,7 @@ var assert = require('assert');
 var async = require('async');
 var Log = require('../../models/log').Log;
 
+mongoose.Promise = global.Promise;
 mongoose.connect(url);
 db.on('error', console.error);
 db.once('open', function() {
