@@ -4,9 +4,9 @@ var sherlockEndpoint = "http://calhadoop-vip-a.slc.paypal.com/regex/request/"; /
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 var mongodb = require('mongodb');
-var url = 'mongodb://partner-self-service-6103.ccg21.dev.paypalcorp.com:12345/';
-//var url = 'mongodb://localhost:12345/';
-var MongoClient = mongodb.MongoClient;
+var url = 'mongodb://root:H9yu7Xn+WD!Ru6Dc_thvxtU7c7AKDuHy292x@10.25.39.2:27017';
+mongoose.Promise = global.Promise;
+//var url = 'mongodb://partner-self-service-6103.ccg21.dev.paypalcorp.com:12345/';
 var assert = require('assert');
 var async = require('async');
 var Log = require('../../models/log').Log;
@@ -103,7 +103,11 @@ module.exports = function module() {
 
 										for (var i in payloadSegments) { // skip duration field
 											var split = payloadSegments[i].split("=");
-											localLog.payload[split[0]] = split[1] // TODO: does node parse into Boolean or Number automatically based on schema?
+											if (split[0] === "Status") {
+												localLog.payload[split[0]] = parseInt(split[1]);
+											} else {
+												localLog.payload[split[0]] = split[1]; // TODO: does node parse into Boolean or Number automatically based on schema?
+											}
 										}
 										//console.log(JSON.stringify(localLog, null, 4));
 
