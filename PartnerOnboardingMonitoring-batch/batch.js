@@ -53,10 +53,12 @@ function run() { // runs all the needed functions
 	endTime = getEndTime();
 	startTime = getStartTime();
 
-	async.each(regexsField, function(searchString, callback) {
+	/*async.each(regexsField, function(searchString, callback) {
 		submitRequest(startTime, endTime, searchString);
 		}, 
-		function(err) {});
+		function(err) {}); */
+	submitRequest(startTime, endTime);
+
 	nullResponse = 0;
 	errorCodes = 0;	
 }
@@ -139,10 +141,10 @@ function getStartTime() {
 }
 	
 
-function submitRequest(start, end, searchString) { // submit 3 queries for 3 different errors. create list of errors to loop through
+function submitRequest(start, end /*, searchString*/) { // submit 3 queries for 3 different errors. create list of errors to loop through
     
-    var searchArray = [searchString];
-    console.log('submitting request : ' + searchArray);
+    /* var searchArray = [searchString];
+    console.log('submitting request : ' + searchArray); */
 
     request.post(
     	'http://calhadoop-vip-a.slc.paypal.com/regex/request',
@@ -155,7 +157,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
 			"dataCenter":"all",
         	"machine":"",
         	"sampling":"100",
-        	"regexs": searchArray,
+        	"regexs": ["ResponseCode=200"], /*searchArray,*/
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
         	"httpCallback": httpCallbackURL + ":3003/api/queryready/?id=$id&status=$status",
@@ -184,7 +186,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
 					console.log(response.statusCode); // error code
 					errorCodes++; // give up after three times
 					console.log("error code trying again : " + errorCodes);
-					submitRequest(start, end, searchArray); // resubmit request
+					submitRequest(start, end /*, searchArray*/); // resubmit request
 					
 				}
 				
@@ -197,7 +199,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
 
 				nullResponse++;
 				console.log("null trying again : " + nullResponse);
-				submitRequest(start, end, searchArray);
+				submitRequest(start, end /*, searchArray */);
 				
 			}
 			
