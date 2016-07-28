@@ -93,8 +93,20 @@ module.exports = function module() {
 										var dataCenter = "Data-Center";
 										localLog.metaData["Data_Center"] = record.values[dataCenter];
 
+										var dateMatch = rawLogsURL.match("datetime=(.*) ");
+										var calendarDate = dateMatch[1];
+
 										for (var field in fields) {
-											localLog.payload[fields[field]] = logSegments[field];
+											switch(fields[field]) {
+												case "Timestamp":
+													var time = logSegments[field];
+													var fullDate = calendarDate + 'T' + time.substring(0, 8);
+													var fullDateDashes = fullDate.replace(/\//g, "-");
+													localLog.payload["Full_Date"] = new Date(fullDateDashes);
+													break;
+												default:
+													localLog.payload[fields[field]] = logSegments[field];
+											}
 										}
 										//console.log(JSON.stringify(localLog));
 
@@ -103,10 +115,12 @@ module.exports = function module() {
 
 										for (var i in payloadSegments) { // skip duration field
 											var split = payloadSegments[i].split("=");
-											if (split[0] === "Status") {
-												localLog.payload[split[0]] = parseInt(split[1]);
-											} else {
-												localLog.payload[split[0]] = split[1]; // TODO: does node parse into Boolean or Number automatically based on schema?
+											switch(split[0]) {
+												case "Status":
+													localLog.payload[split[0]] = parseInt(split[1]);
+													break;
+												default:
+												localLog.payload[split[0]] = split[1];
 											}
 										}
 										//console.log(JSON.stringify(localLog, null, 4));
@@ -134,13 +148,13 @@ module.exports = function module() {
 								}
 							}, function(err) {
 								asyncCallback();
-							});					
+							});
 						} else {
-							if (error) console.log("Network error in getRawLogs: " + response.statusCode);
+							//if (error) console.log("Network error in getRawLogs: " + response.statusCode); //TODO debug the errors being received
 							asyncCallback();
 						}
 					});
-				
+
 				}, function(err){
 					db.close();
 					callback();
