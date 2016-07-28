@@ -99,7 +99,10 @@ module.exports = function module() {
 										for (var field in fields) {
 											switch(fields[field]) {
 												case "Timestamp":
-													localLog.payload["Full_Date"] = /*new Date(*/"<" + calendarDate + logSegments["Timestamp"] + ">";
+													var time = logSegments[field];
+													var fullDate = calendarDate + 'T' + time.substring(0, 8);
+													var fullDateDashes = fullDate.replace(/\//g, "-");
+													localLog.payload["Full_Date"] = new Date(fullDateDashes);
 													break;
 												default:
 													localLog.payload[fields[field]] = logSegments[field];
