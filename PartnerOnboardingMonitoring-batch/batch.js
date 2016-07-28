@@ -2,9 +2,9 @@ var request = require('request'); // require request
 var schedule = require('node-schedule');
 var async = require('async');
 var jobID; // string to hold job ID
-var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT']; // expressions to search for in the CAL log
+var regexsField = [/*'INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT',*/ 'HEADERS_STATUS_DELIVERED']; // expressions to search for in the CAL log
 var errorCodes = 0; // number of times CAL returns an error code
-var nullResponse = 0; // number of times the response is null 
+var nullResponse = 0; // number of times the response is null
 var alexC3 = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com'; // for testing purposes
 var madhavC3 = 'http://partner-onboarding-monitor-9745.ccg21.dev.paypalcorp.com';
 var httpCallbackURL;
@@ -19,7 +19,7 @@ else if (option == 'm') {
 }
 else { // default
     httpCallbackURL = madhavC3;
-} 
+}
 
 // TEST
 console.log(httpCallbackURL);
@@ -55,10 +55,10 @@ function run() { // runs all the needed functions
 
 	async.each(regexsField, function(searchString, callback) {
 		submitRequest(startTime, endTime, searchString);
-		}, 
+		},
 		function(err) {});
 	nullResponse = 0;
-	errorCodes = 0;	
+	errorCodes = 0;
 }
 
 
@@ -87,7 +87,7 @@ function getStartTime() {
 
 	// MONTH
 	if (currentDate == 1 && currentHour == 0) { // first day of a month
-		if (currentMonth == 1) { // january	
+		if (currentMonth == 1) { // january
 			startMonth = 12;
 		}
 
@@ -95,7 +95,7 @@ function getStartTime() {
 			startMonth = currentMonth - 1;
 		}
 	}
-	
+
 	else {
 		startMonth = currentMonth;
 	}
@@ -122,8 +122,8 @@ function getStartTime() {
 	}
 	else {
 		startDate = currentDate;
-	}	
-	
+	}
+
 	// HOUR
 	if (currentHour == 0) { // midnight
 		startHour = 23;
@@ -137,15 +137,16 @@ function getStartTime() {
 
 	return time;
 }
-	
+
 
 function submitRequest(start, end, searchString) { // submit 3 queries for 3 different errors. create list of errors to loop through
-    
+
     var searchArray = [searchString];
     console.log('submitting request : ' + searchArray);
 
     request.post(
     	'http://calhadoop-vip-a.slc.paypal.com/regex/request',
+			//'http://mscalhadoop.qa.paypal.com/regex/request',
     	{
     	json: { // example search input
 			"startTime": start,
@@ -158,7 +159,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
         	"regexs": searchArray,
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": httpCallbackURL + ":3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": httpCallbackURL + ":3004/api/queryready/?id=$id&status=$status",
         	"email":"janwu@paypal.com"
 		}
 	},
@@ -175,7 +176,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
 
 				console.log(startTime);
 				console.log(endTime);
-				
+
 			}
 
             else {
@@ -185,25 +186,24 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
 					errorCodes++; // give up after three times
 					console.log("error code trying again : " + errorCodes);
 					submitRequest(start, end, searchArray); // resubmit request
-					
+
 				}
-				
+
 			}
 		}
 
 		else { // if response is null
-			
+
 			if (nullResponse < 3 ) { // same as error codes
 
 				nullResponse++;
 				console.log("null trying again : " + nullResponse);
 				submitRequest(start, end, searchArray);
-				
+
 			}
-			
+
 
 		}
 	}
 
 )};
-

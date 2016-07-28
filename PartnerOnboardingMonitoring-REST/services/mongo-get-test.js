@@ -15,18 +15,25 @@ mongoose.connect(url);
 db.on('error', console.error);
 db.once('open', function() {
 
-	var toStore = new Log({rawLogsURL : "www.fakeurl.com"});
-	toStore.save(function(err, result){
-		if(err) console.log(err);
-		console.log("Inserted Document: " + JSON.stringify(result));
-
-		Log.findOne({ rawLogsURL : "www.fakeurl.com"}, function (err, result) {
-			console.log("mongodb query returned!");
-			if (err) console.log(err);
-			console.log(JSON.stringify(result, null, 4));
-			db.close();
-		});
-
+	Log.findOne({ 'payload.Type' : 'AeroHC'}, function (err, result) {
+		console.log("mongodb query returned!");
+		if (err) console.log(err);
+		console.log(JSON.stringify(result, null, 4));
+		db.close();
 	});
+
+	// var toStore = new Log({rawLogsURL : "www.fakeurl.com"});
+	// toStore.save(function(err, result){
+	// 	if(err) console.log(err);
+	// 	console.log("Inserted Document: " + JSON.stringify(result));
+
+	// 	Log.findOne({ rawLogsURL : "www.fakeurl.com"}, function (err, result) {
+	// 		console.log("mongodb query returned!");
+	// 		if (err) console.log(err);
+	// 		console.log(JSON.stringify(result, null, 4));
+	// 		db.close();
+	// 	});
+
+	// });
 
 });

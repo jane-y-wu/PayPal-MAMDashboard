@@ -93,6 +93,8 @@ module.exports = function module() {
 										var dataCenter = "Data-Center";
 										localLog.metaData["Data_Center"] = record.values[dataCenter];
 
+										localLog.payload['Date'] = rawLogsURL.match("datetime(.*) ");
+
 										for (var field in fields) {
 											localLog.payload[fields[field]] = logSegments[field];
 										}
@@ -134,13 +136,13 @@ module.exports = function module() {
 								}
 							}, function(err) {
 								asyncCallback();
-							});					
+							});
 						} else {
-							if (error) console.log("Network error in getRawLogs: " + response.statusCode);
+							//if (error) console.log("Network error in getRawLogs: " + response.statusCode); //TODO debug the errors being received
 							asyncCallback();
 						}
 					});
-				
+
 				}, function(err){
 					db.close();
 					callback();
