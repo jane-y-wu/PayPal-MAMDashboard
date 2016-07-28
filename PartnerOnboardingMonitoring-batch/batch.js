@@ -159,7 +159,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
         	"regexs": searchArray,
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": httpCallbackURL + ":3004/api/queryready/?id=$id&status=$status",
+        	"httpCallback": httpCallbackURL + ":3003/api/queryready/?id=$id&status=$status",
         	"email":"janwu@paypal.com"
 		}
 	},

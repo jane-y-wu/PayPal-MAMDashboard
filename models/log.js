@@ -12,8 +12,8 @@ var logSchema = new mongoose.Schema({
 	},
 	payload: {
 		Class : {type: String},
-		Timestamp : {type: String},
-		Date : {type: String},
+		//Timestamp : {type: String},
+		Full_Date : {type: String},
 		Type : {type: String}, // typically ERROR, INFO or WARNING
 		Status : {type: Number},
 		Name : {type: String},

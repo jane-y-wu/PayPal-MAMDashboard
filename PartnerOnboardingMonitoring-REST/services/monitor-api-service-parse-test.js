@@ -93,10 +93,17 @@ module.exports = function module() {
 										var dataCenter = "Data-Center";
 										localLog.metaData["Data_Center"] = record.values[dataCenter];
 
-										localLog.payload['Date'] = rawLogsURL.match("datetime(.*) ");
+										var dateMatch = rawLogsURL.match("datetime=(.*) ");
+										var calendarDate = dateMatch[1];
 
 										for (var field in fields) {
-											localLog.payload[fields[field]] = logSegments[field];
+											switch(fields[field]) {
+												case "Timestamp":
+													localLog.payload["Full_Date"] = /*new Date(*/"<" + calendarDate + logSegments["Timestamp"] + ">";
+													break;
+												default:
+													localLog.payload[fields[field]] = logSegments[field];
+											}
 										}
 										//console.log(JSON.stringify(localLog));
 
@@ -105,10 +112,12 @@ module.exports = function module() {
 
 										for (var i in payloadSegments) { // skip duration field
 											var split = payloadSegments[i].split("=");
-											if (split[0] === "Status") {
-												localLog.payload[split[0]] = parseInt(split[1]);
-											} else {
-												localLog.payload[split[0]] = split[1]; // TODO: does node parse into Boolean or Number automatically based on schema?
+											switch(split[0]) {
+												case "Status":
+													localLog.payload[split[0]] = parseInt(split[1]);
+													break;
+												default:
+												localLog.payload[split[0]] = split[1];
 											}
 										}
 										//console.log(JSON.stringify(localLog, null, 4));
