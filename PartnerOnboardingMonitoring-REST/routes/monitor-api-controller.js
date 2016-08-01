@@ -86,23 +86,6 @@ module.exports = function module(app) {
 	    			console.log("Query with job id: " + req.query.id + " succeeded.");
 	    			res.end();
 
-
-					var dateTest = new Date(2016, 9, 1);
-
-					
-					var error;
-					var errorType = req.query.error;
-					if (errorType == 1) {
-						error = 'INTERNAL_SERVICE_ERROR';
-					}
-					else if (errorType == 2) {
-						error = 'SERVICE_TIMEOUT';
-					}
-					else {
-						error = 'VALIDATION_ERROR';
-					}
-
-					//aggregation.storeCount(3, error, dateTest);
 			    	service.getDetails(req.query.id, function onGetDetails(details) {
 			      		getRawLogs(details);
 			    	});
@@ -111,9 +94,10 @@ module.exports = function module(app) {
 
 		    var getRawLogs = function getRawLogs(details) {
 	    		console.log("getRawLogs called!");
-	    		service.getRawLogs(details, function onGetRawLogs(/*details*/) {
+	    		service.getRawLogs(details, function onGetRawLogs(/*details*/ errorNum, errorType, d, db) {
 	    			//insertMongo(metadata, payload);
-
+				console.log("ABOUT TO AGGREGATE WOW");
+				aggregation.storeCount(errorNum, errorType, d, db);
 	    			console.log("COMPLETE");
 
 	    		});

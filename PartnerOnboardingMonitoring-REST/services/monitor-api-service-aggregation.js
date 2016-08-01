@@ -5,15 +5,15 @@ var WeeklyCount = require('../../models/aggregationSchema').WeeklyCount;
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 var mongodb = require('mongodb');
-//var url = 'mongodb://root:H9yu7Xn+WD!Ru6Dc_thvxtU7c7AKDuHy292x@10.25.39.2:27017';
-var url = 'localhost:27017';
+var url = 'mongodb://root:H9yu7Xn+WD!Ru6Dc_thvxtU7c7AKDuHy292x@10.25.39.2:27017';
+//var url = 'localhost:27017';
 mongoose.Promise = global.Promise;
 
 module.exports = function module() {
 
 	return {
 
-		storeCount : function storeCount(errorNum, errorName, time) {
+		storeCount : function storeCount(errorNum, errorName, time, database) {
 
 			var getWeekNumber = function getWeekNumber(d) {
 				var d = new Date(+d);
@@ -23,9 +23,10 @@ module.exports = function module() {
 			}
 
 			console.log("how about here then");
-			mongoose.connect(url);
-			db.on('error', console.error);
-			db.once('open', function() {
+			db = database;
+			//mongoose.connect(url);
+			//db.on('error', console.error);
+			//db.once('open', function() {
 
 				console.log("Hello please come into store count function");
 
@@ -68,7 +69,13 @@ module.exports = function module() {
 						DailyCount.update({date : time, errorType : errorName}, {$inc: {errorCount: errorNum}}, function(err, results) {
 							console.log("updating");
 							console.log(results);
-							db.close();
+							
+							DailyCount.find({date : time, errorType : errorName}, function(err, results) {
+								console.log(results);
+								db.close();
+							});
+
+							//db.close();
 						})
 
 					}
@@ -101,14 +108,20 @@ module.exports = function module() {
 						WeeklyCount.update({weekNumber : weekNum, errorType : errorName}, {$inc: {errorCount: errorNum}}, function(err, results) {
 							console.log("updating");
 							console.log(results);
-							db.close();
+
+							WeeklyCount.find({date : time, errorType : errorName}, function(err, results) {
+								console.log(results);
+								db.close();
+							});
+
+							//db.close();
 						})
 
 					}
 				})
 	
 
-			});
+			//});
 
 		}
 	}

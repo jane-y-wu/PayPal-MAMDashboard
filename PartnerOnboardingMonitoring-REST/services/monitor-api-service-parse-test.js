@@ -4,9 +4,9 @@ var sherlockEndpoint = "http://calhadoop-vip-a.slc.paypal.com/regex/request/"; /
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 var mongodb = require('mongodb');
-//var url = 'mongodb://root:H9yu7Xn+WD!Ru6Dc_thvxtU7c7AKDuHy292x@10.25.39.2:27017';
-var url = 'localhost:27017';
-mongoose.Promise = global.Promise;
+var url = 'mongodb://root:H9yu7Xn+WD!Ru6Dc_thvxtU7c7AKDuHy292x@10.25.39.2:27017';
+//var url = 'localhost:27017';
+mongoose.Promise = global.promise;
 //var url = 'mongodb://partner-self-service-6103.ccg21.dev.paypalcorp.com:12345/';
 var assert = require('assert');
 var async = require('async');
@@ -160,9 +160,10 @@ module.exports = function module() {
 								}
 							}, function(err) {
 
-								console.log("HELLO ARE YOU HERE WOWOW");
-								aggregation.storeCount(numErrors, errorType, date);
 								asyncCallback();
+								console.log("but hello are you HERE tho");
+								console.log(numErrors + " " + errorType + " " + date + " " + db);
+								callback(numErrors, errorType, date, db);
 							});
 						} else {
 							//if (error) console.log("Network error in getRawLogs: " + response.statusCode); //TODO debug the errors being received
@@ -172,7 +173,6 @@ module.exports = function module() {
 
 				}, function(err){
 					db.close();
-					callback();
 				});
 			});
 		},
