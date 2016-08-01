@@ -13,7 +13,7 @@ module.exports = function module() {
 
 	return {
 
-		storeCount : function storeCount(errorNum, errorName, time, database) {
+		storeCount : function storeCount(errorNum, errorName, time) {
 
 			var getWeekNumber = function getWeekNumber(d) {
 				var d = new Date(+d);
@@ -23,10 +23,9 @@ module.exports = function module() {
 			}
 
 			console.log("how about here then");
-			db = database;
-			//mongoose.connect(url);
-			//db.on('error', console.error);
-			//db.once('open', function() {
+			mongoose.connect(url);
+			db.on('error', console.error);
+			db.once('open', function() {
 
 				console.log("Hello please come into store count function");
 
@@ -121,7 +120,7 @@ module.exports = function module() {
 				})
 	
 
-			//});
+			});
 
 		}
 	}
