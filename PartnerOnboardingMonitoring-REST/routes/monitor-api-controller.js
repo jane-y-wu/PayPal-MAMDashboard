@@ -3,7 +3,7 @@
 module.exports = function module(app) {
 
 	// var service = require('../services/monitor-api-service.js')();
-	var service = require('../services/monitor-api-service-parse-test.js')();
+	var service = require('../services/monitor-api-service.js')();
 
 	return {
 		test : function test(req, res, next) {
@@ -13,7 +13,7 @@ module.exports = function module(app) {
 
 		processCalResult : function processCalResult(req, res, next) {
 			console.log("processCalResult called with " + req.params.id)
-			
+
 			service.processCalResult(req.params.id,
 					function onProcessCalResult(err, result) {
 						if (!err) {
@@ -53,7 +53,7 @@ module.exports = function module(app) {
 
     	getDetails : function getDetailsClosure(req, res, next) {
     		// This is a closure, which allows you to pass in any of these functions in a callback when calling a function in
-    		// monitor-api-services. 
+    		// monitor-api-services.
 
 	    	var getDetails = function(req, res, next) { // Starts here. Calls service.getDetails with onGetDetails as a callback
 	    		if (req.query.status == "SUBMITTED") {
@@ -66,29 +66,31 @@ module.exports = function module(app) {
 			      		getRawLogs(details);
 			    	});
 			    }
-		    }
+		    };
 
 		    var getRawLogs = function getRawLogs(details) {
 	    		console.log("getRawLogs called!");
 	    		service.getRawLogs(details, function onGetRawLogs(/*details*/) {
-	    			//insertMongo(metadata, payload);
 	    			console.log("COMPLETE");
 	    		});
 	    	};
 
-	    	// var insertMongo = function(record, payload) {
-    		// 	console.log("insertMongo called!");
-    		// 	service.insertMongo(record, payload);
-    		// };
-
 		    return getDetails(req, res, next);
     	},
 
-    	displayAll : function displayAll(req, res, next) {
-    		console.log("displayAll called!");
-    		service.displayAll(function onDisplayAll(){
-    			console.log("ALL DISPLAYED");
-    		});
+    	returnLogs : function returnLogs(req, res, next) {
+    		console.log("returnLogs called!");
+
+				console.log(req.query.startDate);
+				var startDate = new Date(req.query.startDate);
+				startDate.setHours(startDate.getHours() + 7); // hacky way of doing it TODO fix so time zone isn't hardcoded in
+				console.log("startDate: " + startDate);
+				var endDate = new Date(req.query.endDate);
+				endDate.setHours(endDate.getHours() + 7);
+				console.log("endDate: " + endDate);
+				service.returnLogs(startDate, endDate, function(logs){
+					res.end(JSON.stringify(logs, null, 4));
+				});
     	}
 	};
 };
