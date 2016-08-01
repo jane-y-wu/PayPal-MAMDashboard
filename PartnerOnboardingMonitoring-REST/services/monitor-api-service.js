@@ -195,9 +195,10 @@ module.exports = function module() {
 								}
 							}, function(err) {
 
-								console.log("HELLO ARE YOU HERE WOWOW");
-								aggregation.storeCount(numErrors, errorType, date);
 								asyncCallback();
+								console.log("but hello are you HERE tho");
+								console.log(numErrors + " " + errorType + " " + date + " " + db);
+								callback(numErrors, errorType, date, db);
 							});
 						} else {
 							//if (error) console.log("Network error in getRawLogs: " + response.statusCode); //TODO debug the errors being received
@@ -207,7 +208,6 @@ module.exports = function module() {
 
 				}, function(err){
 					db.close();
-					callback();
 				});
 			});
 		},
