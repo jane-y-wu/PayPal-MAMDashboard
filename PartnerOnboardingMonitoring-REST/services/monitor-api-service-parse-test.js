@@ -4,12 +4,14 @@ var sherlockEndpoint = "http://calhadoop-vip-a.slc.paypal.com/regex/request/"; /
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 var mongodb = require('mongodb');
-var url = 'mongodb://root:H9yu7Xn+WD!Ru6Dc_thvxtU7c7AKDuHy292x@10.25.39.2:27017';
+//var url = 'mongodb://root:H9yu7Xn+WD!Ru6Dc_thvxtU7c7AKDuHy292x@10.25.39.2:27017';
+var url = 'localhost:27017';
 mongoose.Promise = global.Promise;
 //var url = 'mongodb://partner-self-service-6103.ccg21.dev.paypalcorp.com:12345/';
 var assert = require('assert');
 var async = require('async');
 var Log = require('../../models/log').Log;
+var aggregation = require('../services/monitor-api-service-aggregation.js')();
 
 var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT", "HEADERS_STATUS_DELIVERED"];
 
@@ -60,6 +62,10 @@ module.exports = function module() {
 			db.on('error', console.error);
 			db.once('open', function() {
 
+				var numErrors = details.records.length;
+				var errorType;
+				var date;
+
 				async.each(details.records, function(record, asyncCallback){
 
 					var eventDetailURL = record.url;
@@ -103,6 +109,7 @@ module.exports = function module() {
 													var fullDate = calendarDate + 'T' + time.substring(0, 8);
 													var fullDateDashes = fullDate.replace(/\//g, "-");
 													localLog.payload["Full_Date"] = new Date(fullDateDashes);
+													date = localLog.payload["Full_Date"];
 													break;
 												default:
 													localLog.payload[fields[field]] = logSegments[field];
@@ -124,6 +131,7 @@ module.exports = function module() {
 											}
 										}
 										//console.log(JSON.stringify(localLog, null, 4));
+										var errorType = localLog.payload["Type"];
 
 										var toStore = new Log(localLog);
 										console.log("toStore: " + JSON.stringify(toStore, null, 4));
@@ -138,8 +146,12 @@ module.exports = function module() {
 											// 	if (err) console.log(err);
 											// 	console.log(JSON.stringify(result, null, 4));
 											// 	async2Callback();
-											// });
+											// });e
 										});
+
+										
+
+
 									} else {
 										async2Callback();
 									}
@@ -147,6 +159,9 @@ module.exports = function module() {
 									async2Callback();
 								}
 							}, function(err) {
+
+								console.log("HELLO ARE YOU HERE WOWOW");
+								aggregation.storeCount(numErrors, errorType, date);
 								asyncCallback();
 							});
 						} else {
@@ -190,5 +205,7 @@ module.exports = function module() {
 				callback();
 			});
 		}
+		
+
 	};
 };

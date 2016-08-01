@@ -161,7 +161,7 @@ function submitRequest(start, end /*, searchString*/) { // submit 3 queries for 
         	"regexs": ["ResponseCode=200"], /*searchArray,*/
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": httpCallbackURL + ":3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": "192.168.0.105" + ":3003/api/queryready/?id=$id&status=$status",
         	"email":"janwu@paypal.com"
 		}
 	},

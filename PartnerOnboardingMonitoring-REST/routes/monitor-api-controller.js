@@ -1,14 +1,36 @@
 'use strict';
 
+
+
 module.exports = function module(app) {
 
 	// var service = require('../services/monitor-api-service.js')();
 	var service = require('../services/monitor-api-service-parse-test.js')();
+	var aggregation = require('../services/monitor-api-service-aggregation.js')();
 
 	return {
 		test : function test(req, res, next) {
 			console.log("test called");
 			res.end("test called");
+
+
+			var dateTest = new Date(2016, 9, 1);
+
+			
+			var error;
+			var errorType = req.query.error;
+			if (errorType == 1) {
+				error = 'INTERNAL_SERVICE_ERROR';
+			}
+			else if (errorType == 2) {
+				error = 'SERVICE_TIMEOUT';
+			}
+			else {
+				error = 'VALIDATION_ERROR';
+			}
+
+			aggregation.storeCount(3, error, dateTest);
+
 		},
 
 		processCalResult : function processCalResult(req, res, next) {
@@ -54,6 +76,7 @@ module.exports = function module(app) {
     	getDetails : function getDetailsClosure(req, res, next) {
     		// This is a closure, which allows you to pass in any of these functions in a callback when calling a function in
     		// monitor-api-services. 
+    		console.log("in get details");
 
 	    	var getDetails = function(req, res, next) { // Starts here. Calls service.getDetails with onGetDetails as a callback
 	    		if (req.query.status == "SUBMITTED") {
@@ -62,6 +85,24 @@ module.exports = function module(app) {
 	    		} else if (req.query.status == "SUCCEEDED") {
 	    			console.log("Query with job id: " + req.query.id + " succeeded.");
 	    			res.end();
+
+
+					var dateTest = new Date(2016, 9, 1);
+
+					
+					var error;
+					var errorType = req.query.error;
+					if (errorType == 1) {
+						error = 'INTERNAL_SERVICE_ERROR';
+					}
+					else if (errorType == 2) {
+						error = 'SERVICE_TIMEOUT';
+					}
+					else {
+						error = 'VALIDATION_ERROR';
+					}
+
+					//aggregation.storeCount(3, error, dateTest);
 			    	service.getDetails(req.query.id, function onGetDetails(details) {
 			      		getRawLogs(details);
 			    	});
@@ -72,7 +113,9 @@ module.exports = function module(app) {
 	    		console.log("getRawLogs called!");
 	    		service.getRawLogs(details, function onGetRawLogs(/*details*/) {
 	    			//insertMongo(metadata, payload);
+
 	    			console.log("COMPLETE");
+
 	    		});
 	    	};
 
