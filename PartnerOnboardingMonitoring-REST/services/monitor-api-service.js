@@ -93,6 +93,10 @@ module.exports = function module() {
 			db.on('error', console.error);
 			db.once('open', function() {
 
+				var numErrors = details.records.length;
+				var errorType;
+				var date;
+
 				async.each(details.records, function(record, asyncCallback){
 
 					var eventDetailURL = record.url;
@@ -136,6 +140,7 @@ module.exports = function module() {
 													var fullDate = calendarDate + 'T' + time.substring(0, 8);
 													var fullDateDashes = fullDate.replace(/\//g, "-");
 													localLog.payload["Full_Date"] = new Date(fullDateDashes);
+													date = localLog.payload["Full_Date"];
 													break;
 												default:
 													localLog.payload[fields[field]] = logSegments[field];
@@ -161,6 +166,7 @@ module.exports = function module() {
 											}
 										}
 										//console.log(JSON.stringify(localLog, null, 4));
+										var errorType = localLog.payload["Type"];
 
 										var toStore = new Log(localLog);
 										console.log("toStore: " + JSON.stringify(toStore, null, 4));
@@ -175,8 +181,12 @@ module.exports = function module() {
 											// 	if (err) console.log(err);
 											// 	console.log(JSON.stringify(result, null, 4));
 											// 	async2Callback();
-											// });
+											// });e
 										});
+
+										
+
+
 									} else {
 										async2Callback();
 									}
@@ -184,6 +194,9 @@ module.exports = function module() {
 									async2Callback();
 								}
 							}, function(err) {
+
+								console.log("HELLO ARE YOU HERE WOWOW");
+								aggregation.storeCount(numErrors, errorType, date);
 								asyncCallback();
 							});
 						} else {
@@ -219,5 +232,7 @@ module.exports = function module() {
 
 			});
 		}
+		
+
 	};
 };
