@@ -151,11 +151,13 @@ function submitRequest(start, end /*, searchString*/) { // submit 3 queries for 
 			//'http://mscalhadoop.qa.paypal.com/regex/request',
     	{
     	json: { // example search input
-			"startTime": start,
-			"endTime": end,
+			// "startTime": start,
+			// "endTime": end,
+			"startTime": "2016/08/02 10:00",
+			"endTime": "2016/08/02 10:01",
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
-			"dataCenter":"all",
+			"dataCenter":"dcg11",
         	"machine":"",
         	"sampling":"100",
         	"regexs": ["ResponseCode=200"], /*searchArray,*/

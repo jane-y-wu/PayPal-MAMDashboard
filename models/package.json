@@ -1,6 +1,6 @@
 {
-  "name": "PartnerOnboardingMonitoring-REST",
+  "name": "log",
   "dependencies": {
-    "mongoose": "4.5.7"
+    "mongoose": "4.5.8"
   }
 }
