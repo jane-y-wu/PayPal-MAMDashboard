@@ -1,10 +1,9 @@
 'use strict'
 
 var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
 mongoose.Promise = require('bluebird');
 
-var logSchema = new Schema({
+var logSchema = new mongoose.Schema({
 	rawLogsURL : String,
 	// eventDetailURL: String,
 	metaData : { // not all of this is necessary. is this just an echo of the search parameters?
@@ -37,12 +36,7 @@ var logSchema = new Schema({
 	}
 });
 
-var simpleLogSchema = new Schema({
-	rawLogsURL : String
-});
-
 var Log = mongoose.model('Log', logSchema);
-var SimpleLog = mongoose.model('SimpleLog', simpleLogSchema);
 
 module.exports = {
 	Log : Log,
