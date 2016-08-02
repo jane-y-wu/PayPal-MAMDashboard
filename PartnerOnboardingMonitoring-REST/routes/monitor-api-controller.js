@@ -88,9 +88,26 @@ module.exports = function module(app) {
 				var endDate = new Date(req.query.endDate);
 				endDate.setHours(endDate.getHours() + 7);
 				console.log("endDate: " + endDate);
-				service.returnLogs(startDate, endDate, function(logs){
+
+				service.returnLogs(startDate, endDate, [], function(logs){
 					res.end(JSON.stringify(logs, null, 4));
 				});
-    	}
+    	},
+
+			returnLogsFiltered : function returnLogsFiltered(req, res, next) {
+				console.log("returnLogsFiltered called!");
+
+				// console.log(req.query.startDate);
+				// var startDate = new Date(req.query.startDate);
+				// startDate.setHours(startDate.getHours() + 7); // hacky way of doing it TODO fix so time zone isn't hardcoded in
+				// console.log("startDate: " + startDate);
+				// var endDate = new Date(req.query.endDate);
+				// endDate.setHours(endDate.getHours() + 7);
+				// console.log("endDate: " + endDate);
+
+				service.returnLogs(startDate, endDate, req.body.filters, function(logs){
+					res.end(JSON.stringify(logs, null, 4));
+				});
+			}
 	};
 };
