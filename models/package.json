@@ -1,0 +1,6 @@
+{
+  "name": "log",
+  "dependencies": {
+    "mongoose": "4.5.8"
+  }
+}

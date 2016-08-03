@@ -1,0 +1,8 @@
+{
+  "name": "PartnerOnboardingMonitoring-batch",
+  "dependencies": {
+    "request" : "2.74.0",
+    "node-schedule" : "1.1.1",
+    "async" : "2.0.1"
+  }
+}
