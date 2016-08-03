@@ -196,9 +196,7 @@ module.exports = function module() {
 							}, function(err) {
 
 								asyncCallback();
-								console.log("but hello are you HERE tho");
-								console.log(numErrors + " " + errorType + " " + date + " " + db);
-								callback(numErrors, errorType, date, db);
+					
 							});
 						} else {
 							//if (error) console.log("Network error in getRawLogs: " + response.statusCode); //TODO debug the errors being received
@@ -206,8 +204,17 @@ module.exports = function module() {
 						}
 					});
 
-				}, function(err){
+				}, function(err, numErrors, errorType, date){
 					db.close();
+
+                    //callback();
+                    db.once('close', function() {
+                    	console.log("but hello are you HERE tho");
+						console.log(numErrors + " " + errorType + " " + date);
+						callback(numErrors, errorType, date);
+
+                    })
+                    
 				});
 			});
 		},

@@ -5,7 +5,7 @@
 module.exports = function module(app) {
 
 	// var service = require('../services/monitor-api-service.js')();
-	var service = require('../services/monitor-api-service-parse-test.js')();
+	var service = require('../services/monitor-api-service.js')();
 	var aggregation = require('../services/monitor-api-service-aggregation.js')();
 
 	return {
@@ -93,10 +93,10 @@ module.exports = function module(app) {
 
 		    var getRawLogs = function getRawLogs(details) {
 	    		console.log("getRawLogs called!");
-	    		service.getRawLogs(details, function onGetRawLogs(/*details*/ errorNum, errorType, d, db) {
+	    		service.getRawLogs(details, function onGetRawLogs(/*details*/ errorNum, errorType, d) {
 	    			//insertMongo(metadata, payload);
 				console.log("ABOUT TO AGGREGATE WOW");
-				aggregation.storeCount(errorNum, errorType, d, db);
+				aggregation.storeCount(errorNum, errorType, d);
 	    			console.log("COMPLETE");
 
 	    		});
