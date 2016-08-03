@@ -1,14 +1,11 @@
 'use strict'
 
-var DailyCount = require('../../models/aggregationSchema').DailyCount;
-var WeeklyCount = require('../../models/aggregationSchema').WeeklyCount;
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 var mongodb = require('mongodb');
 var url = 'mongodb://root:H9yu7Xn+WD!Ru6Dc_thvxtU7c7AKDuHy292x@10.25.39.2:27017';
 //var url = 'localhost:27017';
 mongoose.Promise = global.Promise;
-
 
 var dailyCount = new mongoose.Schema({
 	date: {type: Date},
@@ -32,11 +29,8 @@ var weeklyCount = new mongoose.Schema({
 
 })
 
-
 var DailyCount = mongoose.model('DailyCount', dailyCount);
 var WeeklyCount = mongoose.model('WeeklyCount', weeklyCount);
-
-
 
 module.exports = function module() {
 
@@ -51,12 +45,9 @@ module.exports = function module() {
 			    return Math.ceil((((d-new Date(d.getFullYear(),0,1))/8.64e7)+1)/7);
 			}
 
-			console.log("how about here then");
 			mongoose.connect(url);
 			db.on('error', console.error);
 			db.once('open', function() {
-
-				console.log("Hello please come into store count function");
 
 				// TODO parse out date
 				var year = time.getFullYear();
@@ -98,12 +89,7 @@ module.exports = function module() {
 							console.log("updating");
 							console.log(results);
 							
-							DailyCount.find({date : time, errorType : errorName}, function(err, results) {
-								console.log(results);
-								db.close();
-							});
-
-							//db.close();
+							db.close();
 						})
 
 					}
@@ -137,12 +123,7 @@ module.exports = function module() {
 							console.log("updating");
 							console.log(results);
 
-							WeeklyCount.find({date : time, errorType : errorName}, function(err, results) {
-								console.log(results);
-								db.close();
-							});
-
-							//db.close();
+							db.close();
 						})
 
 					}

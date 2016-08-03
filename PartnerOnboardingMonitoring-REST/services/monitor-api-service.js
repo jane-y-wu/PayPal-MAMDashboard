@@ -140,7 +140,6 @@ module.exports = function module() {
 													var fullDate = calendarDate + 'T' + time.substring(0, 8);
 													var fullDateDashes = fullDate.replace(/\//g, "-");
 													localLog.payload["Full_Date"] = new Date(fullDateDashes);
-													date = localLog.payload["Full_Date"];
 													break;
 												default:
 													localLog.payload[fields[field]] = logSegments[field];
@@ -166,7 +165,6 @@ module.exports = function module() {
 											}
 										}
 										//console.log(JSON.stringify(localLog, null, 4));
-										var errorType = localLog.payload["Type"];
 
 										var toStore = new Log(localLog);
 										console.log("toStore: " + JSON.stringify(toStore, null, 4));
@@ -184,7 +182,8 @@ module.exports = function module() {
 											// });e
 										});
 
-										
+										errorType = localLog.payload["Name"];
+										date = localLog.payload["Full_Date"];
 
 
 									} else {
@@ -204,16 +203,14 @@ module.exports = function module() {
 						}
 					});
 
-				}, function(err, numErrors, errorType, date){
+				}, function(err/*, numErrors, errorType, date*/){
 					db.close();
 
-                    //callback();
-                    db.once('close', function() {
-                    	console.log("but hello are you HERE tho");
+                    			//callback();
+                    			db.once('close', function() {
 						console.log(numErrors + " " + errorType + " " + date);
 						callback(numErrors, errorType, date);
-
-                    })
+                    			})
                     
 				});
 			});
