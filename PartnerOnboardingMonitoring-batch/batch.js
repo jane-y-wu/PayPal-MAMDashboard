@@ -151,8 +151,6 @@ function submitRequest(start, end /*, searchString*/) { // submit 3 queries for 
 			//'http://mscalhadoop.qa.paypal.com/regex/request',
     	{
     	json: { // example search input
-			// "startTime": start,
-			// "endTime": end,
 			"startTime": "2016/08/02 10:00",
 			"endTime": "2016/08/02 10:01",
 			"environment":"paypal",
@@ -163,7 +161,7 @@ function submitRequest(start, end /*, searchString*/) { // submit 3 queries for 
         	"regexs": ["ResponseCode=200"], /*searchArray,*/
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": "192.168.0.105" + ":3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": httpCallbackURL + ":3003/api/queryready/?id=$id&status=$status",
         	"email":"janwu@paypal.com"
 		}
 	},
