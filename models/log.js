@@ -1,5 +1,8 @@
 'use strict'
 
+var async = require('async');
+var request = require('request'); // require request
+var assert = require('assert');
 var mongoose = require("mongoose");
 mongoose.Promise = require('bluebird');
 
@@ -40,5 +43,4 @@ var Log = mongoose.model('Log', logSchema);
 
 module.exports = {
 	Log : Log,
-	SimpleLog : SimpleLog
 }
