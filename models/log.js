@@ -1,7 +1,7 @@
 'use strict'
 
 var mongoose = require("mongoose");
-mongoose.Promise = require('bluebird');
+mongoose.Promise = global.Promise;
 
 var logSchema = new mongoose.Schema({
 	rawLogsURL : String,
@@ -39,6 +39,6 @@ var logSchema = new mongoose.Schema({
 var Log = mongoose.model('Log', logSchema);
 
 module.exports = {
-	Log : Log,
-	SimpleLog : SimpleLog
+	Log : Log
+	//SimpleLog : SimpleLog
 }
