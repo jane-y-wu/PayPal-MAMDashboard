@@ -1,4 +1,10 @@
 'use strict';
+var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
+var Log = require('../../models/log.js');
+
+var router = require("express").Router();
+//router.route("/dashboard/:id?").get(getData);
 
 module.exports = function module(app) {
 
@@ -17,6 +23,15 @@ module.exports = function module(app) {
 				}
 				res.send(500);
 			});
+		},
+
+		getData : function getData(req, res) {
+		    Log.find(function (err, schools) {
+		        if (err)
+		            res.send(err);
+		        else
+		            res.json(schools);
+		    });
 		}
 
 	};
