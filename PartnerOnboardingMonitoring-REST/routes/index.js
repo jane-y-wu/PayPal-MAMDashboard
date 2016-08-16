@@ -6,7 +6,7 @@ module.exports = function module(app) {
 
   app.get('/*',function(req,res,next){
       res.header('Access-Control-Allow-Origin' , '*' );
-      next(); // http://expressjs.com/guide.html#passing-route control
+      next();
   });
 
   app.get('/api/queryready/', monitorApiController.getDetails);
