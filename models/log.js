@@ -4,7 +4,7 @@ var async = require('async');
 var request = require('request'); // require request
 var assert = require('assert');
 var mongoose = require("mongoose");
-mongoose.Promise = require('bluebird');
+mongoose.Promise = global.Promise;
 
 var logSchema = new mongoose.Schema({
 	rawLogsURL : String,
@@ -42,5 +42,10 @@ var logSchema = new mongoose.Schema({
 var Log = mongoose.model('Log', logSchema);
 
 module.exports = {
+<<<<<<< HEAD
 	Log : Log,
+=======
+	Log : Log
+	//SimpleLog : SimpleLog
+>>>>>>> aecfba9f842783c308d5dc08c98013752d4274f4
 }

@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "PartnerOnboardingMonitoring-app",
   "version": "0.0.0",
   "private": true,
@@ -24,5 +25,27 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js"
+=======
+  "dependencies": {
+    "babel-preset-es2015": "^6.13.2",
+    "babel-preset-react": "^6.11.1",
+    "babelify": "^7.3.0",
+    "browserify": "^13.1.0",
+    "chart.js": "^1.1.1",
+    "express": "^4.14.0",
+    "gulp": "^3.9.1",
+    "moment": "^2.14.1",
+    "react": "^15.3.0",
+    "react-addons-css-transition-group": "^15.3.0",
+    "react-addons-shallow-compare": "^15.3.0",
+    "react-chartjs": "^0.8.0",
+    "react-datepicker": "^0.29.0",
+    "react-dom": "^15.3.0",
+    "react-infinite-calendar": "^1.1.18",
+    "react-pivot": "^1.16.0",
+    "react-simple-table": "^1.0.1",
+    "reactify": "^1.1.1",
+    "vinyl-source-stream": "^1.1.0"
+>>>>>>> aecfba9f842783c308d5dc08c98013752d4274f4
   }
 }

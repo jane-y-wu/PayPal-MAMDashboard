@@ -93,6 +93,10 @@ module.exports = function module() {
 			db.on('error', console.error);
 			db.once('open', function() {
 
+				var numErrors = details.records.length;
+				var errorType;
+				var date;
+
 				async.each(details.records, function(record, asyncCallback){
 
 					var eventDetailURL = record.url;
@@ -175,8 +179,13 @@ module.exports = function module() {
 											// 	if (err) console.log(err);
 											// 	console.log(JSON.stringify(result, null, 4));
 											// 	async2Callback();
-											// });
+											// });e
 										});
+
+										errorType = localLog.payload["Name"];
+										date = localLog.payload["Full_Date"];
+
+
 									} else {
 										async2Callback();
 									}
@@ -184,7 +193,9 @@ module.exports = function module() {
 									async2Callback();
 								}
 							}, function(err) {
+
 								asyncCallback();
+					
 							});
 						} else {
 							//if (error) console.log("Network error in getRawLogs: " + response.statusCode); //TODO debug the errors being received
@@ -192,9 +203,15 @@ module.exports = function module() {
 						}
 					});
 
-				}, function(err){
+				}, function(err/*, numErrors, errorType, date*/){
 					db.close();
-					callback();
+
+                    			//callback();
+                    			db.once('close', function() {
+						console.log(numErrors + " " + errorType + " " + date);
+						callback(numErrors, errorType, date);
+                    			})
+                    
 				});
 			});
 		},
@@ -321,5 +338,7 @@ module.exports = function module() {
 							}},]
 			callback(fakeDataObject);
 		}
+		
+
 	};
 };
