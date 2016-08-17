@@ -31,6 +31,7 @@ export default class Header extends React.Component {
             <MenuItem onTouchTap={this.handleClose}>Full Statistics</MenuItem>
           </Drawer>
         </MuiThemeProvider>
+        {this.props.children}
       </div>
     );
   }
