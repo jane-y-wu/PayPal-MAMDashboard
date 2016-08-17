@@ -4,6 +4,10 @@ module.exports = function module(app) {
 
   var monitorApiController = require('./monitor-api-controller')(app);
 
+  app.get('/*',function(req,res,next){
+      res.header('Access-Control-Allow-Origin' , '*' );
+      next();
+  });
 
   app.get('/api/queryready/', monitorApiController.getDetails);
   app.get('/api/getLogs/', monitorApiController.returnLogs);

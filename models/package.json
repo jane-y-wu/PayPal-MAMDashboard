@@ -1,6 +1,8 @@
 {
   "name": "log",
   "dependencies": {
-    "mongoose": "4.5.8"
+    "mongoose": "4.5.8",
+    "async": "2.0.1",
+    "request": "2.74.0"
   }
 }
