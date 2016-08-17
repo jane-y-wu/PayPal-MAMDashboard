@@ -5,93 +5,18 @@
 // mongoose.Promise = global.Promise;
 // var DailyCount = require('../../models/aggregationSchema').DailyCount;
 // var WeeklyCount = require('../../models/aggregationSchema').WeeklyCount;
-
-function getPreviousDay(currentDay) {
-
-	var cYear = currentDay.getFullYear();
-	var cMonth = currentDay.getMonth();
-	var cDay = currentDay.getDate();
-
-	var pYear;
-	var pMonth;
-	var pDay;
-
-	// YEAR
-	if (currentMonth == 1 && currentDate == 1) { // current time is new year
-		pYear = cYear - 1;
-	}
-	else {
-		pYear = cYear;
-	}
-
-	// MONTH
-	if (cDate == 1) { // first day of a month
-		if (cMonth == 1) { // january
-			pMonth = 12;
-		}
-
-		else {
-			pMonth = cMonth - 1;
-		}
-	}
-
-	else {
-		pMonth = cMonth;
-	}
-
-	// DATE
-	if (cDate == 1) { // first day of a month
-		if (cMonth == 5 || cMonth == 7 || cMonth == 10 || cMonth == 12) { // the month before has 30 days
-			pDate = 30;
-		}
-		else if (cMonth == 1 || cMonth == 2 || cMonth == 4 || cMonth == 6 || cMonth == 8 || cMonth == 9 || cMonth == 11) {
-			pDate = 31;
-		}
-		else if (cMonth == 3) { // february
-			if ((cYear % 4) == 0 && !((cYear % 100) == 0 && (cYear % 400) != 0)) { // leap year
-				pDate = 29;
-			}
-			else {
-				pDate = 28;
-			}
-		}
-		else {
-			pDate = cDate - 1;
-		}
-	}
-	else {
-		pDate = cDate;
-	}
-
-	// used as startTime
-	// var time = startYear.toString() + "/" + startMonth.toString() + "/" + startDate.toString() + " " + startHour.toString() + ":00";
-
-	var previousDay = new Date(pYear, pMonth, pDate).toLocaleDateString();
-	return previousDay;
-}
+var moment = require('moment');
 
 
-var date = new Date();
-
-var currentYear = date.getFullYear();
-var currentMonth = date.getMonth();
-var currentDate = date.getDate();
-
-// today
-var dateSeven = new Date(currentYear, currentMonth, currentDate).toLocaleDateString();
-
-
-// now do that for the 6 days before
-
-var dateSix = new Date(currentYear, currentMonth, currentDate-1).toLocaleDateString();
-var dateFive = new Date(currentYear, currentMonth, currentDate-2).toLocaleDateString();
-var dateFour = new Date(currentYear, currentMonth, currentDate-3).toLocaleDateString();
-var dateThree = new Date(currentYear, currentMonth, currentDate-4).toLocaleDateString();
-var dateTwo = new Date(currentYear, currentMonth, currentDate-5).toLocaleDateString();
-var dateOne = new Date(currentYear, currentMonth, currentDate-6).toLocaleDateString();
+var dateSeven = moment();
+var dateSix = dateSeven.clone().subtract(1, 'days');
+var dateFive = dateSix.clone().subtract(1, 'days');
+var dateFour = dateFive.clone().subtract(1, 'days');
+var dateThree = dateFour.clone().subtract(1, 'days');
+var dateTwo = dateThree.clone().subtract(1, 'days');
+var dateOne = dateTwo.clone().subtract(1, 'days');
 
 var dayOne = 15;
-
 var dayTwo = 18;
 var dayThree = 12;
 var dayFour = 10;
@@ -119,8 +44,17 @@ var daySeven = 13;
 // });
 
 
-var dates = [dateOne, dateTwo, dateThree, dateFour, dateFive, dateSix, dateSeven];
+var dates = [dateOne.format('LL'), dateTwo.format('LL'), dateThree.format('LL'), dateFour.format('LL'), dateFive.format('LL'), dateSix.format('LL'), dateSeven.format('LL')];
 var dataset = [dayOne, dayTwo, dayThree, dayFour, dayFive, daySix, daySeven];
+var newDataset = [80, 48, 60, 119, 86, 27, 190];
+
+// module.exports = {
+
+// 	dates : dates,
+// 	currentDataset : dataset,
+// 	newDataset : newDataset
+
+//}
 
 module.exports = {
 
