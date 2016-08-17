@@ -38,9 +38,6 @@ export default class Layout extends React.Component {
         <div style={datePickerStyle}>
           <DateRange/>
         </div>
-        <div style={graphStyle}>
-          <GraphContainer />
-        </div>
         <div style={logTableStyle}>
           <MuiThemeProvider muiTheme={getMuiTheme()}>
             <Paper>

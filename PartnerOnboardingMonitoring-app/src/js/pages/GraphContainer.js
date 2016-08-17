@@ -58,8 +58,7 @@ var options = {
 
 var styles = {
   graphContainer: {
-    border: '1px solid black',
-    padding: '15px'
+    //
   }
 }
 
@@ -78,71 +77,6 @@ var newData = {
       }
     ]
 }
-
-
-// module.exports = React.createClass({
-//
-//   getInitialState : function() {
-//     return {chartData : chartData,
-//             startDate : moment(),
-//             endDate : moment()};
-//   },
-//
-//   onButtonClick: function(ev) {
-//     alert('the button was clicked; start date : ' + this.state.startDate.format("LL") + ' end date : ' + this.state.endDate.format("LL"));
-//     this.setState({chartData : newData});
-//   },
-//
-//   handleChangeStart: function(date) {
-//     this.setState({
-//       startDate: date
-//     });
-//   },
-//
-//   handleChangeEnd: function(date) {
-//     this.setState({
-//       endDate: date
-//     });
-//   },
-//
-//   render :function(){
-//     return(
-//
-//       <div>
-//
-//         <div id="calendar-container" className="row">
-//
-//           <DatePicker id="star-calendar"
-//             selected={this.state.startDate}
-//             startDate={this.state.startDate}
-//             endDate={this.state.endDate}
-//             maxDate={moment()}
-//             todayButton={'Today'}
-//             onChange={this.handleChangeStart} />
-//           <DatePicker id="end-calendar"
-//             selected={this.state.endDate}
-//             startDate={this.state.startDate}
-//             endDate={this.state.endDate}
-//             maxDate={moment()}
-//             todayButton={'Today'}
-//             onChange={this.handleChangeEnd} />
-//
-//           <button type="button" onClick={this.onButtonClick}>Update Chart</button>
-//         </div>
-//
-//          <div id="chart-container" className="row">
-//                 <div style={styles.graphContainer}>
-//                   <LineChart data={this.state.chartData}
-//                     options={options}
-//                     width="600" height="250" redraw/>
-//                 </div>
-//          </div>
-//
-//
-//       </div>
-//     )
-//   }
-// });
 
 export default class GraphContainer extends React.Component {
 
@@ -177,7 +111,7 @@ export default class GraphContainer extends React.Component {
 
       <div>
 
-        <div id="calendar-container" className="row">
+        {/*}<div id="calendar-container" className="row">
 
           <DatePicker id="star-calendar"
             selected={this.state.startDate}
@@ -195,13 +129,13 @@ export default class GraphContainer extends React.Component {
             onChange={this.handleChangeEnd} />
 
           <button type="button" onClick={this.onButtonClick}>Update Chart</button>
-        </div>
+        </div>*/}
 
          <div id="chart-container" className="row">
-                <div style={styles.graphContainer}>
+                <div style={styles.graphContainer} width="100%">
                   <LineChart data={this.state.chartData}
                     options={options}
-                    width="600" height="250" redraw/>
+                    width="1200" height="500" redraw/>
                 </div>
          </div>
 

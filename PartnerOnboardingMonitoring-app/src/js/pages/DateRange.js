@@ -49,7 +49,14 @@ export default class DateRange extends React.Component {
   render() {
 
     const datePickerStyle = {
-      padding: "10px",
+      paddingLeft: "10px",
+      paddingRight: "10px",
+      paddingBottom: "10px",
+      paddingTop: "none",
+    }
+
+    const datePickerTextStyle = {
+      fontSize: "0.8em",
     }
 
     const paperStyle = {
@@ -70,26 +77,34 @@ export default class DateRange extends React.Component {
         <div style={divStyle}>
           <Paper style={paperStyle} zDepth={0}>
             <div>
-              <DatePicker style={datePickerStyle} onChange={this.setStartDate}
+              <DatePicker
+                style={datePickerStyle}
+                textFieldStyle={datePickerTextStyle}
+                onChange={this.setStartDate}
                 floatingLabelText="Start Date"
                 maxDate={this.maxDate}
               />
-              <TimePicker
+              {/*}<TimePicker
+                textFieldStyle={datePickerTextStyle}
                 format="24hr"
                 hintText="Start Time"
-              />
+              />*/}
             </div>
           </Paper>
           <Paper style={paperStyle} zDepth={0}>
             <div>
-              <DatePicker style={datePickerStyle} onChange={this.setEndDate}
+              <DatePicker
+                style={datePickerStyle}
+                textFieldStyle={datePickerTextStyle}
+                onChange={this.setEndDate}
                 floatingLabelText="End Date"
                 maxDate={this.maxDate}
               />
-              <TimePicker
+              {/*}<TimePicker
+                textFieldStyle={datePickerTextStyle}
                 format="24hr"
                 hintText="End Time"
-              />
+              />*/}
             </div>
           </Paper>
           <RaisedButton label="refresh" onTouchTap={this.refreshLogs} style={paperStyle}/>
