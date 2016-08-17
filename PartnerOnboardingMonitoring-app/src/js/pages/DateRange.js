@@ -68,7 +68,7 @@ export default class DateRange extends React.Component {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
         <div style={divStyle}>
-          <Paper style={paperStyle}>
+          <Paper style={paperStyle} zDepth={0}>
             <div>
               <DatePicker style={datePickerStyle} onChange={this.setStartDate}
                 floatingLabelText="Start Date"
@@ -80,7 +80,7 @@ export default class DateRange extends React.Component {
               />
             </div>
           </Paper>
-          <Paper style={paperStyle}>
+          <Paper style={paperStyle} zDepth={0}>
             <div>
               <DatePicker style={datePickerStyle} onChange={this.setEndDate}
                 floatingLabelText="End Date"
