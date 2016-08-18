@@ -17,6 +17,6 @@ export function getLogs() {
     }
   };
 
-  request.open('GET', url);
+  request.open('POST', url);
   request.send();
 }
