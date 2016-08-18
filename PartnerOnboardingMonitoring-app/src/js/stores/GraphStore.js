@@ -20,6 +20,7 @@ class GraphStore extends EventEmitter {
   }
 
   returnCount() {
+    console.log(this.data);
     return this.data;
   }
 }

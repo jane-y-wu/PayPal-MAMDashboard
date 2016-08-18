@@ -11,7 +11,8 @@ export function updateGraph() {
 		}
 
 		if (request.status === 200) {
-			dispatcher.dispatch({type: "REFRESH_GRAPH"});
+			dispatcher.dispatch({type: "REFRESH_GRAPH", data: request.responseText});
+			console.log(request.responseText);
 		} else {
 			console.warn('error');
 		}

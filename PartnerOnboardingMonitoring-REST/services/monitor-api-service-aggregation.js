@@ -25,7 +25,7 @@ var DailyCount = mongoose.model('DailyCount', dailyCount);
 var WeeklyCount = mongoose.model('WeeklyCount', weeklyCount);
 
 var dates = [];
-var dataset = [23, 25, 28, 29, 23, 20, 22];
+var dataset = [53, 55, 28, 29, 23, 50, 22];
 
 module.exports = function module() {
 
@@ -151,6 +151,8 @@ module.exports = function module() {
 
 						// put it into the array in its corresponding location - how???
 						// also need to know what type of error it is
+					} else {
+						console.log(err);
 					}
 
 					db.close();
