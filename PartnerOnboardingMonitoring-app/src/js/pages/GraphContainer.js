@@ -4,8 +4,9 @@ var LineChart = require('react-chartjs').Line;
 // var Chart = require('chart.js');
 var dataSrc = require('../data_model/data.js');
 var moment = require('moment');
-// var buttonStart = moment();
-// var buttonEnd = moment();
+
+import * as GraphActions from "../actions/GraphActions";
+import GraphStore from "../stores/GraphStore";
 
 // Chart.defaults.global.responsive = true;
 
@@ -82,28 +83,41 @@ export default class GraphContainer extends React.Component {
 
   constructor() {
     super();
+    this.changeState = this.changeState.bind(this);
     this.state = {
       chartData : chartData,
-      startDate : moment(),
-      endDate : moment()
     }
   }
 
-  onButtonClick(ev) {
-    alert('the button was clicked; start date : ' + this.state.startDate.format("LL") + ' end date : ' + this.state.endDate.format("LL"));
+  // onButtonClick(ev) {
+  //   alert('the button was clicked; start date : ' + this.state.startDate.format("LL") + ' end date : ' + this.state.endDate.format("LL"));
+  //   this.setState({chartData : newData});
+  // }
+
+  // handleChangeStart(date) {
+  //   this.setState({
+  //     startDate: date
+  //   });
+  // }
+
+  // handleChangeEnd(date) {
+  //   this.setState({
+  //     endDate: date
+  //   });
+  // }
+
+
+
+  componentWillMount() {
+    GraphStore.on("change", this.changeState);
+  }
+
+  componentWillUnmount() {
+    GraphStore.removeListener("change");
+  }
+
+  changeState() {
     this.setState({chartData : newData});
-  }
-
-  handleChangeStart(date) {
-    this.setState({
-      startDate: date
-    });
-  }
-
-  handleChangeEnd(date) {
-    this.setState({
-      endDate: date
-    });
   }
 
   render () {

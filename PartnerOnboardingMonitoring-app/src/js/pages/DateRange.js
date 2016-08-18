@@ -9,6 +9,7 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 import * as LogActions from "../actions/LogActions";
+import * as GraphActions from "../actions/GraphActions";
 
 export default class DateRange extends React.Component {
     constructor() {
@@ -22,8 +23,9 @@ export default class DateRange extends React.Component {
     }
 
     refreshLogs() {
-      console.log(this.state.startDate + " " + this.state.endDate);
+      //console.log(this.state.startDate + " " + this.state.endDate);
       LogActions.getLogs();
+      GraphActions.updateGraph();
     }
 
     setStartDate(event, date) {
