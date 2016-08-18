@@ -64,7 +64,7 @@ module.exports = function module() {
 
 						var doc = new DailyCount({date : time,
 													errorType: errorName,
-													errorCount: errorNum}); 
+													errorCount: errorNum});
 
 						console.log(doc);
 
@@ -78,11 +78,11 @@ module.exports = function module() {
 
 					}
 					else {
-	
+
 						DailyCount.update({date : time, errorType : errorName}, {$inc: {errorCount: errorNum}}, function(err, results) {
 							console.log("updating");
 							console.log(results);
-							
+
 							db.close();
 						})
 
@@ -97,7 +97,7 @@ module.exports = function module() {
 
 						var doc = new WeeklyCount({weekNumber : weekNum,
 													errorType: errorName,
-													errorCount: errorNum}); 
+													errorCount: errorNum});
 
 						console.log(doc);
 
@@ -111,7 +111,7 @@ module.exports = function module() {
 
 					}
 					else {
-	
+
 						WeeklyCount.update({weekNumber : weekNum, errorType : errorName}, {$inc: {errorCount: errorNum}}, function(err, results) {
 							console.log("updating");
 							console.log(results);
@@ -121,7 +121,7 @@ module.exports = function module() {
 
 					}
 				})
-	
+
 
 			});
 
@@ -131,36 +131,36 @@ module.exports = function module() {
 
 			console.log('finding counts');
 
-			mongoose.connect(url);
-			db.on('error', console.error);
-			db.once('open', function() {
-				DailyCount.find({ date : {$gte: startDate, $lte: endDate}, errorType : errorType }, function(err, results) {
-
-					if (!err) {
-
-						//store the error count
-						results.forEach(function (dailyCt) {
-
-							console.log(dailyCt.errorCount + dailyCt.date);
-							//dailyCt.errorCount;
-							//dailyCt.date;
-
-							// push each element to their respective arrays
-							// still have to store which error it is
-						});
-
-						// put it into the array in its corresponding location - how???
-						// also need to know what type of error it is
-					} else {
-						console.log(err);
-					}
-
-					db.close();
-					console.log("db closed");
-				})
-
-
-			})
+			// mongoose.connect(url);
+			// db.on('error', console.error);
+			// db.once('open', function() {
+			// 	DailyCount.find({ date : {$gte: startDate, $lte: endDate}, errorType : errorType }, function(err, results) {
+      //
+			// 		if (!err) {
+      //
+			// 			//store the error count
+			// 			results.forEach(function (dailyCt) {
+      //
+			// 				console.log(dailyCt.errorCount + dailyCt.date);
+			// 				//dailyCt.errorCount;
+			// 				//dailyCt.date;
+      //
+			// 				// push each element to their respective arrays
+			// 				// still have to store which error it is
+			// 			});
+      //
+			// 			// put it into the array in its corresponding location - how???
+			// 			// also need to know what type of error it is
+			// 		} else {
+			// 			console.log(err);
+			// 		}
+      //
+			// 		db.close();
+			// 		console.log("db closed");
+			// 	})
+      //
+      //
+			// })
 
 			callback(dataset.toString());
 		}

@@ -113,7 +113,7 @@ export default class GraphContainer extends React.Component {
   }
 
   componentWillUnmount() {
-    GraphStore.removeListener("change");
+    GraphStore.removeListener("change", this.changeState);
   }
 
   changeState() {
