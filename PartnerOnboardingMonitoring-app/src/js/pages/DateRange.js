@@ -15,9 +15,12 @@ export default class DateRange extends React.Component {
       super();
       this.setStartDate = this.setStartDate.bind(this);
       this.setEndDate = this.setEndDate.bind(this);
+      var defaultStartDate = new Date(Date.now());
       this.state = {
         startDate: Date.now(),
         endDate: Date.now(),
+        defaultStartDate: defaultStartDate,
+        defaultEndDate: new Date(Date.now()),
       }
     }
 
@@ -83,6 +86,7 @@ export default class DateRange extends React.Component {
                 onChange={this.setStartDate}
                 floatingLabelText="Start Date"
                 maxDate={this.maxDate}
+                defaultDate={this.state.defaultStartDate}
               />
               {/*}<TimePicker
                 textFieldStyle={datePickerTextStyle}
@@ -99,6 +103,7 @@ export default class DateRange extends React.Component {
                 onChange={this.setEndDate}
                 floatingLabelText="End Date"
                 maxDate={this.maxDate}
+                defaultDate={this.state.defaultEndDate}
               />
               {/*}<TimePicker
                 textFieldStyle={datePickerTextStyle}

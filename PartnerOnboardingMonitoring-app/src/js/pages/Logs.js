@@ -14,72 +14,80 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import * as LogActions from "../actions/LogActions";
 import LogStore from "../stores/LogStore";
 
+/*
+Plan
+
+Have logs to display and logs in time range objects
+Have sort by string/key and sort boolean
+Have filter boolean and filters objects
+Only call getLogs() is dates are changed (times are considred filters)
+
+
+*/
+
+
 export default class Logs extends React.Component {
   constructor(props) {
     super(props);
-    this.getLogs = this.getLogs.bind(this);
+    // this.getLogs = this.getLogs.bind(this);
+    //this.pullLogsData = this.pullLogData.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
     this.state = {
       LOGS_TO_SHOW: props.logsToShow,
-      errName: "loading",
-      fullDate: "loading",
-      message: "loading",
-      parsedLogs: [{errName: "loading"}],
+      //parsedLogs: [{errName: "loading"}],
+      //parsedLogs: props.logData,
+      fullMessage: "",
+      dialog: {},
       open: false,
       logsNotShown: 0,
-      dialog: {},
       showDialog: false,
-      fullMessage: "",
       showFullMessage: false,
     };
   }
 
-  componentWillMount() {
-    LogStore.on("change", this.getLogs);
-    LogActions.getLogs();
-  }
-
-  componentWillUnmount() {
-    LogStore.removeListener("change", this.getLogs);
-    //console.log(this.state.logs);
-  }
+  // componentWillMount() {
+  // }
+  //
+  // componentWillUnmount() {
+  //   LogStore.removeListener("change", this.getLogs);
+  // }
 
 
   // Plan:
   // in getLogs hardcode the data fields in the table. these can only be fields shared by all error types
   // in getdetails
-  getLogs() {
-    var rawLogs = JSON.parse(LogStore.getAll());
-    this.state.parsedLogs = [];
-    console.log(this.state.LOGS_TO_SHOW);
-    for (var i in rawLogs) {
-      if (i >= this.state.LOGS_TO_SHOW && this.state.LOGS_TO_SHOW > 0) break;
-      var parsedLog = {
-        errName: rawLogs[i].payload.Name,
-        // fullDate: rawLogs[i].payload.Full_Date,
-        issue_message: rawLogs[i].payload.issue,
-        rawLogsURL : rawLogs[i].rawLogsURL,
-        Machine: rawLogs[i].metaData.Machine,
-        Pool: rawLogs[i].metaData.Pool,
-        Data_Center: rawLogs[i].metaData.Data_Center,
-        corr_id_: rawLogs[i].payload.corr_id_,
-        operation: rawLogs[i].payload.operation,
-      };
-      var rawDate = rawLogs[i].payload.Full_Date;
-      var dateObj = new Date(rawDate);
-      parsedLog.dateObj = dateObj;
-      parsedLog.fullDate = dateObj.getMonth() + "/" + dateObj.getDay() + "/" + dateObj.getFullYear() + " " + dateObj.getHours() + ":";
-      if (dateObj.getMinutes() < 10) parsedLog.fullDate += "0";
-      parsedLog.fullDate += dateObj.getMinutes();
-      //parsedLog.fullDate = dateObj.toLocaleString();
-      this.state.parsedLogs.push(parsedLog);
-    }
-    this.setState({
-    });
-  }
+  // getLogs() {
+  //   var rawLogs = JSON.parse(LogStore.getAll());
+  //   this.state.parsedLogs = [];
+  //   console.log(this.state.LOGS_TO_SHOW);
+  //   for (var i in rawLogs) {
+  //     if (i >= this.state.LOGS_TO_SHOW && this.state.LOGS_TO_SHOW > 0) break;
+  //     var parsedLog = {
+  //       errName: rawLogs[i].payload.Name,
+  //       // fullDate: rawLogs[i].payload.Full_Date,
+  //       issue_message: rawLogs[i].payload.issue,
+  //       rawLogsURL : rawLogs[i].rawLogsURL,
+  //       Machine: rawLogs[i].metaData.Machine,
+  //       Pool: rawLogs[i].metaData.Pool,
+  //       Data_Center: rawLogs[i].metaData.Data_Center,
+  //       corr_id_: rawLogs[i].payload.corr_id_,
+  //       operation: rawLogs[i].payload.operation,
+  //     };
+  //     var rawDate = rawLogs[i].payload.Full_Date;
+  //     var dateObj = new Date(rawDate);
+  //     parsedLog.dateObj = dateObj;
+  //     parsedLog.fullDate = dateObj.getMonth() + "/" + dateObj.getDay() + "/" + dateObj.getFullYear() + " " + dateObj.getHours() + ":";
+  //     if (dateObj.getMinutes() < 10) parsedLog.fullDate += "0";
+  //     parsedLog.fullDate += dateObj.getMinutes();
+  //     //parsedLog.fullDate = dateObj.toLocaleString();
+  //     this.state.parsedLogs.push(parsedLog);
+  //   }
+  //   this.setState({
+  //   });
+  // }
 
   handleOpen = (index) => {
-    this.state.dialog = this.state.parsedLogs[index];
+    this.state.dialog = this.props.logData[index];
     this.setState({showDialog: true});
   };
 
@@ -95,6 +103,14 @@ export default class Logs extends React.Component {
   handleCloseMessage = () => {
     this.setState({showFullMessage: false});
   };
+
+  // componentWillMount() {
+  //   LogStore.on("refresh", this.pullLogData);
+  // }
+
+  // pullLogData() {
+  //   console.log("Logs.js recieved pulllogdata");
+  // }
 
   render() {
 
@@ -133,7 +149,7 @@ export default class Logs extends React.Component {
               </TableHeader>
               <TableBody displayRowCheckbox={false} showRowHover={true}>
 
-                {this.state.parsedLogs.map( (row, index) => (
+                {this.props.logData.map( (row, index) => (
                   <TableRow key={index}>
                     <TableRowColumn>{row.fullDate}</TableRowColumn>
                     <TableRowColumn><FlatButton label={row.errName}/></TableRowColumn>
@@ -207,7 +223,6 @@ export default class Logs extends React.Component {
             </Dialog>
           </div>
         </MuiThemeProvider>
-        <RaisedButton label="Full Logs" fullWidth={true}/>
       </div>
     );
   }

@@ -320,6 +320,8 @@ module.exports = function module() {
 
 		returnLogs : function returnLogs(startDate, endDate, filters, callback) {
 
+			console.log("filters: " + filters);
+
 			// mongoose.connect(url);
 			// db.on('error', console.error);
 			// db.once('open', function() {
