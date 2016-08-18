@@ -16,7 +16,7 @@ import LogWrapper from './LogWrapper';
 export default class Layout extends React.Component {
 
   render() {
-    const LOGS_TO_SHOW = 3;
+    const LOGS_TO_SHOW = 5;
 
     const logTableStyle = {
       margin: "5%",
@@ -48,7 +48,7 @@ export default class Layout extends React.Component {
           <MuiThemeProvider muiTheme={getMuiTheme()}>
             <div>
               <Paper>
-                <LogWrapper logsToShow={LOGS_TO_SHOW}/>
+                <LogWrapper logsToShow={LOGS_TO_SHOW} fullLogs={true}/>
               </Paper>
               <NavLink to="/fullLogs"><RaisedButton label="Full Logs" fullWidth={true}/></NavLink>
             </div>

@@ -41,7 +41,7 @@ export default class Layout extends React.Component {
         <div style={logTableStyle}>
           <MuiThemeProvider muiTheme={getMuiTheme()}>
             <Paper>
-              <LogWrapper logsToShow={-1}/>
+              <LogWrapper logsToShow={-1} fullLogs={true}/>
             </Paper>
           </MuiThemeProvider>
         </div>
