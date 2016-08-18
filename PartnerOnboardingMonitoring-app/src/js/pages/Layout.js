@@ -4,16 +4,19 @@ import Header from "./Header";
 import Logs from "./Logs";
 import DateRange from "./DateRange";
 import GraphContainer from "./GraphContainer";
-
+import RaisedButton from 'material-ui/RaisedButton';
 import Paper from 'material-ui/Paper';
+import NavLink from './NavLink';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+import LogWrapper from './LogWrapper';
+
 export default class Layout extends React.Component {
 
   render() {
-    const LOGS_TO_SHOW = 3;
+    const LOGS_TO_SHOW = 5;
 
     const logTableStyle = {
       margin: "5%",
@@ -43,9 +46,12 @@ export default class Layout extends React.Component {
         </div>
         <div style={logTableStyle}>
           <MuiThemeProvider muiTheme={getMuiTheme()}>
-            <Paper>
-              <Logs logsToShow={LOGS_TO_SHOW}/>
-            </Paper>
+            <div>
+              <Paper>
+                <LogWrapper logsToShow={LOGS_TO_SHOW} fullLogs={true}/>
+              </Paper>
+              <NavLink to="/fullLogs"><RaisedButton label="Full Logs" fullWidth={true}/></NavLink>
+            </div>
           </MuiThemeProvider>
         </div>
       </div>

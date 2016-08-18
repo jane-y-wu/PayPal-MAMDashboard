@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 import Header from "./Header";
-import Logs from "./Logs";
+import LogWrapper from "./LogWrapper";
 import DateRange from "./DateRange";
 import GraphContainer from "./GraphContainer";
 
@@ -41,7 +41,7 @@ export default class Layout extends React.Component {
         <div style={logTableStyle}>
           <MuiThemeProvider muiTheme={getMuiTheme()}>
             <Paper>
-              <Logs logsToShow={LOGS_TO_SHOW}/>
+              <LogWrapper logsToShow={-1} fullLogs={true}/>
             </Paper>
           </MuiThemeProvider>
         </div>
