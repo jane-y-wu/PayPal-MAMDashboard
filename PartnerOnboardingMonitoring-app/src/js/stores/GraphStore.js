@@ -6,22 +6,22 @@ import dispatcher from "../dispatcher";
 class GraphStore extends EventEmitter {
   constructor() {
     super()
-    this.graph = "Graph updating";
+    this.data = "Graph updating";
   }
 
   handleActions(action) {
     switch(action.type) {
       case "REFRESH_GRAPH": {
-        this.graph = action.graph;
+        this.data = action.data;
         this.emit("change");
         break;
       }
     }
   }
 
-  // getAll() {
-  //   return this.logs;
-  // }
+  returnCount() {
+    return this.data;
+  }
 }
 
 const graphStore = new GraphStore;

@@ -117,6 +117,8 @@ export default class GraphContainer extends React.Component {
   }
 
   changeState() {
+
+ 
     this.setState({chartData : newData});
   }
 
