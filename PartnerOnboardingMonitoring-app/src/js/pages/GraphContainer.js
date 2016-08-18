@@ -117,6 +117,12 @@ export default class GraphContainer extends React.Component {
   }
 
   changeState() {
+    var data = GraphStore.returnCount()
+    data = data.split(',');
+    data = data.map(function(item) {
+      return parseInt(item);
+    })
+    newData.datasets[0].data = data;
     this.setState({chartData : newData});
   }
 

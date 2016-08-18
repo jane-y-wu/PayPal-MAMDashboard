@@ -1,7 +1,5 @@
 'use strict';
 
-
-
 module.exports = function module(app) {
 
 	var service = require('../services/monitor-api-service.js')();
@@ -101,8 +99,8 @@ module.exports = function module(app) {
 				});
     	},
 
-			returnLogsFiltered : function returnLogsFiltered(req, res, next) {
-				console.log("returnLogsFiltered called!");
+		returnLogsFiltered : function returnLogsFiltered(req, res, next) {
+			console.log("returnLogsFiltered called!");
 
 				console.log(req.query.startDate);
 				var startDate = new Date(req.query.startDate);
@@ -112,9 +110,23 @@ module.exports = function module(app) {
 				endDate.setHours(endDate.getHours() + 7);
 				console.log("endDate: " + endDate);
 
-				service.returnLogs(startDate, endDate, req.body.filters, function(logs){
-					res.end(JSON.stringify(logs, null, 4));
-				});
-			}
+			service.returnLogs(startDate, endDate, req.body.filters, function(logs){
+				res.end(JSON.stringify(logs, null, 4));
+			});
+		},
+
+		returnCount : function returnCount(req, res, next) {
+			console.log("returnCount called!");
+
+			var start = req.query.startDate;
+			var end = req.query.endDate;
+			var errorType = req.query.error;
+
+			console.log("start is " + start + " and end is " + end);
+
+			aggregation.returnCount(start, end, errorType, function(response) {
+				res.end(response);
+			});
+		}
 	};
 };
