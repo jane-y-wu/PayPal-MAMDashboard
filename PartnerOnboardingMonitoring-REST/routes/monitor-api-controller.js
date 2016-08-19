@@ -8,6 +8,27 @@ module.exports = function module(app) {
 	return {
 		test : function test(req, res, next) {
 			console.log("test called");
+
+
+			var date = new Date(2016, 6, 27, 2, 15);
+			if (req.query.id == 1) { // internal service error
+				
+				aggregation.storeCount(3, "INTERNAL_SERVICE_ERROR", date);
+				console.log(date);
+			}
+
+			else if (req.query.id == 2) { // validation error
+				
+				aggregation.storeCount(3, "VALIDATION_ERROR", date);
+				console.log(date);
+			}
+
+			else if (req.query.id == 3) { // service timeout
+				
+				aggregation.storeCount(3, "SERVICE_TIMEOUT", date);
+				console.log(date);
+			}
+
 			res.end("test called");
 		},
 

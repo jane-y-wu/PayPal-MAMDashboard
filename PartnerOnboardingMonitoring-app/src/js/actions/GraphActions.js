@@ -1,6 +1,6 @@
 import dispatcher from "../dispatcher";
 
-var url = 'http://localhost:3003/api/returnCount/?startDate=2016-07-26T02:45:00&endDate=2016-07-29T11:00:00'
+var url = 'http://localhost:3003/api/returnCount/?startDate=2016-08-30T07:00:00Z&endDate=2016-08-31T07:00:00Z&error=INTERNAL_SERVICE_ERROR'
 
 export function updateGraph() {
 

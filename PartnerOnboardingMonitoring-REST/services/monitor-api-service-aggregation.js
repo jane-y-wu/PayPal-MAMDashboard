@@ -40,6 +40,8 @@ module.exports = function module() {
 			    return Math.ceil((((d-new Date(d.getFullYear(),0,1))/8.64e7)+1)/7);
 			}
 
+			console.log("in store count : " + errorNum + " " + errorName + " " + time);
+
 			mongoose.connect(url);
 			db.on('error', console.error);
 			db.once('open', function() {
@@ -131,36 +133,40 @@ module.exports = function module() {
 
 			console.log('finding counts');
 
-			// mongoose.connect(url);
-			// db.on('error', console.error);
-			// db.once('open', function() {
-			// 	DailyCount.find({ date : {$gte: startDate, $lte: endDate}, errorType : errorType }, function(err, results) {
-      //
-			// 		if (!err) {
-      //
-			// 			//store the error count
-			// 			results.forEach(function (dailyCt) {
-      //
-			// 				console.log(dailyCt.errorCount + dailyCt.date);
-			// 				//dailyCt.errorCount;
-			// 				//dailyCt.date;
-      //
-			// 				// push each element to their respective arrays
-			// 				// still have to store which error it is
-			// 			});
-      //
-			// 			// put it into the array in its corresponding location - how???
-			// 			// also need to know what type of error it is
-			// 		} else {
-			// 			console.log(err);
-			// 		}
-      //
-			// 		db.close();
-			// 		console.log("db closed");
-			// 	})
-      //
-      //
-			// })
+			mongoose.connect(url);
+			db.on('error', console.error);
+			db.once('open', function() {
+
+				console.log(startDate + " " + endDate + " " + errorType);
+				DailyCount.find({ date : {$gte: startDate, $lte: endDate}, errorType : errorType }, function(err, results) {
+      
+					if (!err) {
+
+						console.log(results);
+      
+						//store the error count
+						results.forEach(function (dailyCt) {
+      
+							//console.log(dailyCt.errorCount + dailyCt.date);
+							//dailyCt.errorCount;
+							//dailyCt.date;
+      
+							// push each element to their respective arrays
+							// still have to store which error it is
+						});
+      
+						// put it into the array in its corresponding location - how???
+						// also need to know what type of error it is
+					} else {
+						console.log(err);
+					}
+      
+					db.close();
+					console.log("db closed");
+				})
+      
+      
+			})
 
 			callback(dataset.toString());
 		}

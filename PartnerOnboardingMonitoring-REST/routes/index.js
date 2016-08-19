@@ -22,4 +22,6 @@ module.exports = function module(app) {
     // This API endpoint is coded under the assumption that we will filter over:
       // partnerAccount
   app.get('/api/returnCount/', monitorApiController.returnCount);
+
+  app.get('/api/test/', monitorApiController.test);
 };
