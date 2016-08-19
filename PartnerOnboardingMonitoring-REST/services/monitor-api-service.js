@@ -329,11 +329,13 @@ module.exports = function module() {
 
 					var eventDetailURL = record.url;
 					var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs");
-
+					console.log("URLS: " + rawLogsURL + eventDetailURL);
 					// TODO: decompose
 					request(rawLogsURL, function(error, response, body){ // use an async each for each row in the response
 						if(!error && response.statusCode == 200 && body !== "") {
 							console.log("raw logs successfully retrieved!");
+
+							console.log(body, null, 4);
 
 							var lines = body.split("\r\n");
 							async.each(lines, function(singleLog, async2Callback){
@@ -395,7 +397,7 @@ module.exports = function module() {
 										//console.log(JSON.stringify(localLog, null, 4));
 
 										var toStore = new Log(localLog);
-										console.log("toStore: " + JSON.stringify(toStore, null, 4));
+										//console.log("toStore: " + JSON.stringify(toStore, null, 4));
 
 										toStore.save(function(err, result){
 											if(err) console.log(err);
