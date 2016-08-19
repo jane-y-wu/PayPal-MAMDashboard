@@ -4,8 +4,9 @@ var assert = require('assert');
 var async = require('async');
 var mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-var url = 'mongodb://root:ej+yFtAR^mEjKB?6AhK7Xrm_prM?aK32Xx94@10.25.39.2:27017';
-mongoose.connect(url);
+// var url = 'mongodb://root:ej+yFtAR^mEjKB?6AhK7Xrm_prM?aK32Xx94@10.25.39.2:27017';
+var url = 'mongodb://10.25.39.2:27017/admin';
+mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});
 var db = mongoose.connection;
 
 // var simpleLogSchema = new mongoose.Schema({
