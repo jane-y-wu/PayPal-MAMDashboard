@@ -3,7 +3,8 @@ var request = require('request'); // require request
 var sherlockEndpoint = "http://calhadoop-vip-a.slc.paypal.com/regex/request/"; // generic sherlock search endpoint url
 var mongoose = require('mongoose');
 var db = mongoose.connection;
-var url = 'mongodb://root:ej+yFtAR^mEjKB?6AhK7Xrm_prM?aK32Xx94@10.25.39.2:27017';
+//var url = 'mongodb://root:ej+yFtAR^mEjKB?6AhK7Xrm_prM?aK32Xx94@10.25.39.2:27017';
+var url = 'mongodb://10.25.39.2:27017/admin';
 mongoose.Promise = global.Promise;
 //var url = 'mongodb://partner-self-service-6103.ccg21.dev.paypalcorp.com:12345/';
 var assert = require('assert');
@@ -316,7 +317,7 @@ module.exports = function module() {
 		},
 
 		getRawLogs : function getRawLogs(details, callback) {
-			mongoose.connect(url);
+			mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});
 			db.on('error', console.error);
 			db.once('open', function() {
 
@@ -447,13 +448,14 @@ module.exports = function module() {
 
 			console.log("filters: " + filters);
 
-			mongoose.connect(url);
+			mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});
 			db.on('error', console.error);
 			db.once('open', function() {
 
 				//if(filters.length == 0) {
 					Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
 						db.close();
+						console.log("logs: " + JSON.stringify(logs));
 						callback(logs);
 					});
 				// } else {

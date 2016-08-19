@@ -18,6 +18,6 @@ export function getLogs() {
     }
   };
 
-  request.open('POST', url2);
+  request.open('POST', url);
   request.send();
 }
