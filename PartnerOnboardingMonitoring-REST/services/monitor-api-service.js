@@ -10,7 +10,7 @@ var assert = require('assert');
 var async = require('async');
 //var Log = require('../../models/log').Log;
 
-var logSchema = new Schema({
+var logSchema = new mongoose.Schema({
 	rawLogsURL : String,
 	// eventDetailURL: String,
 	metaData : { // not all of this is necessary. is this just an echo of the search parameters?
