@@ -447,26 +447,26 @@ module.exports = function module() {
 
 			console.log("filters: " + filters);
 
-			// mongoose.connect(url);
-			// db.on('error', console.error);
-			// db.once('open', function() {
-			//
-			// 	// if(filters.length == 0) {
-			// 	// 	Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
-			// 	// 		db.close();
-			// 	// 		callback(logs);
-			// 	// 	});
-			// 	// } else {
-			// 	// 	Log.find(filters, function(err, logs){
-			// 	// 		db.close();
-			// 	// 		callback(logs);
-			// 	// 	});
-			// 	// }
-			//
-			// 	callback(fakeDataObject);
-			//
-			// });
-			callback(fakeDataObject);
+			mongoose.connect(url);
+			db.on('error', console.error);
+			db.once('open', function() {
+
+				//if(filters.length == 0) {
+					Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
+						db.close();
+						callback(logs);
+					});
+				// } else {
+				// 	Log.find(filters, function(err, logs){
+				// 		db.close();
+				// 		callback(logs);
+				// 	});
+				// }
+
+				//callback(fakeDataObject);
+
+			});
+			//callback(fakeDataObject);
 		}
 
 
