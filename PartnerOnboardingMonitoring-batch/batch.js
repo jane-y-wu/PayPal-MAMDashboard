@@ -159,7 +159,7 @@ function submitRequest(start, end /*, searchString*/) { // submit 3 queries for 
            "machine":"",
            "sampling":"100",
            "regexs": ["INTERNAL_SERVICE_ERROR"],
-           "isTransactionSearch":"true",
+           "isTransactionSearch":"false",
            "searchMode":"simple",
            "httpCallback": httpCallbackURL,
            "email":"janwu@paypal.com"
