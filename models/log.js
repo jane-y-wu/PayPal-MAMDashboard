@@ -1,10 +1,12 @@
 'use strict'
 
+var async = require('async');
+var request = require('request'); // require request
+var assert = require('assert');
 var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
-mongoose.Promise = require('bluebird');
+mongoose.Promise = global.Promise;
 
-var logSchema = new Schema({
+var logSchema = new mongoose.Schema({
 	rawLogsURL : String,
 	// eventDetailURL: String,
 	metaData : { // not all of this is necessary. is this just an echo of the search parameters?
@@ -37,14 +39,13 @@ var logSchema = new Schema({
 	}
 });
 
-var simpleLogSchema = new Schema({
-	rawLogsURL : String
-});
-
 var Log = mongoose.model('Log', logSchema);
-var SimpleLog = mongoose.model('SimpleLog', simpleLogSchema);
 
 module.exports = {
+<<<<<<< HEAD
 	Log : Log,
-	SimpleLog : SimpleLog
+=======
+	Log : Log
+	//SimpleLog : SimpleLog
+>>>>>>> aecfba9f842783c308d5dc08c98013752d4274f4
 }
