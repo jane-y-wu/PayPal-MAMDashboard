@@ -337,8 +337,21 @@ module.exports = function module() {
 						if(!error && response.statusCode == 200) {
 							// Use a stack to iteratively search through entire JSON object for objects with name in errorNames
 							var recordStack = [];
-							console.log(JSON.parse(body));
-							//recordStack.push(JSON.parse(body))
+							recordStack.push(JSON.parse(body));
+							while (recordStack.length > 0) {
+								var currRecord = recordStack.pop();
+								if (currRecord["@Subclasstype"] == "callblockresponse") {
+									for (var i in currRecord["calActivitiesResp"]) {
+										recordStack.push(currRecord["calActivitiesResp"][i]);
+									}
+								} else if (currRecord["@Subclasstype"] == "callblockresponse" && errorNames.indexOf(currRecord["name"]) >= 0) {
+									// Parse Class and Full_date from messageClass
+									// Parse Type, Status and Name from currRecord
+									// Parse key value pairs in data for rest of fields
+								} else if (currRecord["@Subclasstype"] != "callblockresponse") {
+									console.log("Unknown subclasstype!");
+								}
+							}
 						} else {
 							console.log(error);
 							console.log("Status Code: " + response.statusCode);
