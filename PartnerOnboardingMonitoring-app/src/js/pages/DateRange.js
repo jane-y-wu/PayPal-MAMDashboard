@@ -23,12 +23,13 @@ export default class DateRange extends React.Component {
         defaultStartDate: defaultStartDate,
         defaultEndDate: new Date(Date.now()),
       }
+      this.refreshLogs = this.refreshLogs.bind(this);
     }
 
     refreshLogs() {
       //console.log(this.state.startDate + " " + this.state.endDate);
       LogActions.getLogs();
-      GraphActions.updateGraph();
+      GraphActions.updateGraph(new Date(this.state.startDate).toISOString(), new Date(this.state.endDate).toISOString());
     }
 
     setStartDate(event, date) {

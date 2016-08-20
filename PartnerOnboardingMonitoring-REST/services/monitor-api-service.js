@@ -412,6 +412,7 @@ module.exports = function module() {
 
 										errorType = localLog.payload["Name"];
 										date = localLog.payload["Full_Date"];
+										console.log("inside here " + errorType + date);
 
 
 									} else {

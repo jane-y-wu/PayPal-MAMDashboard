@@ -2,7 +2,7 @@ var request = require('request'); // require request
 var schedule = require('node-schedule');
 var async = require('async');
 var jobID; // string to hold job ID
-var regexsField = [/*'INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT',*/ 'HEADERS_STATUS_DELIVERED']; // expressions to search for in the CAL log
+var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT'/*, 'HEADERS_STATUS_DELIVERED'*/]; // expressions to search for in the CAL log
 var errorCodes = 0; // number of times CAL returns an error code
 var nullResponse = 0; // number of times the response is null
 var alexC3 = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com'; // for testing purposes
@@ -53,11 +53,11 @@ function run() { // runs all the needed functions
 	endTime = getEndTime();
 	startTime = getStartTime();
 
-	/*async.each(regexsField, function(searchString, callback) {
+	async.each(regexsField, function(searchString, callback) {
 		submitRequest(startTime, endTime, searchString);
 		},
-		function(err) {}); */
-	submitRequest(startTime, endTime);
+		function(err) {});
+	//submitRequest(startTime, endTime);
 
 	nullResponse = 0;
 	errorCodes = 0;
@@ -141,10 +141,10 @@ function getStartTime() {
 }
 
 
-function submitRequest(start, end /*, searchString*/) { // submit 3 queries for 3 different errors. create list of errors to loop through
+function submitRequest(start, end, searchString) { // submit 3 queries for 3 different errors. create list of errors to loop through
 
-    /* var searchArray = [searchString];
-    console.log('submitting request : ' + searchArray); */
+    var searchArray = [searchString];
+    console.log('submitting request : ' + searchArray);
 
     request.post(
     	'http://calhadoop-vip-a.slc.paypal.com/regex/request',
@@ -155,21 +155,19 @@ function submitRequest(start, end /*, searchString*/) { // submit 3 queries for 
 			"endTime": end, 
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
-			"dataCenter":"dcg11",
+			"dataCenter":"all",
         	"machine":"",
         	"sampling":"100",
-        	"regexs": ["ResponseCode=200"], /*searchArray,*/
+        	"regexs": /*["ResponseCode=200"], */searchArray,
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": "192.168.0.105" + ":3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": httpCallbackURL + ":3003/api/queryready/?id=$id&status=$status",
         	"email":"janwu@paypal.com"
 		}
 	},
 	function (error, response, body) {
 
 		if (response) {
-
-
 
 			if (!error && response.statusCode == 200) { // no errors
 
@@ -187,7 +185,7 @@ function submitRequest(start, end /*, searchString*/) { // submit 3 queries for 
 					console.log(response.statusCode); // error code
 					errorCodes++; // give up after three times
 					console.log("error code trying again : " + errorCodes);
-					submitRequest(start, end /*, searchArray*/); // resubmit request
+					submitRequest(start, end , searchArray); // resubmit request
 				}
 
 			}
@@ -199,7 +197,7 @@ function submitRequest(start, end /*, searchString*/) { // submit 3 queries for 
 
 				nullResponse++;
 				console.log("null trying again : " + nullResponse);
-				submitRequest(start, end /*, searchArray */);
+				submitRequest(start, end , searchArray);
 			}
 
 

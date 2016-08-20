@@ -5,6 +5,7 @@ var db = mongoose.connection;
 var mongodb = require('mongodb');
 //var url = 'mongodb://root:H9yu7Xn+WD!Ru6Dc_thvxtU7c7AKDuHy292x@10.25.39.2:27017';
 var url = 'localhost:27017';
+//var url = 'mongodb://10.25.39.2:27017/admin';
 mongoose.Promise = global.Promise;
 
 var moment = require('moment');
@@ -25,7 +26,7 @@ var DailyCount = mongoose.model('DailyCount', dailyCount);
 var WeeklyCount = mongoose.model('WeeklyCount', weeklyCount);
 
 var dates = [];
-var dataset = [53, 55, 28, 29, 23, 50, 22];
+var dataset = [/*53, 55, 28, 29, 23, 50, 22*/];
 
 module.exports = function module() {
 
@@ -42,7 +43,7 @@ module.exports = function module() {
 
 			console.log("in store count : " + errorNum + " " + errorName + " " + time);
 
-			mongoose.connect(url);
+			mongoose.connect(url /*, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'}*/);
 			db.on('error', console.error);
 			db.once('open', function() {
 
@@ -131,23 +132,33 @@ module.exports = function module() {
 
 		returnCount : function returnCount(startDate, endDate, errorType, callback) {
 
-			console.log('finding counts');
+			console.log('finding counts!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
-			mongoose.connect(url);
+			//mongoose.connect(url);
+
+			var start = moment(startDate).toDate();
+			var end = moment(endDate).toDate();
+
+			db = mongoose.createConnection(url);
+
+			console.log("the url is " + url);
 			db.on('error', console.error);
 			db.once('open', function() {
 
-				console.log(startDate + " " + endDate + " " + errorType);
-				DailyCount.find({ date : {$gte: startDate, $lte: endDate}, errorType : errorType }, function(err, results) {
+				console.log(start + " " + end + " " + errorType);
+				DailyCount.find({ date : {$gte: start, $lte: end} , errorType : "AeroHC" }, function(err, results) {
       
 					if (!err) {
 
-						console.log(results);
+						console.log("results are " + results);
       
 						//store the error count
 						results.forEach(function (dailyCt) {
       
-							//console.log(dailyCt.errorCount + dailyCt.date);
+							console.log(dailyCt.errorCount + dailyCt.date);
+
+							dates.push(dailyCt.date);
+							dataset.push(dailyCt.errorCount);
 							//dailyCt.errorCount;
 							//dailyCt.date;
       
@@ -158,7 +169,7 @@ module.exports = function module() {
 						// put it into the array in its corresponding location - how???
 						// also need to know what type of error it is
 					} else {
-						console.log(err);
+						console.log("the error is " + err);
 					}
       
 					db.close();
@@ -168,7 +179,7 @@ module.exports = function module() {
       
 			})
 
-			callback(dataset.toString());
+			callback([dates, dataset].toString());
 		}
 	}
 }

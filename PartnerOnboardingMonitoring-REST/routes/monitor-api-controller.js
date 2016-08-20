@@ -95,7 +95,7 @@ module.exports = function module(app) {
 	    		console.log("getRawLogs called!");
 	    		service.getRawLogs(details, function onGetRawLogs(/*details*/ errorNum, errorType, d) {
 	    			//insertMongo(metadata, payload);
-				aggregation.storeCount(errorNum, errorType, d);
+					aggregation.storeCount(errorNum, errorType, d);
 	    			console.log("COMPLETE");
 
 	    		});
