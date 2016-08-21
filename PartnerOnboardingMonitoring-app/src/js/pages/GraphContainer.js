@@ -1,40 +1,47 @@
 var React = require('react');
 var DatePicker = require('react-datepicker');
 var LineChart = require('react-chartjs').Line;
-// var Chart = require('chart.js');
-var dataSrc = require('../data_model/data.js');
 var moment = require('moment');
 
 import * as GraphActions from "../actions/GraphActions";
 import GraphStore from "../stores/GraphStore";
 
-// Chart.defaults.global.responsive = true;
-
 var chartData = {
 
 
-    labels: dataSrc.dates,
+    labels: [],
     datasets: [
       {
-        label: 'My First dataset',
+        label: 'INTERNAL_SERVICE_ERROR',
         fillColor: 'rgba(220,220,220,0.2)',
         strokeColor: 'rgba(220,220,220,1)',
         pointColor: 'rgba(220,220,220,1)',
         pointStrokeColor: '#fff',
         pointHighlightFill: '#fff',
         pointHighlightStroke: 'rgba(220,220,220,1)',
-        data: dataSrc.dataset,
+        data: [],
       },
       {
-        label: 'My Second dataset',
+        label: 'VALIDATION_ERROR',
         fillColor: 'rgba(151,187,205,0.2)',
         strokeColor: 'rgba(151,187,205,1)',
         pointColor: 'rgba(151,187,205,1)',
         pointStrokeColor: '#fff',
         pointHighlightFill: '#fff',
         pointHighlightStroke: 'rgba(151,187,205,1)',
-        data: [28, 48, 40, 19, 66, 27, 70],
+        data: [],
       },
+
+      {
+        label: 'SERVICE_TIMEOUT',
+        fillColor: 'rgba(185,203,212,0.2)',
+        strokeColor: 'rgba(185,203,212,1)',
+        pointColor: 'rgba(185,203,212,1)',
+        pointStrokeColor: '#fff',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(185.5,203.5,212.5,1)',
+        data: [],
+      }
     ]
 
 }
@@ -63,50 +70,19 @@ var styles = {
   }
 }
 
-var newData = {
-  labels: dataSrc.dates,
-    datasets: [
-      {
-        label: 'My First dataset',
-        fillColor: 'rgba(220,220,220,0.2)',
-        strokeColor: 'rgba(220,220,220,1)',
-        pointColor: 'rgba(220,220,220,1)',
-        pointStrokeColor: '#fff',
-        pointHighlightFill: '#fff',
-        pointHighlightStroke: 'rgba(220,220,220,1)',
-        data: [23, 25, 28, 29, 23, 20, 22],
-      }
-    ]
-}
-
 export default class GraphContainer extends React.Component {
 
   constructor() {
     super();
     this.changeState = this.changeState.bind(this);
+
+    GraphActions.updateGraph();
+    GraphStore.on('change', this.changeState);
     this.state = {
       chartData : chartData,
     }
+
   }
-
-  // onButtonClick(ev) {
-  //   alert('the button was clicked; start date : ' + this.state.startDate.format("LL") + ' end date : ' + this.state.endDate.format("LL"));
-  //   this.setState({chartData : newData});
-  // }
-
-  // handleChangeStart(date) {
-  //   this.setState({
-  //     startDate: date
-  //   });
-  // }
-
-  // handleChangeEnd(date) {
-  //   this.setState({
-  //     endDate: date
-  //   });
-  // }
-
-
 
   componentWillMount() {
     GraphStore.on("change", this.changeState);
@@ -117,45 +93,37 @@ export default class GraphContainer extends React.Component {
   }
 
   changeState() {
+
     var response = GraphStore.returnCount();
-    response = response.split(',');
-    response = response.map(function(item) {
+    response = response.split(','); // split response string back into array
+
+    var data = [];
+    var dates = [];
+
+    var length = response.length; 
+
+    for (var i = 0; i < length/2; i++) { // store dates first
+        dates.push(response.shift());
+    }
+
+    response = response.map(function(item) { // parse the rest into ints
       return parseInt(item);
     })
 
-    var data = response[1];
+    for (var i = 0; i < response.length; i++) { // store data
+      data.push(response[i]);
+    }
 
+    chartData.labels = dates;
+    chartData.datasets[0].data = data;
+    this.setState({chartData : chartData});
 
-    console.log("new data is " + data);
-    newData.datasets[0].data = data;
-    this.setState({chartData : newData});
   }
 
   render () {
     return(
 
       <div>
-
-        {/*}<div id="calendar-container" className="row">
-
-          <DatePicker id="star-calendar"
-            selected={this.state.startDate}
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            maxDate={moment()}
-            todayButton={'Today'}
-            onChange={this.handleChangeStart} />
-          <DatePicker id="end-calendar"
-            selected={this.state.endDate}
-            startDate={this.state.startDate}
-            endDate={this.state.endDate}
-            maxDate={moment()}
-            todayButton={'Today'}
-            onChange={this.handleChangeEnd} />
-
-          <button type="button" onClick={this.onButtonClick}>Update Chart</button>
-        </div>*/}
-
          <div id="chart-container" className="row">
                 <div style={styles.graphContainer} width="100%">
                   <LineChart data={this.state.chartData}

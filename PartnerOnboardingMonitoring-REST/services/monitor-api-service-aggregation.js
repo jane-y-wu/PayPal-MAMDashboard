@@ -8,6 +8,8 @@ var url = 'localhost:27017';
 //var url = 'mongodb://10.25.39.2:27017/admin';
 mongoose.Promise = global.Promise;
 
+var form = 'MMM Do YYYY'; // format of date string
+
 var moment = require('moment');
 
 var dailyCount = new mongoose.Schema({
@@ -25,8 +27,6 @@ var weeklyCount = new mongoose.Schema({
 var DailyCount = mongoose.model('DailyCount', dailyCount);
 var WeeklyCount = mongoose.model('WeeklyCount', weeklyCount);
 
-var dates = [];
-var dataset = [/*53, 55, 28, 29, 23, 50, 22*/];
 
 module.exports = function module() {
 
@@ -130,11 +130,56 @@ module.exports = function module() {
 
 		},
 
-		returnCount : function returnCount(startDate, endDate, errorType, callback) {
+		returnCountDefault : function returnCountDefault (callback) {
+
+			var dateSeven = moment();
+			var dateSix = dateSeven.clone().subtract(1, 'days');
+			var dateFive = dateSix.clone().subtract(1, 'days');
+			var dateFour = dateFive.clone().subtract(1, 'days');
+			var dateThree = dateFour.clone().subtract(1, 'days');
+			var dateTwo = dateThree.clone().subtract(1, 'days');
+			var dateOne = dateTwo.clone().subtract(1, 'days');
+
+			var dates = [dateOne.format(form), dateTwo.format(form), dateThree.format(form), dateFour.format(form), dateFive.format(form), dateSix.format(form), dateSeven.format(form)];
+			var dataset = [/*dayOne, dayTwo, dayThree, dayFour, dayFive, daySix, daySeven*/];
+
+			db = mongoose.createConnection(url);
+
+			db.on('error', console.error);
+			db.once('open', function() {
+
+				dates.forEach(function (day) {
+					DailyCount.find({date : day, errorType : "AeroHC"}, function (err, results) {
+						//dataset.push(results.errorCount);
+					})
+				});
+
+				db.close();
+
+			})
+
+			// var dayOne = 15;
+			// var dayTwo = 18;
+			// var dayThree = 12;
+			// var dayFour = 10;
+			// var dayFive = 16;
+			// var daySix = 19;
+			// var daySeven = 13;
+
+			
+			dataset = [80, 48, 60, 119, 86, 27, 190]
+
+			callback([dates, dataset].toString());
+		},
+
+		returnCount : function returnCount (startDate, endDate, errorType, callback) {
 
 			console.log('finding counts!!!!!!!!!!!!!!!!!!!!!!!!!!');
 
 			//mongoose.connect(url);
+
+			var dates = [1, 2, 3, 4, 5, 6, 7];
+			var dataset = [53, 55, 28, 29, 23, 50, 22];
 
 			var start = moment(startDate).toDate();
 			var end = moment(endDate).toDate();
@@ -146,7 +191,7 @@ module.exports = function module() {
 			db.once('open', function() {
 
 				console.log(start + " " + end + " " + errorType);
-				DailyCount.find({ date : {$gte: start, $lte: end} , errorType : "AeroHC" }, function(err, results) {
+				DailyCount.find({ date : {$gte: start, $lte: end} , errorType : "AeroHC" }, function (err, results) {
       
 					if (!err) {
 
@@ -156,18 +201,11 @@ module.exports = function module() {
 						results.forEach(function (dailyCt) {
       
 							console.log(dailyCt.errorCount + dailyCt.date);
-
 							dates.push(dailyCt.date);
 							dataset.push(dailyCt.errorCount);
-							//dailyCt.errorCount;
-							//dailyCt.date;
-      
-							// push each element to their respective arrays
-							// still have to store which error it is
+
 						});
       
-						// put it into the array in its corresponding location - how???
-						// also need to know what type of error it is
 					} else {
 						console.log("the error is " + err);
 					}

@@ -27,7 +27,6 @@ export default class DateRange extends React.Component {
     }
 
     refreshLogs() {
-      //console.log(this.state.startDate + " " + this.state.endDate);
       LogActions.getLogs();
       GraphActions.updateGraph(new Date(this.state.startDate).toISOString(), new Date(this.state.endDate).toISOString());
     }

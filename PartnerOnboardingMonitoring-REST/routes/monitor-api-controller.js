@@ -145,9 +145,18 @@ module.exports = function module(app) {
 
 			console.log("start is " + start + " and end is " + end);
 
-			aggregation.returnCount(start, end, errorType, function(response) {
-				res.end(response);
-			});
+			if (start === "undefined" && end === "undefined") {
+				aggregation.returnCountDefault(function (response) {
+					res.end(response);
+				});
+			} else {
+				aggregation.returnCount(start, end, errorType, function (response) {
+					res.end(response);
+				});
+
+			}
+
+			
 		}
 	};
 };
