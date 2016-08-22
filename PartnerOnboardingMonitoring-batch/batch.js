@@ -12,13 +12,13 @@ var option = process.argv[2];
 
 // for testing purposes: option a to use alex's C3, m for madhav's
 if (option == 'a') {
-	httpCallbackURL = alexC3;
+	httpCallbackURL = alexC3 + ":3004/api/queryready/?id=$id&status=$status";
 }
 else if (option == 'm') {
-	httpCallbackURL = madhavC3;
+	httpCallbackURL = madhavC3 + ":3004/api/queryready/?id=$id&status=$status";
 }
 else { // default
-    httpCallbackURL = madhavC3;
+    httpCallbackURL = madhavC3 + ":3004/api/queryready/?id=$id&status=$status";
 }
 
 // TEST
@@ -151,6 +151,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
 			//'http://mscalhadoop.qa.paypal.com/regex/request',
     	{
     	json: { // example search input
+
 			"startTime": start,
 			"endTime": end, 
 			"environment":"paypal",
