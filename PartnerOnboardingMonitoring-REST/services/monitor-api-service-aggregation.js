@@ -1,7 +1,8 @@
 'use strict'
 
 var mongoose = require('mongoose');
-var db = mongoose.connection;
+//var db = mongoose.connection;
+var db = require('../../models/db.js');
 var mongodb = require('mongodb');
 //var url = 'mongodb://root:H9yu7Xn+WD!Ru6Dc_thvxtU7c7AKDuHy292x@10.25.39.2:27017';
 var url = 'localhost:27017';
@@ -9,6 +10,7 @@ var url = 'localhost:27017';
 mongoose.Promise = global.Promise;
 var async = require('async');
 var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"];
+//mongoose.connect(url);
 
 var form = 'MMM Do YYYY'; // format of date string
 
@@ -26,8 +28,11 @@ var weeklyCount = new mongoose.Schema({
 	errorCount: {type: Number},
 })
 
-var DailyCount = mongoose.model('DailyCount', dailyCount);
-var WeeklyCount = mongoose.model('WeeklyCount', weeklyCount);
+// var DailyCount = mongoose.model('DailyCount', dailyCount);
+// var WeeklyCount = mongoose.model('WeeklyCount', weeklyCount);
+
+var DailyCount = db.model('DailyCount', dailyCount);
+var WeeklyCount = db.model('WeeklyCount', weeklyCount);
 
 
 module.exports = function module() {
@@ -46,10 +51,10 @@ module.exports = function module() {
 			console.log("in store count : " + errorNum + " " + errorName + " " + time);
 
 			//db = mongoose.createConnection(url /*, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'}*/);
-			mongoose.connect(url);
+			//mongoose.connect(url);
 
-			db.on('error', console.error);
-			db.once('open', function() {
+			//db.on('error', console.error);
+			//db.once('open', function() {
 
 				// TODO parse out date
 				var year = time.getFullYear();
@@ -80,7 +85,7 @@ module.exports = function module() {
 						store.save(function(err, result){
 							console.log(result);
 							console.log("saved");
-							db.close();
+							//db.close();
 						})
 
 					}
@@ -90,7 +95,7 @@ module.exports = function module() {
 							console.log("updating");
 							console.log(results);
 
-							db.close();
+							//db.close();
 						})
 
 					}
@@ -113,7 +118,7 @@ module.exports = function module() {
 						store.save(function(err, result){
 							console.log(result);
 							console.log("saved");
-							db.close();
+							//db.close();
 						})
 
 					}
@@ -123,14 +128,14 @@ module.exports = function module() {
 							console.log("updating");
 							console.log(results);
 
-							db.close();
+							//db.close();
 						})
 
 					}
 				})
 
 
-			});
+			//});
 
 		},
 
@@ -145,10 +150,10 @@ module.exports = function module() {
 			var end = moment(endDate).toDate();
 
 			//db = mongoose.createConnection(url);
-			mongoose.connect(url);
+			//mongoose.connect(url);
 			//console.log('getErrorCount DB CONNECTS!!!!');
-			db.on('error', console.error);
-			db.once('open', function() {
+			//db.on('error', console.error);
+			//db.once('open', function() {
 
 				//console.log('getErrorCount DB OPENING!!!!');
 
@@ -192,7 +197,7 @@ module.exports = function module() {
 					}, function(err) {
 
 						responseObj.labels = dates;
-						db.close();
+						//db.close();
 						//console.log("***************   get error count db closed");
 
 						callback(JSON.stringify(responseObj));
@@ -200,12 +205,12 @@ module.exports = function module() {
 					})
 
 				} else {
-					db.close();
+					//db.close();
 				}
 
 
 
-			});
+			//});
 			
 		}
 	}

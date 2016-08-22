@@ -2,7 +2,8 @@
 var request = require('request'); // require request
 var sherlockEndpoint = "http://calhadoop-vip-a.slc.paypal.com/regex/request/"; // generic sherlock search endpoint url
 var mongoose = require('mongoose');
-var db = mongoose.connection;
+//var db = mongoose.connection;
+var db = require('../../models/db.js');
 //var url = 'mongodb://root:ej+yFtAR^mEjKB?6AhK7Xrm_prM?aK32Xx94@10.25.39.2:27017';
 //var url = 'mongodb://10.25.39.2:27017/admin';
 var url = 'localhost:27017';
@@ -45,7 +46,8 @@ var logSchema = new mongoose.Schema({
 	}
 });
 
-var Log = mongoose.model('Log', logSchema);
+//var Log = mongoose.model('Log', logSchema);
+var Log = db.model('Log', logSchema);
 
 var fakeData = require('./fakeData.js');
 var fakeDataObject = fakeData.fakeDataObject;
@@ -95,9 +97,9 @@ module.exports = function module() {
 		},
 
 		getRawLogs : function getRawLogs(details, callback) {
-			mongoose.connect(url/*, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'}*/);
-			db.on('error', console.error);
-			db.once('open', function() {
+			// mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});
+			// db.on('error', console.error);
+			// db.once('open', function() {
 
 				var numErrors = details.records.length;
 				var errorType;
@@ -252,19 +254,20 @@ module.exports = function module() {
 					// });
 
 				}, function(err/*, numErrors, errorType, date*/){
-					db.close();
+					//db.close();
 
                     			//callback();
-                    			db.once('close', function() {
+                    			//db.once('close', function() {
 						console.log(numErrors + " " + errorType + " " + date);
 						callback(numErrors, errorType, date);
-                    			})
+                    			//})
 
 				});
-			});
+			//});
 		},
 
 		returnLogs : function returnLogs(startDate, endDate, filters, callback) {
+
 			// console.log("filters: " + filters);
 			//
 			// mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});
