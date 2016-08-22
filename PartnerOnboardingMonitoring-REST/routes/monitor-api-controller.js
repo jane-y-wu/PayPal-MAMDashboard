@@ -10,7 +10,7 @@ module.exports = function module(app) {
 			console.log("test called");
 
 
-			var date = new Date(2016, 6, 27, 2, 15);
+			var date = new Date(2016, 7, 21, 2, 15);
 			if (req.query.id == 1) { // internal service error
 				
 				aggregation.storeCount(3, "INTERNAL_SERVICE_ERROR", date);
@@ -136,8 +136,8 @@ module.exports = function module(app) {
 			});
 		},
 
-		returnCount : function returnCount(req, res, next) {
-			console.log("returnCount called!");
+		getErrorCount : function getErrorCount(req, res, next) {
+			console.log("getErrorCount called!");
 
 			var start = req.query.startDate;
 			var end = req.query.endDate;
@@ -145,17 +145,9 @@ module.exports = function module(app) {
 
 			console.log("start is " + start + " and end is " + end);
 
-			if (start === "undefined" && end === "undefined") {
-				aggregation.returnCountDefault(function (response) {
-					res.end(response);
-				});
-			} else {
-				aggregation.returnCount(start, end, errorType, function (response) {
-					res.end(response);
-				});
-
-			}
-
+			aggregation.getErrorCount(start, end, errorType, function (response) {
+				res.end(response);
+			});
 			
 		}
 	};

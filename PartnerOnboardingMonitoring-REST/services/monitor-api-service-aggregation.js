@@ -7,6 +7,8 @@ var mongodb = require('mongodb');
 var url = 'localhost:27017';
 //var url = 'mongodb://10.25.39.2:27017/admin';
 mongoose.Promise = global.Promise;
+var async = require('async');
+var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"];
 
 var form = 'MMM Do YYYY'; // format of date string
 
@@ -43,7 +45,9 @@ module.exports = function module() {
 
 			console.log("in store count : " + errorNum + " " + errorName + " " + time);
 
-			mongoose.connect(url /*, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'}*/);
+			//db = mongoose.createConnection(url /*, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'}*/);
+			mongoose.connect(url);
+
 			db.on('error', console.error);
 			db.once('open', function() {
 
@@ -130,94 +134,79 @@ module.exports = function module() {
 
 		},
 
-		returnCountDefault : function returnCountDefault (callback) {
+		getErrorCount : function getErrorCount (startDate, endDate, errorType, callback) {
 
-			var dateSeven = moment();
-			var dateSix = dateSeven.clone().subtract(1, 'days');
-			var dateFive = dateSix.clone().subtract(1, 'days');
-			var dateFour = dateFive.clone().subtract(1, 'days');
-			var dateThree = dateFour.clone().subtract(1, 'days');
-			var dateTwo = dateThree.clone().subtract(1, 'days');
-			var dateOne = dateTwo.clone().subtract(1, 'days');
+			var dates = [];
+			var dataset = [];
 
-			var dates = [dateOne.format(form), dateTwo.format(form), dateThree.format(form), dateFour.format(form), dateFive.format(form), dateSix.format(form), dateSeven.format(form)];
-			var dataset = [/*dayOne, dayTwo, dayThree, dayFour, dayFive, daySix, daySeven*/];
-
-			db = mongoose.createConnection(url);
-
-			db.on('error', console.error);
-			db.once('open', function() {
-
-				dates.forEach(function (day) {
-					DailyCount.find({date : day, errorType : "AeroHC"}, function (err, results) {
-						//dataset.push(results.errorCount);
-					})
-				});
-
-				db.close();
-
-			})
-
-			// var dayOne = 15;
-			// var dayTwo = 18;
-			// var dayThree = 12;
-			// var dayFour = 10;
-			// var dayFive = 16;
-			// var daySix = 19;
-			// var daySeven = 13;
-
-			
-			dataset = [80, 48, 60, 119, 86, 27, 190]
-
-			callback([dates, dataset].toString());
-		},
-
-		returnCount : function returnCount (startDate, endDate, errorType, callback) {
-
-			console.log('finding counts!!!!!!!!!!!!!!!!!!!!!!!!!!');
-
-			//mongoose.connect(url);
-
-			var dates = [1, 2, 3, 4, 5, 6, 7];
-			var dataset = [53, 55, 28, 29, 23, 50, 22];
+			var responseObj = new Object();
 
 			var start = moment(startDate).toDate();
 			var end = moment(endDate).toDate();
 
-			db = mongoose.createConnection(url);
-
-			console.log("the url is " + url);
+			//db = mongoose.createConnection(url);
+			mongoose.connect(url);
+			//console.log('getErrorCount DB CONNECTS!!!!');
 			db.on('error', console.error);
 			db.once('open', function() {
 
+				//console.log('getErrorCount DB OPENING!!!!');
+
 				console.log(start + " " + end + " " + errorType);
-				DailyCount.find({ date : {$gte: start, $lte: end} , errorType : "AeroHC" }, function (err, results) {
-      
-					if (!err) {
 
-						console.log("results are " + results);
-      
-						//store the error count
-						results.forEach(function (dailyCt) {
-      
-							console.log(dailyCt.errorCount + dailyCt.date);
-							dates.push(dailyCt.date);
-							dataset.push(dailyCt.errorCount);
+				if (errorType === "undefined") { // search all three
 
-						});
-      
-					} else {
-						console.log("the error is " + err);
-					}
-      
+
+					async.each(errorNames, function(eachErr, cb) {
+						//debugger;
+						console.log(eachErr);
+						//console.log('************************ before find');
+						DailyCount.find({ date : {$gte: start, $lte: end} , errorType : eachErr }, null, {sort : {date : 1}}, function (err, results) {
+		      				console.log('inside find');
+							if (!err) {
+
+								dates = [];
+								dataset = [];
+
+								console.log("results are " + results);
+		      
+								//store the error count
+								results.forEach(function (dailyCt) {
+		      
+									console.log(dailyCt.errorCount + dailyCt.date);
+									dates.push(moment(dailyCt.date).format(form));
+									dataset.push(dailyCt.errorCount);
+
+								});
+		      
+							} else {
+								console.log("the error is " + err);
+							}
+
+							responseObj[eachErr] = dataset;
+
+							cb();
+
+						})
+
+					}, function(err) {
+
+						responseObj.labels = dates;
+						db.close();
+						//console.log("***************   get error count db closed");
+
+						callback(JSON.stringify(responseObj));
+
+					})
+
+				} else {
 					db.close();
-					console.log("db closed");
-				})
-      
-      
-			})
+				}
 
-			callback([dates, dataset].toString());
+
+
+			});
+			
 		}
 	}
 }

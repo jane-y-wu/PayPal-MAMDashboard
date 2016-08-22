@@ -76,8 +76,8 @@ export default class GraphContainer extends React.Component {
     super();
     this.changeState = this.changeState.bind(this);
 
-    GraphActions.updateGraph();
-    GraphStore.on('change', this.changeState);
+    GraphActions.updateGraph(moment().subtract(6, 'days').toISOString(), moment().toISOString());
+    //GraphStore.on('change', this.changeState);
     this.state = {
       chartData : chartData,
     }
@@ -95,27 +95,15 @@ export default class GraphContainer extends React.Component {
   changeState() {
 
     var response = GraphStore.returnCount();
-    response = response.split(','); // split response string back into array
+    response = JSON.parse(response);
 
-    var data = [];
-    var dates = [];
+    //console.log(response);
 
-    var length = response.length; 
+    chartData.labels = response.labels;
+    chartData.datasets[0].data = response.INTERNAL_SERVICE_ERROR;
+    chartData.datasets[1].data = response.VALIDATION_ERROR;
+    chartData.datasets[2].data = response.SERVICE_TIMEOUT;
 
-    for (var i = 0; i < length/2; i++) { // store dates first
-        dates.push(response.shift());
-    }
-
-    response = response.map(function(item) { // parse the rest into ints
-      return parseInt(item);
-    })
-
-    for (var i = 0; i < response.length; i++) { // store data
-      data.push(response[i]);
-    }
-
-    chartData.labels = dates;
-    chartData.datasets[0].data = data;
     this.setState({chartData : chartData});
 
   }

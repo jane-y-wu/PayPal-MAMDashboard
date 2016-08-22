@@ -21,7 +21,7 @@ module.exports = function module(app) {
   app.post('/api/getLogs/', monitorApiController.returnLogsFiltered);
     // This API endpoint is coded under the assumption that we will filter over:
       // partnerAccount
-  app.get('/api/returnCount/', monitorApiController.returnCount);
+  app.get('/api/getErrorCount/', monitorApiController.getErrorCount);
 
   app.get('/api/test/', monitorApiController.test);
 };
