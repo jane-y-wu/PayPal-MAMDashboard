@@ -9,6 +9,7 @@ export default class LogWrapper extends React.Component {
   constructor(props) {
     super(props);
     this.getLogs = this.getLogs.bind(this);
+    this.sortLogs = this.sortLogs.bind(this);
     this.state = {
       LOGS_TO_SHOW: props.logsToShow,
       parsedLogs: [{errName: "loading"}],
@@ -22,6 +23,12 @@ export default class LogWrapper extends React.Component {
 
   componentWillUnmount() {
     LogStore.removeListener("change", this.getLogs);
+  }
+
+  sortLogs(a, b) {
+    if (a.dateObj < b.dateObj) return -1;
+    if (a.dateObj > b.dateObj) return 1;
+    return 0;
   }
 
   getLogs() {
@@ -50,6 +57,7 @@ export default class LogWrapper extends React.Component {
       //parsedLog.fullDate = dateObj.toLocaleString();
       this.state.parsedLogs.push(parsedLog);
     }
+    this.state.parsedLogs.sort(this.sortLogs);
     this.setState({
     });
     console.log(this.state.parsedLogs);

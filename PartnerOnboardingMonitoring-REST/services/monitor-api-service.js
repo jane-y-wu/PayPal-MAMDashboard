@@ -49,231 +49,8 @@ var logSchema = new mongoose.Schema({
 //var Log = mongoose.model('Log', logSchema);
 var Log = db.model('Log', logSchema);
 
-var fakeDataObject = [{
-		rawLogsURL : "http://www.paypal.com",
-		metaData : {
-			Machine : "machine",
-			Pool : "pool",
-			Data_Center : "data center",
-		},
-		payload: {
-			Class : "E",
-			Full_Date : Date.now(),
-			Type : "Validation",
-			Status : 2,
-			Name : "VALIDATION_ERROR",
-			corr_id_: "123456789",
-			method: "POST",
-			isLoginable: true,
-			hasPartnerRelationships: true,
-			channel: "API",
-			operation: "VALIDATE_US",
-			type: "Input Validation Error",
-			service: "PartnerApiPlatformServ",
-			path: "#/owner_info/phones/@type=='HOME'/national_number",
-			issue: "National number must be between 1 to 14 digits long",
-			partnerAccount: "1177032420632337513"
-		}},
-	{
-		rawLogsURL : "http://www.paypal2.com",
-		metaData : {
-			Machine : "machine2",
-			Pool : "pool2",
-			Data_Center : "data center2",
-		},
-		payload: {
-			Class : "E2",
-			Full_Date : Date.now(),
-			Type : "Validation 2",
-			Status : 2,
-			Name : "VALIDATION_ERROR 2",
-			corr_id_: "123456789 2",
-			method: "POST 2",
-			isLoginable: true,
-			hasPartnerRelationships: true,
-			channel: "API 2",
-			operation: "VALIDATE_US 2",
-			type: "Input Validation Error2",
-			service: "PartnerApiPlatformServ 2",
-			path: "#/owner_info/phones/@type=='HOME'/national_number 2",
-			issue: "National number must be between 1 to 14 digits long ",
-			partnerAccount: "1177032420632337513 2"
-		}},
-		{
-			rawLogsURL : "http://www.paypal.com",
-			metaData : {
-				Machine : "machine",
-				Pool : "pool",
-				Data_Center : "data center",
-			},
-			payload: {
-				Class : "E",
-				Full_Date : Date.now(),
-				Type : "Validation 3",
-				Status : 3,
-				Name : "VALIDATION_ERROR 3",
-				corr_id_: "123456789 3",
-				method: "POST 3",
-				isLoginable: true,
-				hasPartnerRelationships: true,
-				channel: "API 3",
-				operation: "VALIDATE_US 3",
-				type: "Input Validation Error 3",
-				service: "PartnerApiPlatformServ 3",
-				path: "#/owner_info/phones/@type=='HOME'/national_number 3",
-				issue: "National number must be between 1 to 14 digits long 3",
-				partnerAccount: "1177032420632337513 3"
-			}},
-			{
-					rawLogsURL : "http://www.paypal.com",
-					metaData : {
-						Machine : "machine",
-						Pool : "pool",
-						Data_Center : "data center",
-					},
-					payload: {
-						Class : "E",
-						Full_Date : Date.now(),
-						Type : "Validation",
-						Status : 2,
-						Name : "INTERNAL_SERVICE_ERROR",
-						corr_id_: "123456789",
-						method: "POST",
-						isLoginable: true,
-						hasPartnerRelationships: true,
-						channel: "API",
-						operation: "VALIDATE_US",
-						type: "Input Validation Error",
-						service: "PartnerApiPlatformServ",
-						path: "#/owner_info/phones/@type=='HOME'/national_number",
-						issue: "National number must be between 1 to 14 digits long",
-						partnerAccount: "1177032420632337513"
-					}},
-				{
-					rawLogsURL : "http://www.paypal2.com",
-					metaData : {
-						Machine : "machine2",
-						Pool : "pool2",
-						Data_Center : "data center2",
-					},
-					payload: {
-						Class : "E2",
-						Full_Date : Date.now(),
-						Type : "Validation 2",
-						Status : 2,
-						Name : "INTERNAL_SERVICE_ERROR 2",
-						corr_id_: "123456789 2",
-						method: "POST 2",
-						isLoginable: true,
-						hasPartnerRelationships: true,
-						channel: "API 2",
-						operation: "VALIDATE_US 2",
-						type: "Input Validation Error2",
-						service: "PartnerApiPlatformServ 2",
-						path: "#/owner_info/phones/@type=='HOME'/national_number 2",
-						issue: "National number must be between 1 to 14 digits long ",
-						partnerAccount: "1177032420632337513 2"
-					}},
-					{
-						rawLogsURL : "http://www.paypal.com",
-						metaData : {
-							Machine : "machine",
-							Pool : "pool",
-							Data_Center : "data center",
-						},
-						payload: {
-							Class : "E",
-							Full_Date : Date.now(),
-							Type : "Validation 3",
-							Status : 3,
-							Name : "INTERNAL_SERVICE_ERROR 3",
-							corr_id_: "123456789 3",
-							method: "POST 3",
-							isLoginable: true,
-							hasPartnerRelationships: true,
-							channel: "API 3",
-							operation: "VALIDATE_US 3",
-							type: "Input Validation Error 3",
-							service: "PartnerApiPlatformServ 3",
-							path: "#/owner_info/phones/@type=='HOME'/national_number 3",
-							issue: "National number must be between 1 to 14 digits long 3",
-							partnerAccount: "1177032420632337513 3"
-						}},
-						{
-								rawLogsURL : "http://www.paypal.com",
-								metaData : {
-									Machine : "machine",
-									Pool : "pool",
-									Data_Center : "data center",
-								},
-								payload: {
-									Class : "E",
-									Full_Date : Date.now(),
-									Type : "Validation",
-									Status : 2,
-									Name : "SERVICE_TIMEOUT",
-									corr_id_: "123456789",
-									method: "POST",
-									isLoginable: true,
-									hasPartnerRelationships: true,
-									channel: "API",
-									operation: "VALIDATE_US",
-									type: "Input Validation Error",
-									service: "PartnerApiPlatformServ",
-									path: "#/owner_info/phones/@type=='HOME'/national_number",
-									issue: "National number must be between 1 to 14 digits long",
-									partnerAccount: "1177032420632337513"
-								}},
-							{
-								rawLogsURL : "http://www.paypal2.com",
-								metaData : {
-									Machine : "machine2",
-									Pool : "pool2",
-									Data_Center : "data center2",
-								},
-								payload: {
-									Class : "E2",
-									Full_Date : Date.now(),
-									Type : "Validation 2",
-									Status : 2,
-									Name : "SERVICE_TIMEOUT 2",
-									corr_id_: "123456789 2",
-									method: "POST 2",
-									isLoginable: true,
-									hasPartnerRelationships: true,
-									channel: "API 2",
-									operation: "VALIDATE_US 2",
-									type: "Input Validation Error2",
-									service: "PartnerApiPlatformServ 2",
-									path: "#/owner_info/phones/@type=='HOME'/national_number 2",
-									issue: "National number must be between 1 to 14 digits long ",
-									partnerAccount: "1177032420632337513 2"
-								}},
-								{
-									rawLogsURL : "http://www.paypal.com",
-									metaData : {
-										Machine : "machine",
-										Pool : "pool",
-										Data_Center : "data center",
-									},
-									payload: {
-										Class : "E",
-										Full_Date : Date.now(),
-										Type : "Validation 3",
-										Status : 3,
-										Name : "SERVICE_TIMEOUT 3",
-										corr_id_: "123456789 3",
-										method: "POST 3",
-										isLoginable: true,
-										hasPartnerRelationships: true,
-										channel: "API 3",
-										operation: "VALIDATE_US 3",
-										type: "Input Validation Error 3",
-										service: "PartnerApiPlatformServ 3",
-										path: "#/owner_info/phones/@type=='HOME'/national_number 3",
-										issue: "National number must be between 1 to 14 digits long 3",
-										partnerAccount: "1177032420632337513 3"
-									}}]
+var fakeData = require('./fakeData.js');
+var fakeDataObject = fakeData.fakeDataObject;
 
 var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT", "HEADERS_STATUS_DELIVERED"];
 
@@ -341,8 +118,32 @@ module.exports = function module() {
 						if(!error && response.statusCode == 200) {
 							// Use a stack to iteratively search through entire JSON object for objects with name in errorNames
 							var recordStack = [];
-							console.log(JSON.parse(body));
-							//recordStack.push(JSON.parse(body))
+							recordStack.push(JSON.parse(body));
+							while (recordStack.length > 0) {
+								var currRecord = recordStack.pop();
+								if (currRecord["@Subclasstype"] == "callblockresponse") {
+									for (var i in currRecord["calActivitiesResp"]) {
+										recordStack.push(currRecord["calActivitiesResp"][i]);
+									}
+								} else if (currRecord["@Subclasstype"] == "callblockresponse" && errorNames.indexOf(currRecord["name"]) >= 0) {
+									var localLog = { metaData : {}, payload: {} };
+									// Parse Class and Full_date from messageClass
+									localLog.metdata.Class = currRecord.messageClass[0];
+									var dateMatch = rawLogsURL.match("datetime=(.*) ");
+									var calendarDate = dateMatch[1];
+									var time = currRecord.messageClass.substring(1);
+									var fullDate = calendarDate + 'T' + time.substring(0, 8);
+									var fullDateDashes = fullDate.replace(/\//g, "-");
+									localLog.payload["Full_Date"] = new Date(fullDateDashes);
+									// Parse Type, Status and Name from currRecord
+									localLog.metdata.Type = currRecord.type;
+									localLog.metdata.Status = parseInt(currRecord.status);
+									localLog.metdata.Name = currRecord.name;
+									// Parse key value pairs in data for rest of fields
+								} else if (currRecord["@Subclasstype"] != "callblockresponse") {
+									console.log("Unknown subclasstype!");
+								}
+							}
 						} else {
 							console.log(error);
 							console.log("Status Code: " + response.statusCode);
@@ -467,29 +268,29 @@ module.exports = function module() {
 
 		returnLogs : function returnLogs(startDate, endDate, filters, callback) {
 
-			console.log("filters: " + filters);
-
+			// console.log("filters: " + filters);
+			//
 			// mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});
 			// db.on('error', console.error);
 			// db.once('open', function() {
-
-				//if(filters.length == 0) {
-					Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
-						//db.close();
-						console.log("logs: " + JSON.stringify(logs));
-						callback(logs);
-					});
-				// } else {
-				// 	Log.find(filters, function(err, logs){
-				// 		db.close();
-				// 		callback(logs);
-				// 	});
-				// }
-
-				//callback(fakeDataObject);
-
-			//});
-			//callback(fakeDataObject);
+			//
+			// 	//if(filters.length == 0) {
+			// 		Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
+			// 			db.close();
+			// 			console.log("logs: " + JSON.stringify(logs));
+			// 			callback(logs);
+			// 		});
+			// 	// } else {
+			// 	// 	Log.find(filters, function(err, logs){
+			// 	// 		db.close();
+			// 	// 		callback(logs);
+			// 	// 	});
+			// 	// }
+			//
+			// 	//callback(fakeDataObject);
+			//
+			// });
+			callback(fakeDataObject);
 		}
 
 
