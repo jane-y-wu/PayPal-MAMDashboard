@@ -42,10 +42,6 @@ var logSchema = new mongoose.Schema({
 var Log = mongoose.model('Log', logSchema);
 
 module.exports = {
-<<<<<<< HEAD
-	Log : Log,
-=======
 	Log : Log
 	//SimpleLog : SimpleLog
->>>>>>> aecfba9f842783c308d5dc08c98013752d4274f4
 }
