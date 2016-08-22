@@ -4,7 +4,8 @@ var sherlockEndpoint = "http://calhadoop-vip-a.slc.paypal.com/regex/request/"; /
 var mongoose = require('mongoose');
 var db = mongoose.connection;
 //var url = 'mongodb://root:ej+yFtAR^mEjKB?6AhK7Xrm_prM?aK32Xx94@10.25.39.2:27017';
-var url = 'mongodb://10.25.39.2:27017/admin';
+//var url = 'mongodb://10.25.39.2:27017/admin';
+var url = 'localhost:27017';
 mongoose.Promise = global.Promise;
 //var url = 'mongodb://partner-self-service-6103.ccg21.dev.paypalcorp.com:12345/';
 var assert = require('assert');
@@ -94,7 +95,7 @@ module.exports = function module() {
 		},
 
 		getRawLogs : function getRawLogs(details, callback) {
-			mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});
+			mongoose.connect(url/*, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'}*/);
 			db.on('error', console.error);
 			db.once('open', function() {
 
@@ -103,6 +104,7 @@ module.exports = function module() {
 				var date;
 
 				async.each(details.records, function(record, asyncCallback){
+
 
 					var eventDetailURL = record.url; //this is logview url
 					var jsonURL = eventDetailURL.replace("logviewui", "logview");
@@ -263,7 +265,6 @@ module.exports = function module() {
 		},
 
 		returnLogs : function returnLogs(startDate, endDate, filters, callback) {
-
 			// console.log("filters: " + filters);
 			//
 			// mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});

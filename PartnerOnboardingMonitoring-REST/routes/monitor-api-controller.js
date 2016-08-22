@@ -8,6 +8,27 @@ module.exports = function module(app) {
 	return {
 		test : function test(req, res, next) {
 			console.log("test called");
+
+
+			var date = new Date(2016, 7, 21, 2, 15);
+			if (req.query.id == 1) { // internal service error
+				
+				aggregation.storeCount(3, "INTERNAL_SERVICE_ERROR", date);
+				console.log(date);
+			}
+
+			else if (req.query.id == 2) { // validation error
+				
+				aggregation.storeCount(3, "VALIDATION_ERROR", date);
+				console.log(date);
+			}
+
+			else if (req.query.id == 3) { // service timeout
+				
+				aggregation.storeCount(3, "SERVICE_TIMEOUT", date);
+				console.log(date);
+			}
+
 			res.end("test called");
 		},
 
@@ -74,7 +95,7 @@ module.exports = function module(app) {
 	    		console.log("getRawLogs called!");
 	    		service.getRawLogs(details, function onGetRawLogs(/*details*/ errorNum, errorType, d) {
 	    			//insertMongo(metadata, payload);
-				aggregation.storeCount(errorNum, errorType, d);
+					aggregation.storeCount(errorNum, errorType, d);
 	    			console.log("COMPLETE");
 
 	    		});
@@ -115,8 +136,8 @@ module.exports = function module(app) {
 			});
 		},
 
-		returnCount : function returnCount(req, res, next) {
-			console.log("returnCount called!");
+		getErrorCount : function getErrorCount(req, res, next) {
+			console.log("getErrorCount called!");
 
 			var start = req.query.startDate;
 			var end = req.query.endDate;
@@ -124,9 +145,10 @@ module.exports = function module(app) {
 
 			console.log("start is " + start + " and end is " + end);
 
-			aggregation.returnCount(start, end, errorType, function(response) {
+			aggregation.getErrorCount(start, end, errorType, function (response) {
 				res.end(response);
 			});
+			
 		}
 	};
 };
