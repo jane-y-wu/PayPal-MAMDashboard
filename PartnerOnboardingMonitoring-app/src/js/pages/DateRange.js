@@ -8,6 +8,8 @@ import FlatButton from 'material-ui/FlatButton';
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+var moment = require('moment');
+
 import * as LogActions from "../actions/LogActions";
 import * as GraphActions from "../actions/GraphActions";
 
@@ -16,19 +18,19 @@ export default class DateRange extends React.Component {
       super();
       this.setStartDate = this.setStartDate.bind(this);
       this.setEndDate = this.setEndDate.bind(this);
-      var defaultStartDate = new Date(Date.now());
+      var defaultStartDate = moment().subtract(6, 'days').toDate();
       this.state = {
-        startDate: Date.now(),
-        endDate: Date.now(),
+        startDate: moment().subtract(6, 'days').toDate(),
+        endDate: moment().toDate(),
         defaultStartDate: defaultStartDate,
-        defaultEndDate: new Date(Date.now()),
+        defaultEndDate: moment().toDate(),
       }
+      this.refreshLogs = this.refreshLogs.bind(this);
     }
 
     refreshLogs() {
-      //console.log(this.state.startDate + " " + this.state.endDate);
       LogActions.getLogs();
-      GraphActions.updateGraph();
+      GraphActions.updateGraph(new Date(this.state.startDate).toISOString(), new Date(this.state.endDate).toISOString());
     }
 
     setStartDate(event, date) {
