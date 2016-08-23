@@ -10,25 +10,42 @@ export default class LogWrapper extends React.Component {
     super(props);
     this.getLogs = this.getLogs.bind(this);
     this.sortLogs = this.sortLogs.bind(this);
+    this.reSortLogs = this.reSortLogs.bind(this);
     this.state = {
       LOGS_TO_SHOW: props.logsToShow,
       parsedLogs: [{errName: "loading"}],
+      sortBy: "dateObj",
+      sortDirection: 1
     };
   }
 
   componentWillMount() {
     LogStore.on("change", this.getLogs);
+    LogStore.on("sortChange", this.reSortLogs);
     LogActions.getLogs();
   }
 
   componentWillUnmount() {
     LogStore.removeListener("change", this.getLogs);
+    LogStore.removeListener("sortChange", this.reSortLogs);
   }
 
   sortLogs(a, b) {
-    if (a.dateObj < b.dateObj) return -1;
-    if (a.dateObj > b.dateObj) return 1;
+    if (a[this.state.sortBy] < b[this.state.sortBy]) return -1 * this.state.sortDirection;
+    if (a[this.state.sortBy] > b[this.state.sortBy]) return 1 * this.state.sortDirection;
     return 0;
+  }
+
+  reSortLogs() {
+    var toSortBy = LogStore.getSortBy();
+    if (this.state.sortBy == toSortBy) {
+      this.state.sortDirection *= -1;
+    } else {
+      this.state.sortBy = toSortBy;
+      this.state.sortDirection = 1;
+    }
+    this.state.parsedLogs.sort(this.sortLogs);
+    this.setState({});
   }
 
   getLogs() {

@@ -21,3 +21,7 @@ export function getLogs() {
   request.open('POST', url);
   request.send();
 }
+
+export function updateSortBy(sortBy) {
+  dispatcher.dispatch({type: "UPDATE_SORT_BY", sortBy: sortBy});
+}
