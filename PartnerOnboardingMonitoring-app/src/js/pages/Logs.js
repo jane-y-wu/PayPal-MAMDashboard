@@ -111,11 +111,31 @@ export default class Logs extends React.Component {
             <Table>
               <TableHeader displaySelectAll={false}>
                 <TableRow>
-                  <TableHeaderColumn><FlatButton label={"Full Date"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "fullDate")}/></TableHeaderColumn>
-                  <TableHeaderColumn><FlatButton label={"Error Name"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "errName")}/></TableHeaderColumn>
-                  <TableHeaderColumn><FlatButton label={"Issue/Message"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "issue_message")}/></TableHeaderColumn>
-                  <TableHeaderColumn><FlatButton label={"Corr ID"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "corr_id_")}/></TableHeaderColumn>
-                  <TableHeaderColumn><FlatButton label={"Operation"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "operation")}/></TableHeaderColumn>
+                  <TableHeaderColumn>
+                    <FlatButton label={"Full Date"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "fullDate")}/>
+                    {this.props.sortBy == "fullDate" && this.props.sortDirection == 1 ? <KeyboardArrowUp/> : ""}
+                    {this.props.sortBy == "fullDate" && this.props.sortDirection == -1 ? <KeyboardArrowDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn>
+                    <FlatButton label={"Error Name"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "errName")}/>
+                    {this.props.sortBy == "errName" && this.props.sortDirection == 1 ? <KeyboardArrowUp/> : ""}
+                    {this.props.sortBy == "errName" && this.props.sortDirection == -1 ? <KeyboardArrowDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn>
+                    <FlatButton label={"Issue/Message"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "issue_message")}/>
+                    {this.props.sortBy == "issue_message" && this.props.sortDirection == 1 ? <KeyboardArrowUp/> : ""}
+                    {this.props.sortBy == "issue_message" && this.props.sortDirection == -1 ? <KeyboardArrowDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn>
+                    <FlatButton label={"Corr ID"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "corr_id_")}/>
+                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == 1 ? <KeyboardArrowUp/> : ""}
+                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == -1 ? <KeyboardArrowDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn>
+                    <FlatButton label={"Operation"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "operation")}/>
+                    {this.props.sortBy == "operation" && this.props.sortDirection == 1 ? <KeyboardArrowUp/> : ""}
+                    {this.props.sortBy == "operation" && this.props.sortDirection == -1 ? <KeyboardArrowDown/> : ""}
+                  </TableHeaderColumn>
                   <TableHeaderColumn></TableHeaderColumn>
                 </TableRow>
               </TableHeader>
