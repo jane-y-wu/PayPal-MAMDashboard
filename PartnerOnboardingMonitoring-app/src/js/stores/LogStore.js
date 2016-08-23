@@ -7,6 +7,7 @@ class LogStore extends EventEmitter {
   constructor() {
     super()
     this.logs = "Logs loading";
+    this.sortBy = "fullDate";
   }
 
   handleActions(action) {

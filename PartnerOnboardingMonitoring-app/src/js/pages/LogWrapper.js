@@ -82,7 +82,7 @@ export default class LogWrapper extends React.Component {
 
   render() {
     return(
-      <Logs logsToShow={this.state.LOGS_TO_SHOW} logData={this.state.parsedLogs}/>
+      <Logs logsToShow={this.state.LOGS_TO_SHOW} logData={this.state.parsedLogs} sortBy={this.state.sortBy} sortDirection={this.state.sortDirection}/>
     )
   }
 }
