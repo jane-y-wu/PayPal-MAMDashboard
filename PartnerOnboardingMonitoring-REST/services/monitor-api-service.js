@@ -115,28 +115,38 @@ module.exports = function module() {
 						// calrecordbeans are what we're interested. calblockresponse contain more JSON objects
 						if(!error && response.statusCode == 200) {
 							// Use a stack to iteratively search through entire JSON object for objects with name in errorNames
+							var metaBlock = JSON.parse(body);
+							var pool = metaBlock.pool;
+							var machine = metaBlock.machine;
 							var recordStack = [];
-							recordStack.push(JSON.parse(body));
+							for(var h in metaBlock.calBlockResp) {
+								recordStack.push(metaBlock.calBlockResp[h]);
+							}
 							while (recordStack.length > 0) {
 								var currRecord = recordStack.pop();
+								//var currRecord = currRecordArr[0]
+								//if (!currRecord) console.log(currRecordArr);
+								console.log(currRecord);
 								if (currRecord["@Subclasstype"] == "calblockresponse") {
-									for (var i in currRecord["calActivitiesResp"]) {
-										recordStack.push(currRecord["calActivitiesResp"][i]);
+									for (var i in currRecord["calActivitesResp"]) {
+										recordStack.push(currRecord["calActivitesResp"][i]);
 									}
 								} else if (currRecord["@Subclasstype"] == "calrecordbean" && errorNames.indexOf(currRecord["name"]) >= 0) {
 									var localLog = { metaData : {}, payload: {} };
+									localLog.metaData.pool = pool;
+									localLog.machine = machine;
 									// Parse Class and Full_date from messageClass
-									localLog.metdata.Class = currRecord.messageClass[0];
-									var dateMatch = rawLogsURL.match("datetime=(.*) ");
+									localLog.payload.Class = currRecord.messageClass[0];
+									var dateMatch = eventDetailURL.match("datetime=(.*) ");
 									var calendarDate = dateMatch[1];
 									var time = currRecord.messageClass.substring(1);
 									var fullDate = calendarDate + 'T' + time.substring(0, 8);
 									var fullDateDashes = fullDate.replace(/\//g, "-");
 									localLog.payload["Full_Date"] = new Date(fullDateDashes);
 									// Parse Type, Status and Name from currRecord
-									localLog.metdata.Type = currRecord.type;
-									localLog.metdata.Status = parseInt(currRecord.status);
-									localLog.metdata.Name = currRecord.name;
+									localLog.payload.Type = currRecord.type;
+									localLog.payload.Status = parseInt(currRecord.status);
+									localLog.payload.Name = currRecord.name;
 									// Parse key value pairs in data for rest of fields
 									for (var j in currRecord) {
 										localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
@@ -151,13 +161,13 @@ module.exports = function module() {
 										console.log("Inserted Document: " + JSON.stringify(result));
 										async2Callback();
 
-									Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
-										console.log("mongodb query returned!");
-										if (err) console.log(err);
-										console.log(JSON.stringify(result, null, 4));
-										async2Callback();
+									//Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
+									//	console.log("mongodb query returned!");
+									//	if (err) console.log(err);
+									//	console.log(JSON.stringify(result, null, 4));
+									//	async2Callback();
 									});
-								} else if (currRecord["@Subclasstype"] != "calblockresponse") {
+								} else if (currRecord["@Subclasstype"] != "calrecordbean" && currRecord["@Subclasstype"] != "calblockresponse") {
 									console.log("Unknown subclasstype: " + currRecord["@Subclasstype"]);
 								}
 							}
