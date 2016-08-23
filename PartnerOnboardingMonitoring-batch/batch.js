@@ -153,7 +153,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
     	json: { // example search input
 
 			"startTime": start,
-			"endTime": end, 
+			"endTime": end,
 			"environment":"paypal",
 			"pool": "partnerapiplatformserv",
 			"dataCenter":"all",

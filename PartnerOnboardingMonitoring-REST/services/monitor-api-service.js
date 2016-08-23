@@ -121,11 +121,11 @@ module.exports = function module() {
 							recordStack.push(JSON.parse(body));
 							while (recordStack.length > 0) {
 								var currRecord = recordStack.pop();
-								if (currRecord["@Subclasstype"] == "callblockresponse") {
+								if (currRecord["@Subclasstype"] == "calblockresponse") {
 									for (var i in currRecord["calActivitiesResp"]) {
 										recordStack.push(currRecord["calActivitiesResp"][i]);
 									}
-								} else if (currRecord["@Subclasstype"] == "callblockresponse" && errorNames.indexOf(currRecord["name"]) >= 0) {
+								} else if (currRecord["@Subclasstype"] == "calrecordbean" && errorNames.indexOf(currRecord["name"]) >= 0) {
 									var localLog = { metaData : {}, payload: {} };
 									// Parse Class and Full_date from messageClass
 									localLog.metdata.Class = currRecord.messageClass[0];
@@ -140,7 +140,26 @@ module.exports = function module() {
 									localLog.metdata.Status = parseInt(currRecord.status);
 									localLog.metdata.Name = currRecord.name;
 									// Parse key value pairs in data for rest of fields
-								} else if (currRecord["@Subclasstype"] != "callblockresponse") {
+									for (var j in currRecord) {
+										localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
+									}
+									
+									// Save to MongoDB
+									var toStore = new Log(localLog);
+									console.log("toStore: " + JSON.stringify(toStore, null, 4));
+
+									toStore.save(function(err, result){
+										if(err) console.log(err);
+										console.log("Inserted Document: " + JSON.stringify(result));
+										async2Callback();
+
+									Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
+										console.log("mongodb query returned!");
+										if (err) console.log(err);
+										console.log(JSON.stringify(result, null, 4));
+										async2Callback();
+									});
+								} else if (currRecord["@Subclasstype"] != "calblockresponse") {
 									console.log("Unknown subclasstype: " + currRecord["@Subclasstype"]);
 								}
 							}
@@ -229,7 +248,7 @@ module.exports = function module() {
 					// 						// 	if (err) console.log(err);
 					// 						// 	console.log(JSON.stringify(result, null, 4));
 					// 						// 	async2Callback();
-					// 						// });e
+					// 						// });
 					// 					});
 					//
 					// 					errorType = localLog.payload["Name"];
