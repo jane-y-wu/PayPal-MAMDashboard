@@ -1,11 +1,18 @@
 'use strict'
 
 var mongoose = require('mongoose');
-var db = mongoose.connection;
+//var db = mongoose.connection;
+var db = require('../../models/db.js');
 var mongodb = require('mongodb');
 //var url = 'mongodb://root:H9yu7Xn+WD!Ru6Dc_thvxtU7c7AKDuHy292x@10.25.39.2:27017';
 var url = 'localhost:27017';
+//var url = 'mongodb://10.25.39.2:27017/admin';
 mongoose.Promise = global.Promise;
+var async = require('async');
+var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"];
+//mongoose.connect(url);
+
+var form = 'MMM Do YYYY'; // format of date string
 
 var moment = require('moment');
 
@@ -21,11 +28,12 @@ var weeklyCount = new mongoose.Schema({
 	errorCount: {type: Number},
 })
 
-var DailyCount = mongoose.model('DailyCount', dailyCount);
-var WeeklyCount = mongoose.model('WeeklyCount', weeklyCount);
+// var DailyCount = mongoose.model('DailyCount', dailyCount);
+// var WeeklyCount = mongoose.model('WeeklyCount', weeklyCount);
 
-var dates = [];
-var dataset = [53, 55, 28, 29, 23, 50, 22];
+var DailyCount = db.model('DailyCount', dailyCount);
+var WeeklyCount = db.model('WeeklyCount', weeklyCount);
+
 
 module.exports = function module() {
 
@@ -40,9 +48,13 @@ module.exports = function module() {
 			    return Math.ceil((((d-new Date(d.getFullYear(),0,1))/8.64e7)+1)/7);
 			}
 
-			mongoose.connect(url);
-			db.on('error', console.error);
-			db.once('open', function() {
+			console.log("in store count : " + errorNum + " " + errorName + " " + time);
+
+			//db = mongoose.createConnection(url /*, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'}*/);
+			//mongoose.connect(url);
+
+			//db.on('error', console.error);
+			//db.once('open', function() {
 
 				// TODO parse out date
 				var year = time.getFullYear();
@@ -73,7 +85,7 @@ module.exports = function module() {
 						store.save(function(err, result){
 							console.log(result);
 							console.log("saved");
-							db.close();
+							//db.close();
 						})
 
 					}
@@ -83,7 +95,7 @@ module.exports = function module() {
 							console.log("updating");
 							console.log(results);
 
-							db.close();
+							//db.close();
 						})
 
 					}
@@ -106,7 +118,7 @@ module.exports = function module() {
 						store.save(function(err, result){
 							console.log(result);
 							console.log("saved");
-							db.close();
+							//db.close();
 						})
 
 					}
@@ -116,53 +128,90 @@ module.exports = function module() {
 							console.log("updating");
 							console.log(results);
 
-							db.close();
+							//db.close();
 						})
 
 					}
 				})
 
 
-			});
+			//});
 
 		},
 
-		returnCount : function returnCount(startDate, endDate, errorType, callback) {
+		getErrorCount : function getErrorCount (startDate, endDate, errorType, callback) {
 
-			console.log('finding counts');
+			var dates = [];
+			var dataset = [];
 
-			// mongoose.connect(url);
-			// db.on('error', console.error);
-			// db.once('open', function() {
-			// 	DailyCount.find({ date : {$gte: startDate, $lte: endDate}, errorType : errorType }, function(err, results) {
-      //
-			// 		if (!err) {
-      //
-			// 			//store the error count
-			// 			results.forEach(function (dailyCt) {
-      //
-			// 				console.log(dailyCt.errorCount + dailyCt.date);
-			// 				//dailyCt.errorCount;
-			// 				//dailyCt.date;
-      //
-			// 				// push each element to their respective arrays
-			// 				// still have to store which error it is
-			// 			});
-      //
-			// 			// put it into the array in its corresponding location - how???
-			// 			// also need to know what type of error it is
-			// 		} else {
-			// 			console.log(err);
-			// 		}
-      //
-			// 		db.close();
-			// 		console.log("db closed");
-			// 	})
-      //
-      //
-			// })
+			var responseObj = new Object();
 
-			callback(dataset.toString());
+			var start = moment(startDate).toDate();
+			var end = moment(endDate).toDate();
+
+			//db = mongoose.createConnection(url);
+			//mongoose.connect(url);
+			//console.log('getErrorCount DB CONNECTS!!!!');
+			//db.on('error', console.error);
+			//db.once('open', function() {
+
+				//console.log('getErrorCount DB OPENING!!!!');
+
+				console.log(start + " " + end + " " + errorType);
+
+				if (errorType === "undefined") { // search all three
+
+
+					async.each(errorNames, function(eachErr, cb) {
+						//debugger;
+						console.log(eachErr);
+						//console.log('************************ before find');
+						DailyCount.find({ date : {$gte: start, $lte: end} , errorType : eachErr }, null, {sort : {date : 1}}, function (err, results) {
+		      				console.log('inside find');
+							if (!err) {
+
+								dates = [];
+								dataset = [];
+
+								console.log("results are " + results);
+		      
+								//store the error count
+								results.forEach(function (dailyCt) {
+		      
+									console.log(dailyCt.errorCount + dailyCt.date);
+									dates.push(moment(dailyCt.date).format(form));
+									dataset.push(dailyCt.errorCount);
+
+								});
+		      
+							} else {
+								console.log("the error is " + err);
+							}
+
+							responseObj[eachErr] = dataset;
+
+							cb();
+
+						})
+
+					}, function(err) {
+
+						responseObj.labels = dates;
+						//db.close();
+						//console.log("***************   get error count db closed");
+
+						callback(JSON.stringify(responseObj));
+
+					})
+
+				} else {
+					//db.close();
+				}
+
+
+
+			//});
+			
 		}
 	}
 }

@@ -7,6 +7,8 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import Toggle from 'material-ui/Toggle';
 import Dialog from 'material-ui/Dialog';
+import ArrowDropUp from 'material-ui/svg-icons/navigation/arrow-drop-up';
+import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -32,6 +34,7 @@ export default class Logs extends React.Component {
     // this.getLogs = this.getLogs.bind(this);
     //this.pullLogsData = this.pullLogData.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
+    this.updateSortBy = this.updateSortBy.bind(this);
     this.state = {
       LOGS_TO_SHOW: props.logsToShow,
       //parsedLogs: [{errName: "loading"}],
@@ -44,47 +47,6 @@ export default class Logs extends React.Component {
       showFullMessage: false,
     };
   }
-
-  // componentWillMount() {
-  // }
-  //
-  // componentWillUnmount() {
-  //   LogStore.removeListener("change", this.getLogs);
-  // }
-
-
-  // Plan:
-  // in getLogs hardcode the data fields in the table. these can only be fields shared by all error types
-  // in getdetails
-  // getLogs() {
-  //   var rawLogs = JSON.parse(LogStore.getAll());
-  //   this.state.parsedLogs = [];
-  //   console.log(this.state.LOGS_TO_SHOW);
-  //   for (var i in rawLogs) {
-  //     if (i >= this.state.LOGS_TO_SHOW && this.state.LOGS_TO_SHOW > 0) break;
-  //     var parsedLog = {
-  //       errName: rawLogs[i].payload.Name,
-  //       // fullDate: rawLogs[i].payload.Full_Date,
-  //       issue_message: rawLogs[i].payload.issue,
-  //       rawLogsURL : rawLogs[i].rawLogsURL,
-  //       Machine: rawLogs[i].metaData.Machine,
-  //       Pool: rawLogs[i].metaData.Pool,
-  //       Data_Center: rawLogs[i].metaData.Data_Center,
-  //       corr_id_: rawLogs[i].payload.corr_id_,
-  //       operation: rawLogs[i].payload.operation,
-  //     };
-  //     var rawDate = rawLogs[i].payload.Full_Date;
-  //     var dateObj = new Date(rawDate);
-  //     parsedLog.dateObj = dateObj;
-  //     parsedLog.fullDate = dateObj.getMonth() + "/" + dateObj.getDay() + "/" + dateObj.getFullYear() + " " + dateObj.getHours() + ":";
-  //     if (dateObj.getMinutes() < 10) parsedLog.fullDate += "0";
-  //     parsedLog.fullDate += dateObj.getMinutes();
-  //     //parsedLog.fullDate = dateObj.toLocaleString();
-  //     this.state.parsedLogs.push(parsedLog);
-  //   }
-  //   this.setState({
-  //   });
-  // }
 
   handleOpen = (index) => {
     this.state.dialog = this.props.logData[index];
@@ -103,6 +65,10 @@ export default class Logs extends React.Component {
   handleCloseMessage = () => {
     this.setState({showFullMessage: false});
   };
+
+  updateSortBy = (sortBy) => {
+    LogActions.updateSortBy(sortBy);
+  }
 
   // componentWillMount() {
   //   LogStore.on("refresh", this.pullLogData);
@@ -132,6 +98,16 @@ export default class Logs extends React.Component {
 
     const maxDate = Date.now();
 
+    const labelStyle = {
+      textTransform: "none",
+      color: "grey",
+      fontSize: "1em"
+    }
+
+    const headerCellStyle = {
+      verticalAlign: "text-bottom"
+    }
+
     return (
       <div>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -139,11 +115,33 @@ export default class Logs extends React.Component {
             <Table>
               <TableHeader displaySelectAll={false}>
                 <TableRow>
-                  <TableHeaderColumn>Full Date</TableHeaderColumn>
-                  <TableHeaderColumn>Error Name</TableHeaderColumn>
-                  <TableHeaderColumn>Issue/Message</TableHeaderColumn>
-                  <TableHeaderColumn>Corr ID</TableHeaderColumn>
-                  <TableHeaderColumn>Operation</TableHeaderColumn>
+                  <TableHeaderColumn>
+                    <div style={headerCellStyle}>
+                      <FlatButton label={"Full Date"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "fullDate")}/>
+                      {this.props.sortBy == "fullDate" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                      {this.props.sortBy == "fullDate" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                    </div>
+                  </TableHeaderColumn>
+                  <TableHeaderColumn>
+                    <FlatButton label={"Error Name"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "errName")}/>
+                    {this.props.sortBy == "errName" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "errName" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn>
+                    <FlatButton label={"Issue/Message"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "issue_message")}/>
+                    {this.props.sortBy == "issue_message" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "issue_message" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn>
+                    <FlatButton label={"Corr ID"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "corr_id_")}/>
+                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn>
+                    <FlatButton label={"Operation"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "operation")}/>
+                    {this.props.sortBy == "operation" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "operation" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  </TableHeaderColumn>
                   <TableHeaderColumn></TableHeaderColumn>
                 </TableRow>
               </TableHeader>

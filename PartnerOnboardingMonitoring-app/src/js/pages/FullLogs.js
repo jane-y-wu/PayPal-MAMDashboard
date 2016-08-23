@@ -13,7 +13,6 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 export default class Layout extends React.Component {
 
   render() {
-    const LOGS_TO_SHOW = 3;
 
     const logTableStyle = {
       margin: "5%",

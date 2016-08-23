@@ -7,6 +7,7 @@ class LogStore extends EventEmitter {
   constructor() {
     super()
     this.logs = "Logs loading";
+    this.sortBy = "fullDate";
   }
 
   handleActions(action) {
@@ -16,11 +17,20 @@ class LogStore extends EventEmitter {
         this.emit("change");
         break;
       }
+      case "UPDATE_SORT_BY": {
+        this.sortBy = action.sortBy;
+        this.emit("sortChange");
+        break;
+      }
     }
   }
 
   getAll() {
     return this.logs;
+  }
+
+  getSortBy() {
+    return this.sortBy;
   }
 }
 
