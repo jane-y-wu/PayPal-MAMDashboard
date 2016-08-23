@@ -12,13 +12,13 @@ var option = process.argv[2];
 
 // for testing purposes: option a to use alex's C3, m for madhav's
 if (option == 'a') {
-	httpCallbackURL = alexC3 + ":3004/api/queryready/?id=$id&status=$status";
+	httpCallbackURL = alexC3 + ":3003/api/queryready/?id=$id&status=$status";
 }
 else if (option == 'm') {
-	httpCallbackURL = madhavC3 + ":3004/api/queryready/?id=$id&status=$status";
+	httpCallbackURL = madhavC3 + ":3003/api/queryready/?id=$id&status=$status";
 }
 else { // default
-    httpCallbackURL = madhavC3 + ":3004/api/queryready/?id=$id&status=$status";
+    httpCallbackURL = madhavC3 + ":3003/api/queryready/?id=$id&status=$status";
 }
 
 // TEST
@@ -162,7 +162,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
         	"regexs": /*["ResponseCode=200"], */searchArray,
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": httpCallbackURL + ":3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": httpCallbackURL/* + ":3003/api/queryready/?id=$id&status=$status"*/,
         	"email":"janwu@paypal.com"
 		}
 	},

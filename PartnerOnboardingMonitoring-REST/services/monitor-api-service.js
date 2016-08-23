@@ -143,7 +143,7 @@ module.exports = function module() {
 									for (var j in currRecord) {
 										localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
 									}
-									
+
 									// Save to MongoDB
 									var toStore = new Log(localLog);
 									console.log("toStore: " + JSON.stringify(toStore, null, 4));
@@ -153,11 +153,12 @@ module.exports = function module() {
 										console.log("Inserted Document: " + JSON.stringify(result));
 										async2Callback();
 
-									Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
-										console.log("mongodb query returned!");
-										if (err) console.log(err);
-										console.log(JSON.stringify(result, null, 4));
-										async2Callback();
+										// Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
+										// 	console.log("mongodb query returned!");
+										// 	if (err) console.log(err);
+										// 	console.log(JSON.stringify(result, null, 4));
+										// 	async2Callback();
+										// });
 									});
 								} else if (currRecord["@Subclasstype"] != "calblockresponse") {
 									console.log("Unknown subclasstype: " + currRecord["@Subclasstype"]);
