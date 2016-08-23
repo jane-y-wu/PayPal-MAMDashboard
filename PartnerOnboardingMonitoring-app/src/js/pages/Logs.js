@@ -7,8 +7,8 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 import Toggle from 'material-ui/Toggle';
 import Dialog from 'material-ui/Dialog';
-import KeyboardArrowUp from 'material-ui/svg-icons/hardware/keyboard-arrow-up';
-import KeyboardArrowDown from 'material-ui/svg-icons/hardware/keyboard-arrow-down';
+import ArrowDropUp from 'material-ui/svg-icons/navigation/arrow-drop-up';
+import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -104,6 +104,10 @@ export default class Logs extends React.Component {
       fontSize: "1em"
     }
 
+    const headerCellStyle = {
+      verticalAlign: "text-bottom"
+    }
+
     return (
       <div>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
@@ -112,29 +116,31 @@ export default class Logs extends React.Component {
               <TableHeader displaySelectAll={false}>
                 <TableRow>
                   <TableHeaderColumn>
-                    <FlatButton label={"Full Date"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "fullDate")}/>
-                    {this.props.sortBy == "fullDate" && this.props.sortDirection == 1 ? <KeyboardArrowUp/> : ""}
-                    {this.props.sortBy == "fullDate" && this.props.sortDirection == -1 ? <KeyboardArrowDown/> : ""}
+                    <div style={headerCellStyle}>
+                      <FlatButton label={"Full Date"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "fullDate")}/>
+                      {this.props.sortBy == "fullDate" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                      {this.props.sortBy == "fullDate" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                    </div>
                   </TableHeaderColumn>
                   <TableHeaderColumn>
                     <FlatButton label={"Error Name"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "errName")}/>
-                    {this.props.sortBy == "errName" && this.props.sortDirection == 1 ? <KeyboardArrowUp/> : ""}
-                    {this.props.sortBy == "errName" && this.props.sortDirection == -1 ? <KeyboardArrowDown/> : ""}
+                    {this.props.sortBy == "errName" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "errName" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
                   <TableHeaderColumn>
                     <FlatButton label={"Issue/Message"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "issue_message")}/>
-                    {this.props.sortBy == "issue_message" && this.props.sortDirection == 1 ? <KeyboardArrowUp/> : ""}
-                    {this.props.sortBy == "issue_message" && this.props.sortDirection == -1 ? <KeyboardArrowDown/> : ""}
+                    {this.props.sortBy == "issue_message" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "issue_message" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
                   <TableHeaderColumn>
                     <FlatButton label={"Corr ID"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "corr_id_")}/>
-                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == 1 ? <KeyboardArrowUp/> : ""}
-                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == -1 ? <KeyboardArrowDown/> : ""}
+                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
                   <TableHeaderColumn>
                     <FlatButton label={"Operation"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "operation")}/>
-                    {this.props.sortBy == "operation" && this.props.sortDirection == 1 ? <KeyboardArrowUp/> : ""}
-                    {this.props.sortBy == "operation" && this.props.sortDirection == -1 ? <KeyboardArrowDown/> : ""}
+                    {this.props.sortBy == "operation" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "operation" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
                   <TableHeaderColumn></TableHeaderColumn>
                 </TableRow>
