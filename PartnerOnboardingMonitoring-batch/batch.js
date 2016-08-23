@@ -12,13 +12,13 @@ var option = process.argv[2];
 
 // for testing purposes: option a to use alex's C3, m for madhav's
 if (option == 'a') {
-	httpCallbackURL = alexC3;
+	httpCallbackURL = alexC3 + ":3004/api/queryready/?id=$id&status=$status";
 }
 else if (option == 'm') {
-	httpCallbackURL = madhavC3;
+	httpCallbackURL = madhavC3 + ":3004/api/queryready/?id=$id&status=$status";
 }
 else { // default
-    httpCallbackURL = madhavC3;
+    httpCallbackURL = madhavC3 + ":3004/api/queryready/?id=$id&status=$status";
 }
 
 // TEST
@@ -151,19 +151,19 @@ function submitRequest(start, end /*, searchString*/) { // submit 3 queries for 
 			//'http://mscalhadoop.qa.paypal.com/regex/request',
     	{
     	json: { // example search input
-			"startTime": start,
-			"endTime": end, 
-			"environment":"paypal",
-			"pool": "partnerapiplatformserv",
-			"dataCenter":"dcg11",
-        	"machine":"",
-        	"sampling":"100",
-        	"regexs": ["ResponseCode=200"], /*searchArray,*/
-        	"isTransactionSearch":"false",
-        	"searchMode":"simple",
-        	"httpCallback": "192.168.0.105" + ":3003/api/queryready/?id=$id&status=$status",
-        	"email":"janwu@paypal.com"
-		}
+           "startTime": start,
+           "endTime": end,
+           "environment":"paypal",
+           "pool": "partnerapiplatformserv",
+           "dataCenter":"all",
+           "machine":"",
+           "sampling":"100",
+           "regexs": ["INTERNAL_SERVICE_ERROR"],
+           "isTransactionSearch":"false",
+           "searchMode":"simple",
+           "httpCallback": httpCallbackURL,
+           "email":"janwu@paypal.com"
+        }
 	},
 	function (error, response, body) {
 
