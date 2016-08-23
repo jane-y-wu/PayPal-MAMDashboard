@@ -1,6 +1,7 @@
 var request = require('request'); // require request
 var schedule = require('node-schedule');
 var async = require('async');
+var moment = require('moment');
 var jobID; // string to hold job ID
 var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT'/*, 'HEADERS_STATUS_DELIVERED'*/]; // expressions to search for in the CAL log
 var errorCodes = 0; // number of times CAL returns an error code
@@ -12,35 +13,16 @@ var option = process.argv[2];
 
 // for testing purposes: option a to use alex's C3, m for madhav's
 if (option == 'a') {
-	httpCallbackURL = alexC3 + ":3004/api/queryready/?id=$id&status=$status";
+	httpCallbackURL = alexC3 + ":3003/api/queryready/?id=$id&status=$status";
 }
 else if (option == 'm') {
-	httpCallbackURL = madhavC3 + ":3004/api/queryready/?id=$id&status=$status";
+	httpCallbackURL = madhavC3 + ":3003/api/queryready/?id=$id&status=$status";
 }
 else { // default
-    httpCallbackURL = madhavC3 + ":3004/api/queryready/?id=$id&status=$status";
+    httpCallbackURL = madhavC3 + ":3003/api/queryready/?id=$id&status=$status";
 }
 
-// TEST
 console.log(httpCallbackURL);
-
-var date = new Date();
-
-// variables to hold the current time, up to the hour
-// will be used as end time
-var currentYear;
-var currentMonth;
-var currentDate;
-var currentHour;
-
-// variables to hold the time that will be used as start time
-var startYear;
-var startMonth;
-var startDate;
-var startHour;
-
-var endTime;
-var startTime;
 
 var rule = new schedule.RecurrenceRule();
 rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
@@ -50,8 +32,10 @@ run();
 
 function run() { // runs all the needed functions
 
-	endTime = getEndTime();
-	startTime = getStartTime();
+	endTime = moment().startOf('hour').format('YYYY/MM/DD HH:mm');
+	startTime = moment().subtract(1, 'hours').startOf('hour').format('YYYY/MM/DD HH:mm');
+
+	console.log('start time : ' + startTime + '; end time : ' + endTime);
 
 	async.each(regexsField, function(searchString, callback) {
 		submitRequest(startTime, endTime, searchString);
@@ -62,84 +46,6 @@ function run() { // runs all the needed functions
 	nullResponse = 0;
 	errorCodes = 0;
 }
-
-
-function getEndTime() { // gets current time up to the hour and will be saved as endTime
-
-	currentYear = date.getFullYear();
-	currentMonth = date.getMonth() + 1;
-	currentDate = date.getDate();
-	currentHour = date.getHours();
-
-	var currentTime = currentYear.toString() + "/" + currentMonth.toString() + "/" + currentDate.toString() + " " + currentHour.toString() + ":00";
-
-
-	return currentTime;
-}
-
-function getStartTime() {
-
-	// YEAR
-	if (currentMonth == 1 && currentDate == 1 && currentHour == 0) { // current time is new year
-		startYear = currentYear - 1;
-	}
-	else {
-		startYear = currentYear;
-	}
-
-	// MONTH
-	if (currentDate == 1 && currentHour == 0) { // first day of a month
-		if (currentMonth == 1) { // january
-			startMonth = 12;
-		}
-
-		else {
-			startMonth = currentMonth - 1;
-		}
-	}
-
-	else {
-		startMonth = currentMonth;
-	}
-
-	// DATE
-	if (currentDate == 1 && currentHour == 0) { // first day of a month
-		if (currentMonth == 5 || currentMonth == 7 || currentMonth == 10 || currentMonth == 12) { // the month before has 30 days
-			startDate = 30;
-		}
-		else if (currentMonth == 1 || currentMonth == 2 || currentMonth == 4 || currentMonth == 6 || currentMonth == 8 || currentMonth == 9 || currentMonth == 11) {
-			startDate = 31;
-		}
-		else if (currentMonth == 3) { // february
-			if ((currentYear % 4) == 0 && !((currentYear % 100) == 0 && (currentYear % 400) != 0)) { // leap year
-				startDate = 29;
-			}
-			else {
-				startDate = 28;
-			}
-		}
-		else {
-			startDate = currentDate - 1;
-		}
-	}
-	else {
-		startDate = currentDate;
-	}
-
-	// HOUR
-	if (currentHour == 0) { // midnight
-		startHour = 23;
-	}
-	else {
-		startHour = currentHour - 1;
-	}
-
-	// used as startTime
-	var time = startYear.toString() + "/" + startMonth.toString() + "/" + startDate.toString() + " " + startHour.toString() + ":00";
-
-	return time;
-}
-
 
 function submitRequest(start, end, searchString) { // submit 3 queries for 3 different errors. create list of errors to loop through
 
@@ -162,7 +68,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
         	"regexs": /*["ResponseCode=200"], */searchArray,
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": httpCallbackURL + ":3003/api/queryready/?id=$id&status=$status",
+        	"httpCallback": httpCallbackURL,
         	"email":"janwu@paypal.com"
 		}
 	},
