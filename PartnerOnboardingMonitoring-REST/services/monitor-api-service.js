@@ -141,7 +141,7 @@ module.exports = function module() {
 									localLog.metdata.Name = currRecord.name;
 									// Parse key value pairs in data for rest of fields
 								} else if (currRecord["@Subclasstype"] != "callblockresponse") {
-									console.log("Unknown subclasstype!");
+									console.log("Unknown subclasstype: " + currRecord["@Subclasstype"]);
 								}
 							}
 						} else {
