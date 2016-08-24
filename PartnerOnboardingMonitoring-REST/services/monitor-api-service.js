@@ -52,7 +52,7 @@ var Log = db.model('Log', logSchema);
 var fakeData = require('./fakeData.js');
 var fakeDataObject = fakeData.fakeDataObject;
 
-var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT", "HEADERS_STATUS_DELIVERED"];
+var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"/*, "HEADERS_STATUS_DELIVERED"*/];
 
 module.exports = function module() {
 
@@ -128,7 +128,7 @@ module.exports = function module() {
 								var currRecord = recordStack.pop();
 								//var currRecord = currRecordArr[0]
 								//if (!currRecord) console.log(currRecordArr);
-								console.log(currRecord);
+								//console.log(currRecord);
 								if (currRecord["@Subclasstype"] == "calblockresponse") {
 									for (var i in currRecord["calActivitesResp"]) {
 										recordStack.push(currRecord["calActivitesResp"][i]);
