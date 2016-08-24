@@ -118,8 +118,8 @@ module.exports = function module() {
 							var toStores = [];
 
 							var metaBlock = JSON.parse(body);
-							var pool = metaBlock.pool;
-							var machine = metaBlock.machine;
+							var Pool = metaBlock.pool;
+							var Machine = metaBlock.machine;
 							var recordStack = [];
 							for(var h in metaBlock.calBlockResp) {
 								recordStack.push(metaBlock.calBlockResp[h]);
