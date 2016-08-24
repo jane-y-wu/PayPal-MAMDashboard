@@ -151,8 +151,25 @@ module.exports = function module() {
 									localLog.payload.Status = parseInt(currRecord.status);
 									localLog.payload.Name = currRecord.name;
 									// Parse key value pairs in data for rest of fields
-									for (var j in currRecord) {
-										localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
+									// for (var j in currRecord) {
+									// 	localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
+									// }
+									var payloadSegments = currRecord.data.split("&");
+									//console.log(payloadSegments);
+
+									for (var i in payloadSegments) { // skip duration field
+										var split = payloadSegments[i].split("=");
+										switch(split[0]) {
+											case "Status":
+												localLog.payload[split[0]] = parseInt(split[1]);
+												break;
+											case "isLoginable":
+											case "hasPartnerRelationships":
+												localLog.payload[split[0]] = (split[1] === 'true');
+												break;
+											default:
+											localLog.payload[split[0]] = split[1];
+										}
 									}
 
 									errorType = localLog.payload.Name;
