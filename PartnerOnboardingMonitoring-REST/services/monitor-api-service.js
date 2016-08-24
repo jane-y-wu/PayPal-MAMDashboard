@@ -118,8 +118,8 @@ module.exports = function module() {
 							var toStores = [];
 
 							var metaBlock = JSON.parse(body);
-							var Pool = metaBlock.pool;
-							var Machine = metaBlock.machine;
+							var pool = metaBlock.pool;
+							var machine = metaBlock.machine;
 							var recordStack = [];
 							for(var h in metaBlock.calBlockResp) {
 								recordStack.push(metaBlock.calBlockResp[h]);
@@ -138,6 +138,7 @@ module.exports = function module() {
 									var localLog = { metaData : {}, payload: {} };
 									localLog.metaData.Pool = pool;
 									localLog.metaData.Machine = machine;
+									localLog.metaData.Data_Center = record.values["Data-Center"];
 									// Parse Class and Full_date from messageClass
 									localLog.payload.Class = currRecord.messageClass[0];
 									var dateMatch = eventDetailURL.match("datetime=(.*) ");
