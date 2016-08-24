@@ -61,7 +61,7 @@ export default class LogWrapper extends React.Component {
         rawLogsURL : rawLogs[i].rawLogsURL,
         Machine: rawLogs[i].metaData.Machine,
         Pool: rawLogs[i].metaData.Pool,
-        Data_Center: /*rawLogs[i].metaData.Data_Center*/ "Temp Data Center",
+        Data_Center: rawLogs[i].metaData.Data_Center,
         corr_id_: rawLogs[i].payload.corr_id_,
         operation: rawLogs[i].payload.operation,
       };
