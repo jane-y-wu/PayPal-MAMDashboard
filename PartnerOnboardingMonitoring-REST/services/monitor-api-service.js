@@ -153,13 +153,13 @@ module.exports = function module() {
 									for (var j in currRecord) {
 										localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
 									}
-									
+
 									errorType = localLog.payload.Name;
 									date = localLog.payload["Full_Date"];
 
 									// Save to queue of toStores
 									var toStore = new Log(localLog); // CREATE A QUEUE OF ITEMS OUT OF LOOP AND ADD. OUT OF LOOP ASYNC EACH.
-									console.log("toStore: " + JSON.stringify(toStore, null, 4));
+									//console.log("toStore: " + JSON.stringify(toStore, null, 4));
 									toStores.push(toStore);
 
 								} else if (currRecord["@Subclasstype"] != "calrecordbean" && currRecord["@Subclasstype"] != "calblockresponse") {
@@ -167,8 +167,7 @@ module.exports = function module() {
 								}
 							}
 						} else {
-							console.log(error);
-							console.log("Status Code: " + response.statusCode);
+							console.log("Error fetching logs. Status Code: " + response.statusCode + " Error: " + console.error(););
 						}
 
 
@@ -202,27 +201,27 @@ module.exports = function module() {
 
 			// console.log("filters: " + filters);
 			//
-			// mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});
-			// db.on('error', console.error);
-			// db.once('open', function() {
-			//
-			// 	//if(filters.length == 0) {
-			// 		Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
-			// 			db.close();
-			// 			console.log("logs: " + JSON.stringify(logs));
-			// 			callback(logs);
-			// 		});
-			// 	// } else {
-			// 	// 	Log.find(filters, function(err, logs){
-			// 	// 		db.close();
-			// 	// 		callback(logs);
-			// 	// 	});
-			// 	// }
-			//
-			// 	//callback(fakeDataObject);
-			//
-			// });
-			callback(fakeDataObject);
+
+			db.on('error', console.error);
+			db.once('open', function() {
+
+				//if(filters.length == 0) {
+					Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
+						db.close();
+						console.log("logs: " + JSON.stringify(logs));
+						callback(logs);
+					});
+				// } else {
+				// 	Log.find(filters, function(err, logs){
+				// 		db.close();
+				// 		callback(logs);
+				// 	});
+				// }
+
+				//callback(fakeDataObject);
+
+			});
+			//callback(fakeDataObject);
 		}
 
 
