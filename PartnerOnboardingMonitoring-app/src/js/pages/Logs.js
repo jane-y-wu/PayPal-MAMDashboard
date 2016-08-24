@@ -39,17 +39,23 @@ export default class Logs extends React.Component {
       LOGS_TO_SHOW: props.logsToShow,
       //parsedLogs: [{errName: "loading"}],
       //parsedLogs: props.logData,
-      fullMessage: "",
+      fullField: "",
       dialog: {},
+      dialogKeys: [],
       open: false,
       logsNotShown: 0,
       showDialog: false,
-      showFullMessage: false,
+      showFullField: false,
     };
   }
 
   handleOpen = (index) => {
     this.state.dialog = this.props.logData[index];
+    console.log(this.state.dialog);
+    var keys = [];
+    for (var i in this.props.logData[index]) keys.push(i);
+    this.state.dialogKeys = keys;
+    console.log(this.state.dialogKeys);
     this.setState({showDialog: true});
   };
 
@@ -57,13 +63,16 @@ export default class Logs extends React.Component {
     this.setState({showDialog: false});
   };
 
-  handleShowMessage = (message) => {
-    this.state.fullMessage = message;
-    this.setState({showFullMessage: true});
+  handleShowField = (fullField, title) => {
+    this.setState({
+      showFullField: true,
+      fullField: fullField,
+      fieldTitle: title
+    });
   };
 
-  handleCloseMessage = () => {
-    this.setState({showFullMessage: false});
+  handleCloseField = () => {
+    this.setState({showFullField: false});
   };
 
   updateSortBy = (sortBy) => {
@@ -92,7 +101,7 @@ export default class Logs extends React.Component {
       <FlatButton
         label="Close"
         primary={true}
-        onTouchTap={this.handleCloseMessage}
+        onTouchTap={this.handleCloseField}
       />
     ];
 
@@ -105,55 +114,77 @@ export default class Logs extends React.Component {
     }
 
     const headerCellStyle = {
-      verticalAlign: "text-bottom"
+      width: "12%"
+    }
+
+    const dialogCellStyle = {
+      height: "500px"
     }
 
     return (
       <div>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
           <div>
-            <Table>
-              <TableHeader displaySelectAll={false}>
+            <Table fixedHeader={true}>
+              <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                 <TableRow>
-                  <TableHeaderColumn>
-                    <div style={headerCellStyle}>
+                  <TableHeaderColumn style={headerCellStyle} >
+                    <div>
                       <FlatButton label={"Full Date"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "fullDate")}/>
                       {this.props.sortBy == "fullDate" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
                       {this.props.sortBy == "fullDate" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                     </div>
                   </TableHeaderColumn>
-                  <TableHeaderColumn>
-                    <FlatButton label={"Error Name"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "errName")}/>
-                    {this.props.sortBy == "errName" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
-                    {this.props.sortBy == "errName" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Error Name"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Name")}/>
+                    {this.props.sortBy == "Name" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Name" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
-                  <TableHeaderColumn>
-                    <FlatButton label={"Issue/Message"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "issue_message")}/>
-                    {this.props.sortBy == "issue_message" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
-                    {this.props.sortBy == "issue_message" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Machine"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Machine")}/>
+                    {this.props.sortBy == "Machine" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Machine" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
-                  <TableHeaderColumn>
-                    <FlatButton label={"Corr ID"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "corr_id_")}/>
-                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
-                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Pool"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Pool")}/>
+                    {this.props.sortBy == "Pool" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Pool" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
-                  <TableHeaderColumn>
-                    <FlatButton label={"Operation"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "operation")}/>
-                    {this.props.sortBy == "operation" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
-                    {this.props.sortBy == "operation" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Data_Center"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Data_Center")}/>
+                    {this.props.sortBy == "Data_Center" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Data_Center" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
-                  <TableHeaderColumn></TableHeaderColumn>
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Class"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Class")}/>
+                    {this.props.sortBy == "Class" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Class" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Type"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Type")}/>
+                    {this.props.sortBy == "Type" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Type" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Status"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Status")}/>
+                    {this.props.sortBy == "Status" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Status" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn style={headerCellStyle}></TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={false} showRowHover={true}>
 
                 {this.props.logData.map( (row, index) => (
                   <TableRow key={index}>
-                    <TableRowColumn>{row.fullDate}</TableRowColumn>
-                    <TableRowColumn><FlatButton label={row.errName}/></TableRowColumn>
-                    <TableRowColumn><FlatButton children={row.issue_message} onTouchTap={this.handleShowMessage.bind(this, row.issue_message)}/></TableRowColumn>
-                    <TableRowColumn><FlatButton label={row.corr_id_}/></TableRowColumn>
-                    <TableRowColumn><FlatButton label={row.operation}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.fullDate} onTouchTap={this.handleShowField.bind(this, row.fullDate, "Full Date")}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Name} onTouchTap={this.handleShowField.bind(this, row.Name, "Error Name")}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Machine} onTouchTap={this.handleShowField.bind(this, row.Machine, "Machine")}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Pool} onTouchTap={this.handleShowField.bind(this, row.Pool, "Pool")}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Data_Center} onTouchTap={this.handleShowField.bind(this, row.Data_Center, "Data Center")}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Class} onTouchTap={this.handleShowField.bind(this, row.Class, "Class")}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Type} onTouchTap={this.handleShowField.bind(this, row.Type, "Type")}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Status} onTouchTap={this.handleShowField.bind(this, row.Status, "Status")}/></TableRowColumn>
                     <TableRowColumn><RaisedButton label="More" onTouchTap={this.handleOpen.bind(this, index)} fullWidth={true}/></TableRowColumn>
                   </TableRow>
                 ))}
@@ -162,19 +193,19 @@ export default class Logs extends React.Component {
             <Dialog
               actions={actionsDialog}
               modal={false}
-              open={this.state.showFullMessage}
-              onRequestClose={this.handleCloseMessage}
+              open={this.state.showFullField}
+              onRequestClose={this.handleCloseField}
             >
               <div>
                 <Table>
                   <TableHeader displaySelectAll={false}>
                     <TableRow>
-                      <TableHeaderColumn>Issue/Message</TableHeaderColumn>
+                      <TableHeaderColumn>{this.state.fieldTitle}</TableHeaderColumn>
                     </TableRow>
                   </TableHeader>
                   <TableBody displayRowCheckbox={false} >
                     <TableRow>
-                      <TableRowColumn>{this.state.fullMessage}</TableRowColumn>
+                      <TableRowColumn>{this.state.fullField}</TableRowColumn>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -185,38 +216,21 @@ export default class Logs extends React.Component {
               modal={false}
               open={this.state.showDialog}
               onRequestClose={this.handleClose}
+              autoScrollBodyContent={true}
             >
               <div>
-              <Table>
-                <TableHeader displaySelectAll={false}>
-                  <TableRow>
-                    <TableHeaderColumn>Raw Logs URL</TableHeaderColumn>
-                    <TableHeaderColumn>Machine</TableHeaderColumn>
-                    <TableHeaderColumn>Pool</TableHeaderColumn>
-                    <TableHeaderColumn>Data Center</TableHeaderColumn>
-                  </TableRow>
-                </TableHeader>
-                <TableBody displayRowCheckbox={false} >
-                  <TableRow>
-                    <TableRowColumn>{this.state.dialog.rawLogsURL}</TableRowColumn>
-                    <TableRowColumn>{this.state.dialog.Machine}</TableRowColumn>
-                    <TableRowColumn>{this.state.dialog.Pool}</TableRowColumn>
-                    <TableRowColumn>{this.state.dialog.Data_Center}</TableRowColumn>
-                  </TableRow>
-                </TableBody>
-              </Table>
-                <Table>
-                  <TableHeader displaySelectAll={false}>
-                    <TableRow>
-                      <TableHeaderColumn>Issue/Message</TableHeaderColumn>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody displayRowCheckbox={false} >
-                    <TableRow>
-                      <TableRowColumn>{this.state.dialog.issue_message}</TableRowColumn>
-                    </TableRow>
-                  </TableBody>
-                </Table>
+              {this.state.dialogKeys.map( (key, index) => (
+                <div>
+                  <Table>
+                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
+                      <TableRow>
+                        <TableHeaderColumn>{key}</TableHeaderColumn>
+                      </TableRow>
+                    </TableHeader>
+                  </Table>
+                  {this.state.dialog[key]}
+                </div>
+              ))}
               </div>
             </Dialog>
           </div>

@@ -134,9 +134,12 @@ module.exports = function module() {
 										recordStack.push(currRecord["calActivitesResp"][i]);
 									}
 								} else if (currRecord["@Subclasstype"] == "calrecordbean" && errorNames.indexOf(currRecord["name"]) >= 0) {
+									console.log("currRecord: " + JSON.stringify(currRecord, null, 4));
 									var localLog = { metaData : {}, payload: {} };
-									localLog.metaData.pool = pool;
-									localLog.machine = machine;
+									localLog.rawLogsURL = jsonURL;
+									localLog.metaData.Pool = pool;
+									localLog.metaData.Machine = machine;
+									localLog.metaData.Data_Center = record.values["Data-Center"];
 									// Parse Class and Full_date from messageClass
 									localLog.payload.Class = currRecord.messageClass[0];
 									var dateMatch = eventDetailURL.match("datetime=(.*) ");
@@ -146,20 +149,37 @@ module.exports = function module() {
 									var fullDateDashes = fullDate.replace(/\//g, "-");
 									localLog.payload["Full_Date"] = new Date(fullDateDashes);
 									// Parse Type, Status and Name from currRecord
-									localLog.payload.Type = currRecord.type;
+									localLog.payload.Type = currRecord.type; // TODO parse from record instead of currRecord
 									localLog.payload.Status = parseInt(currRecord.status);
 									localLog.payload.Name = currRecord.name;
 									// Parse key value pairs in data for rest of fields
-									for (var j in currRecord) {
-										localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
+									// for (var j in currRecord) {
+									// 	localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
+									// }
+									var payloadSegments = currRecord.data.split("&");
+									//console.log(payloadSegments);
+
+									for (var i in payloadSegments) { // skip duration field
+										var split = payloadSegments[i].split("=");
+										switch(split[0]) {
+											case "Status":
+												localLog.payload[split[0]] = parseInt(split[1]);
+												break;
+											case "isLoginable":
+											case "hasPartnerRelationships":
+												localLog.payload[split[0]] = (split[1] === 'true');
+												break;
+											default:
+											localLog.payload[split[0]] = split[1];
+										}
 									}
-									
+
 									errorType = localLog.payload.Name;
 									date = localLog.payload["Full_Date"];
 
 									// Save to queue of toStores
 									var toStore = new Log(localLog); // CREATE A QUEUE OF ITEMS OUT OF LOOP AND ADD. OUT OF LOOP ASYNC EACH.
-									console.log("toStore: " + JSON.stringify(toStore, null, 4));
+									//console.log("toStore: " + JSON.stringify(toStore, null, 4));
 									toStores.push(toStore);
 
 								} else if (currRecord["@Subclasstype"] != "calrecordbean" && currRecord["@Subclasstype"] != "calblockresponse") {
@@ -167,13 +187,13 @@ module.exports = function module() {
 								}
 							}
 						} else {
-							console.log(error);
-							console.log("Status Code: " + response.statusCode);
+							console.log("Error fetching logs. Status Code: " + response.statusCode + " Error: " + console.log(error));
 						}
 
 
 						async.each(toStores, function(toStore, asyncCallback2) {
 							// Add all toStores to MongoDB
+							console.log("toStore: " + toStore);
 							toStore.save(function(err, result){
 								if(err) console.log(err);
 								console.log("Inserted Document: " + JSON.stringify(result));
@@ -202,27 +222,27 @@ module.exports = function module() {
 
 			// console.log("filters: " + filters);
 			//
-			// mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});
-			// db.on('error', console.error);
-			// db.once('open', function() {
-			//
-			// 	//if(filters.length == 0) {
-			// 		Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
-			// 			db.close();
-			// 			console.log("logs: " + JSON.stringify(logs));
-			// 			callback(logs);
-			// 		});
-			// 	// } else {
-			// 	// 	Log.find(filters, function(err, logs){
-			// 	// 		db.close();
-			// 	// 		callback(logs);
-			// 	// 	});
-			// 	// }
-			//
-			// 	//callback(fakeDataObject);
-			//
-			// });
-			callback(fakeDataObject);
+
+			//db.on('error', console.error);
+			//db.once('open', function() {
+
+				//if(filters.length == 0) {
+					Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
+						//db.close();
+						console.log("logs: " + JSON.stringify(logs));
+						callback(logs);
+					});
+				// } else {
+				// 	Log.find(filters, function(err, logs){
+				// 		db.close();
+				// 		callback(logs);
+				// 	});
+				// }
+
+				//callback(fakeDataObject);
+
+			//});
+			//callback(fakeDataObject);
 		}
 
 
