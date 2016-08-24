@@ -26,6 +26,7 @@ export default class DateRange extends React.Component {
         defaultEndDate: moment().toDate(),
       }
       this.refreshLogs = this.refreshLogs.bind(this);
+      this.disableFuture = this.disableFuture.bind(this);
     }
 
     refreshLogs() {
@@ -45,6 +46,10 @@ export default class DateRange extends React.Component {
       });
     }
 
+    disableFuture(date) {
+      return date > this.state.endDate;
+    }
+
     setStartTime() {
       //
     }
@@ -52,6 +57,7 @@ export default class DateRange extends React.Component {
     setEndTime() {
       //
     }
+
 
   render() {
 
@@ -78,7 +84,6 @@ export default class DateRange extends React.Component {
 
     }
 
-
     return (
       <MuiThemeProvider muiTheme={getMuiTheme()}>
         <div style={divStyle}>
@@ -91,6 +96,7 @@ export default class DateRange extends React.Component {
                 floatingLabelText="Start Date"
                 maxDate={this.maxDate}
                 defaultDate={this.state.defaultStartDate}
+                shouldDisableDate={this.disableFuture}
               />
               {/*}<TimePicker
                 textFieldStyle={datePickerTextStyle}
@@ -108,6 +114,7 @@ export default class DateRange extends React.Component {
                 floatingLabelText="End Date"
                 maxDate={this.maxDate}
                 defaultDate={this.state.defaultEndDate}
+                shouldDisableDate={this.disableFuture}
               />
               {/*}<TimePicker
                 textFieldStyle={datePickerTextStyle}
