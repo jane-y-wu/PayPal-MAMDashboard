@@ -54,7 +54,7 @@ export default class LogWrapper extends React.Component {
     console.log(this.state.LOGS_TO_SHOW);
     for (var i in rawLogs) {
       if (i >= this.state.LOGS_TO_SHOW && this.state.LOGS_TO_SHOW > 0) break;
-      var parsedLog = {
+      /*var parsedLog = {
         errName: rawLogs[i].payload.Name,
         // fullDate: rawLogs[i].payload.Full_Date,
         issue_message: rawLogs[i].payload.issue,
@@ -64,7 +64,15 @@ export default class LogWrapper extends React.Component {
         Data_Center: rawLogs[i].metaData.Data_Center,
         corr_id_: rawLogs[i].payload.corr_id_,
         operation: rawLogs[i].payload.operation,
-      };
+      };*/
+      var parsedLog = {};
+      parsedLog.rawLogsUrl = rawLogs[i].rawLogsURL;
+      for (var j in rawLogs[i].metaData) {
+        parsedLog[j] = rawLogs[i].metaData[j];
+      }
+      for (var k in rawLogs[i].payload) {
+        parsedLog[k] = rawLogs[i].payload[k];
+      }
       var rawDate = rawLogs[i].payload.Full_Date;
       var dateObj = new Date(rawDate);
       parsedLog.dateObj = dateObj;
@@ -73,6 +81,7 @@ export default class LogWrapper extends React.Component {
       parsedLog.fullDate += dateObj.getMinutes();
       //parsedLog.fullDate = dateObj.toLocaleString();
       this.state.parsedLogs.push(parsedLog);
+      console.log(parsedLog);
     }
     this.state.parsedLogs.sort(this.sortLogs);
     this.setState({

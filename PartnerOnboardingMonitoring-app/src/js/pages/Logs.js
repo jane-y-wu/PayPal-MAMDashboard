@@ -105,7 +105,7 @@ export default class Logs extends React.Component {
     }
 
     const headerCellStyle = {
-      verticalAlign: "text-bottom"
+      width: "12%"
     }
 
     return (
@@ -113,47 +113,65 @@ export default class Logs extends React.Component {
         <MuiThemeProvider muiTheme={getMuiTheme()}>
           <div>
             <Table>
-              <TableHeader displaySelectAll={false}>
+              <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                 <TableRow>
-                  <TableHeaderColumn>
-                    <div style={headerCellStyle}>
+                  <TableHeaderColumn style={headerCellStyle} >
+                    <div>
                       <FlatButton label={"Full Date"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "fullDate")}/>
                       {this.props.sortBy == "fullDate" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
                       {this.props.sortBy == "fullDate" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                     </div>
                   </TableHeaderColumn>
-                  <TableHeaderColumn>
-                    <FlatButton label={"Error Name"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "errName")}/>
-                    {this.props.sortBy == "errName" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
-                    {this.props.sortBy == "errName" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Error Name"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Name")}/>
+                    {this.props.sortBy == "Name" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Name" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
-                  <TableHeaderColumn>
-                    <FlatButton label={"Issue/Message"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "issue_message")}/>
-                    {this.props.sortBy == "issue_message" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
-                    {this.props.sortBy == "issue_message" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Machine"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Machine")}/>
+                    {this.props.sortBy == "Machine" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Machine" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
-                  <TableHeaderColumn>
-                    <FlatButton label={"Corr ID"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "corr_id_")}/>
-                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
-                    {this.props.sortBy == "corr_id_" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Pool"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Pool")}/>
+                    {this.props.sortBy == "Pool" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Pool" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
-                  <TableHeaderColumn>
-                    <FlatButton label={"Operation"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "operation")}/>
-                    {this.props.sortBy == "operation" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
-                    {this.props.sortBy == "operation" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Data_Center"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Data_Center")}/>
+                    {this.props.sortBy == "Data_Center" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Data_Center" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
-                  <TableHeaderColumn></TableHeaderColumn>
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Class"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Class")}/>
+                    {this.props.sortBy == "Class" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Class" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Type"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Type")}/>
+                    {this.props.sortBy == "Type" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Type" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn style={headerCellStyle}>
+                    <FlatButton label={"Status"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Status")}/>
+                    {this.props.sortBy == "Status" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
+                    {this.props.sortBy == "Status" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
+                  </TableHeaderColumn>
+                  <TableHeaderColumn style={headerCellStyle}></TableHeaderColumn>
                 </TableRow>
               </TableHeader>
               <TableBody displayRowCheckbox={false} showRowHover={true}>
 
                 {this.props.logData.map( (row, index) => (
                   <TableRow key={index}>
-                    <TableRowColumn>{row.fullDate}</TableRowColumn>
-                    <TableRowColumn><FlatButton label={row.errName}/></TableRowColumn>
-                    <TableRowColumn><FlatButton children={row.issue_message} onTouchTap={this.handleShowMessage.bind(this, row.issue_message)}/></TableRowColumn>
-                    <TableRowColumn><FlatButton label={row.corr_id_}/></TableRowColumn>
-                    <TableRowColumn><FlatButton label={row.operation}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.fullDate} onTouchTap={this.handleShowMessage.bind(this, row.fullDate)}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Name} onTouchTap={this.handleShowMessage.bind(this, row.Name)}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Machine} onTouchTap={this.handleShowMessage.bind(this, row.Machine)}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Pool} onTouchTap={this.handleShowMessage.bind(this, row.Pool)}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Data_Center} onTouchTap={this.handleShowMessage.bind(this, row.Data_Center)}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Class} onTouchTap={this.handleShowMessage.bind(this, row.Class)}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Type} onTouchTap={this.handleShowMessage.bind(this, row.Type)}/></TableRowColumn>
+                    <TableRowColumn><FlatButton children={row.Status} onTouchTap={this.handleShowMessage.bind(this, row.Status)}/></TableRowColumn>
                     <TableRowColumn><RaisedButton label="More" onTouchTap={this.handleOpen.bind(this, index)} fullWidth={true}/></TableRowColumn>
                   </TableRow>
                 ))}
@@ -166,7 +184,7 @@ export default class Logs extends React.Component {
               onRequestClose={this.handleCloseMessage}
             >
               <div>
-                <Table>
+                {/*}<Table>
                   <TableHeader displaySelectAll={false}>
                     <TableRow>
                       <TableHeaderColumn>Issue/Message</TableHeaderColumn>
@@ -177,7 +195,8 @@ export default class Logs extends React.Component {
                       <TableRowColumn>{this.state.fullMessage}</TableRowColumn>
                     </TableRow>
                   </TableBody>
-                </Table>
+                </Table>*/}
+                {this.state.fullMessage}
               </div>
             </Dialog>
             <Dialog

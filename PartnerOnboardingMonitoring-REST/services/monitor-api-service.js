@@ -136,9 +136,9 @@ module.exports = function module() {
 								} else if (currRecord["@Subclasstype"] == "calrecordbean" && errorNames.indexOf(currRecord["name"]) >= 0) {
 									console.log("currRecord: " + JSON.stringify(currRecord, null, 4));
 									var localLog = { metaData : {}, payload: {} };
+									localLog.rawLogsURL = jsonURL;
 									localLog.metaData.Pool = pool;
 									localLog.metaData.Machine = machine;
-									localLog.metaData.Data_Center = record.values["Data-Center"];
 									// Parse Class and Full_date from messageClass
 									localLog.payload.Class = currRecord.messageClass[0];
 									var dateMatch = eventDetailURL.match("datetime=(.*) ");
@@ -148,7 +148,7 @@ module.exports = function module() {
 									var fullDateDashes = fullDate.replace(/\//g, "-");
 									localLog.payload["Full_Date"] = new Date(fullDateDashes);
 									// Parse Type, Status and Name from currRecord
-									localLog.payload.Type = currRecord.type;
+									localLog.payload.Type = currRecord.type; // TODO parse from record instead of currRecord
 									localLog.payload.Status = parseInt(currRecord.status);
 									localLog.payload.Name = currRecord.name;
 									// Parse key value pairs in data for rest of fields
