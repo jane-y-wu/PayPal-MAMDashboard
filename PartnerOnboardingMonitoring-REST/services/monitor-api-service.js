@@ -153,6 +153,9 @@ module.exports = function module() {
 									for (var j in currRecord) {
 										localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
 									}
+									
+									errorType = localLog.payload.Name;
+									date = localLog.payload["Full_Date"];
 
 									// Save to queue of toStores
 									var toStore = new Log(localLog); // CREATE A QUEUE OF ITEMS OUT OF LOOP AND ADD. OUT OF LOOP ASYNC EACH.
@@ -167,6 +170,7 @@ module.exports = function module() {
 							console.log(error);
 							console.log("Status Code: " + response.statusCode);
 						}
+
 
 						async.each(toStores, function(toStore, asyncCallback2) {
 							// Add all toStores to MongoDB

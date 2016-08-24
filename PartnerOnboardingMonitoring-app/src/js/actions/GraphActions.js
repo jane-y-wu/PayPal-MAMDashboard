@@ -19,7 +19,6 @@ export function updateGraph(startDate, endDate, errorType) {
 	};
 
 	request.open('GET', url);
-	console.log('sending request to url!!!!!!!!');
 	request.send();
 	
 }

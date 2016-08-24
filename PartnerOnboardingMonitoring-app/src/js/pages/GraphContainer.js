@@ -41,6 +41,17 @@ var chartData = {
         pointHighlightFill: '#fff',
         pointHighlightStroke: 'rgba(185.5,203.5,212.5,1)',
         data: [],
+      },
+
+      {
+        label: 'Total',
+        fillColor: 'rgba(185,203,212,0.2)',
+        strokeColor: 'rgba(185,203,212,1)',
+        pointColor: 'rgba(185,203,212,1)',
+        pointStrokeColor: '#fff',
+        pointHighlightFill: '#fff',
+        pointHighlightStroke: 'rgba(185.5,203.5,212.5,1)',
+        data: [],
       }
     ]
 
@@ -103,6 +114,7 @@ export default class GraphContainer extends React.Component {
     chartData.datasets[0].data = response.INTERNAL_SERVICE_ERROR;
     chartData.datasets[1].data = response.VALIDATION_ERROR;
     chartData.datasets[2].data = response.SERVICE_TIMEOUT;
+    chartData.datasets[3].data = response.totalData;
 
     this.setState({chartData : chartData});
 
