@@ -125,7 +125,7 @@ export default class Logs extends React.Component {
       <div>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
           <div>
-            <Table fixedHeader={true} wrapperStyle={dialogCellStyle}>
+            <Table fixedHeader={true}>
               <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                 <TableRow>
                   <TableHeaderColumn style={headerCellStyle} >
@@ -222,7 +222,7 @@ export default class Logs extends React.Component {
               {this.state.dialogKeys.map( (key, index) => (
                 <div>
                   <Table>
-                    <TableHeader displaySelectAll={false}>
+                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                       <TableRow>
                         <TableHeaderColumn>{key}</TableHeaderColumn>
                       </TableRow>
@@ -231,36 +231,6 @@ export default class Logs extends React.Component {
                   {this.state.dialog[key]}
                 </div>
               ))}
-                {/*<Table>
-                  <TableHeader displaySelectAll={false}>
-                    <TableRow>
-                      <TableHeaderColumn>Raw Logs URL</TableHeaderColumn>
-                      <TableHeaderColumn>Machine</TableHeaderColumn>
-                      <TableHeaderColumn>Pool</TableHeaderColumn>
-                      <TableHeaderColumn>Data Center</TableHeaderColumn>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody displayRowCheckbox={false} >
-                    <TableRow>
-                      <TableRowColumn>{this.state.dialog.rawLogsURL}</TableRowColumn>
-                      <TableRowColumn>{this.state.dialog.Machine}</TableRowColumn>
-                      <TableRowColumn>{this.state.dialog.Pool}</TableRowColumn>
-                      <TableRowColumn>{this.state.dialog.Data_Center}</TableRowColumn>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-                <Table>
-                  <TableHeader displaySelectAll={false}>
-                    <TableRow>
-                      <TableHeaderColumn>Issue/Message</TableHeaderColumn>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody displayRowCheckbox={false} >
-                    <TableRow>
-                      <TableRowColumn>{this.state.dialog.issue_message}</TableRowColumn>
-                    </TableRow>
-                  </TableBody>
-                </Table>*/}
               </div>
             </Dialog>
           </div>
