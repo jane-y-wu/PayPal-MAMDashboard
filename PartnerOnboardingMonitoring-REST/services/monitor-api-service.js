@@ -163,11 +163,10 @@ module.exports = function module() {
 								} else if (currRecord["@Subclasstype"] != "calrecordbean" && currRecord["@Subclasstype"] != "calblockresponse") {
 									console.log("Unknown subclasstype: " + currRecord["@Subclasstype"]);
 								}
-								else {
-									console.log(error);
-									console.log("Status Code: " + response.statusCode);
-								}
-							} 
+							}
+						} else {
+							console.log(error);
+							console.log("Status Code: " + response.statusCode);
 						}
 
 
