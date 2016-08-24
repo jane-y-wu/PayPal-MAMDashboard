@@ -139,6 +139,7 @@ module.exports = function module() {
 									localLog.rawLogsURL = jsonURL;
 									localLog.metaData.Pool = pool;
 									localLog.metaData.Machine = machine;
+									localLog.Data_Center = record.values["Data-Center"]
 									// Parse Class and Full_date from messageClass
 									localLog.payload.Class = currRecord.messageClass[0];
 									var dateMatch = eventDetailURL.match("datetime=(.*) ");
