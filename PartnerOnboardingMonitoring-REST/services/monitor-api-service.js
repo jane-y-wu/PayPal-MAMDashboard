@@ -52,7 +52,7 @@ var Log = db.model('Log', logSchema);
 var fakeData = require('./fakeData.js');
 var fakeDataObject = fakeData.fakeDataObject;
 
-var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT", "HEADERS_STATUS_DELIVERED"];
+var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"];
 
 module.exports = function module() {
 
@@ -128,7 +128,7 @@ module.exports = function module() {
 								var currRecord = recordStack.pop();
 								//var currRecord = currRecordArr[0]
 								//if (!currRecord) console.log(currRecordArr);
-								console.log(currRecord);
+								//console.log(currRecord);
 								if (currRecord["@Subclasstype"] == "calblockresponse") {
 									for (var i in currRecord["calActivitesResp"]) {
 										recordStack.push(currRecord["calActivitesResp"][i]);
@@ -156,7 +156,7 @@ module.exports = function module() {
 
 									// Save to queue of toStores
 									var toStore = new Log(localLog); // CREATE A QUEUE OF ITEMS OUT OF LOOP AND ADD. OUT OF LOOP ASYNC EACH.
-									console.log("toStore: " + JSON.stringify(toStore, null, 4));
+									//console.log("toStore: " + JSON.stringify(toStore, null, 4));
 									toStores.push(toStore);
 
 								} else if (currRecord["@Subclasstype"] != "calrecordbean" && currRecord["@Subclasstype"] != "calblockresponse") {
@@ -170,6 +170,7 @@ module.exports = function module() {
 
 						async.each(toStores, function(toStore, asyncCallback2) {
 							// Add all toStores to MongoDB
+							console.log("toStore: " + toStore);
 							toStore.save(function(err, result){
 								if(err) console.log(err);
 								console.log("Inserted Document: " + JSON.stringify(result));
