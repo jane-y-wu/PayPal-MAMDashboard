@@ -153,7 +153,9 @@ module.exports = function module() {
 									for (var j in currRecord) {
 										localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
 									}
-
+									
+									errorType = localLog.payload.Name;
+									date = localLog.payload["Full_Date"];
 
 									// Save to queue of toStores
 									var toStore = new Log(localLog); // CREATE A QUEUE OF ITEMS OUT OF LOOP AND ADD. OUT OF LOOP ASYNC EACH.
