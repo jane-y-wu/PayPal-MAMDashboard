@@ -10,22 +10,22 @@ module.exports = function module(app) {
 			console.log("test called");
 
 
-			var date = new Date(2016, 7, 18, 2, 15);
+			var date = new Date(2016, 7, 14, 2, 15);
 			if (req.query.id == 1) { // internal service error
 				
-				aggregation.storeCount(5, "INTERNAL_SERVICE_ERROR", date);
+				aggregation.storeCount(2, "INTERNAL_SERVICE_ERROR", date);
 				console.log(date);
 			}
 
 			else if (req.query.id == 2) { // validation error
 				
-				aggregation.storeCount(6, "VALIDATION_ERROR", date);
+				aggregation.storeCount(3, "VALIDATION_ERROR", date);
 				console.log(date);
 			}
 
 			else if (req.query.id == 3) { // service timeout
 				
-				aggregation.storeCount(3, "SERVICE_TIMEOUT", date);
+				aggregation.storeCount(2, "SERVICE_TIMEOUT", date);
 				console.log(date);
 			}
 
