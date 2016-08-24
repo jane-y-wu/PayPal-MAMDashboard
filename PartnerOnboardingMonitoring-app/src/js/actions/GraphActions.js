@@ -5,9 +5,10 @@ import dispatcher from "../dispatcher";
 export function updateGraph(startDate, endDate, errorType) {
 
 	var url = 'http://localhost:3003/api/getErrorCount/?startDate=' + startDate + '&endDate=' + endDate + '&error=' + errorType;
+	var c3url = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3003/api/getErrorCount/?startDate=' + startDate + '&endDate=' + endDate + '&error=' + errorType;
 	var request = new XMLHttpRequest();
 	request.onreadystatechange = (e) => {
-		if (request.readyState !==4) { // DON'T EXACTLY UNDERSTAND THIS LINE
+		if (request.readyState !==4) {
 			return;
 		}
 
@@ -18,7 +19,7 @@ export function updateGraph(startDate, endDate, errorType) {
 		}
 	};
 
-	request.open('GET', url);
+	request.open('GET', c3url);
 	request.send();
 	
 }

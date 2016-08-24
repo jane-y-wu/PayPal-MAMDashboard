@@ -30,8 +30,5 @@ process.on('SIGINT', function() {
   }); 
 }); 
 
-// mongoose.connect(url, function(){
-//     console.log('mongoose connected');
-// })
 module.exports = mongoose;
 
