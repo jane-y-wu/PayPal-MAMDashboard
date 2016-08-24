@@ -143,6 +143,7 @@ module.exports = function module() {
 
 			var dates = [];
 			var dataset = [];
+			var total = [];
 
 			var responseObj = new Object();
 
@@ -155,17 +156,13 @@ module.exports = function module() {
 			//db.on('error', console.error);
 			//db.once('open', function() {
 
-				//console.log('getErrorCount DB OPENING!!!!');
-
 				console.log(start + " " + end + " " + errorType);
 
 				if (errorType === "undefined") { // search all three
 
 
 					async.each(errorNames, function(eachErr, cb) {
-						//debugger;
 						console.log(eachErr);
-						//console.log('************************ before find');
 						DailyCount.find({ date : {$gte: start, $lte: end} , errorType : eachErr }, null, {sort : {date : 1}}, function (err, results) {
 		      				console.log('inside find');
 							if (!err) {
@@ -198,8 +195,10 @@ module.exports = function module() {
 
 						responseObj.labels = dates;
 						//db.close();
-						//console.log("***************   get error count db closed");
-
+						for (var i = 0; i < responseObj.labels.length; i++) { 
+						    total.push(responseObj.VALIDATION_ERROR[i] + responseObj.INTERNAL_SERVICE_ERROR[i] + responseObj.SERVICE_TIMEOUT[i]);
+						}
+						responseObj.totalData = total;
 						callback(JSON.stringify(responseObj));
 
 					})
