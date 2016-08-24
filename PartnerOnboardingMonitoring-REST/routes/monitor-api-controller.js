@@ -88,7 +88,10 @@ module.exports = function module(app) {
 			    	service.getDetails(req.query.id, function onGetDetails(details) {
 			      		getRawLogs(details);
 			    	});
-			    }
+			} else {
+				console.log("Unknown status: " + req.query.status + ", ID: " + req.query.id);
+				res.end();
+			}
 		    };
 
 		    var getRawLogs = function getRawLogs(details) {
