@@ -134,9 +134,10 @@ module.exports = function module() {
 										recordStack.push(currRecord["calActivitesResp"][i]);
 									}
 								} else if (currRecord["@Subclasstype"] == "calrecordbean" && errorNames.indexOf(currRecord["name"]) >= 0) {
+									console.log("currRecord: " + JSON.stringify(currRecord, null, 4));
 									var localLog = { metaData : {}, payload: {} };
-									localLog.metaData.pool = pool;
-									localLog.machine = machine;
+									localLog.metaData.Pool = pool;
+									localLog.metaData.Machine = machine;
 									// Parse Class and Full_date from messageClass
 									localLog.payload.Class = currRecord.messageClass[0];
 									var dateMatch = eventDetailURL.match("datetime=(.*) ");
@@ -167,7 +168,7 @@ module.exports = function module() {
 								}
 							}
 						} else {
-							console.log("Error fetching logs. Status Code: " + response.statusCode + " Error: " + console.error(););
+							console.log("Error fetching logs. Status Code: " + response.statusCode + " Error: " + console.log(error));
 						}
 
 
@@ -203,12 +204,12 @@ module.exports = function module() {
 			// console.log("filters: " + filters);
 			//
 
-			db.on('error', console.error);
-			db.once('open', function() {
+			//db.on('error', console.error);
+			//db.once('open', function() {
 
 				//if(filters.length == 0) {
 					Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
-						db.close();
+						//db.close();
 						console.log("logs: " + JSON.stringify(logs));
 						callback(logs);
 					});
@@ -221,7 +222,7 @@ module.exports = function module() {
 
 				//callback(fakeDataObject);
 
-			});
+			//});
 			//callback(fakeDataObject);
 		}
 
