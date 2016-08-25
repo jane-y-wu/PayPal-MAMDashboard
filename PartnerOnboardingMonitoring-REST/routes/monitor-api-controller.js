@@ -128,7 +128,7 @@ module.exports = function module(app) {
 
 				console.log(req.query.startDate);
 				var startDate = new Date(req.query.startDate);
-				startDate.setHours(startDate.getHours());
+				startDate.setHours(startDate.getHours()); // hacky way of doing it TODO fix so time zone isn't hardcoded in
 				console.log("startDate: " + startDate);
 				var endDate = new Date(req.query.endDate);
 				endDate.setHours(endDate.getHours());
@@ -152,6 +152,15 @@ module.exports = function module(app) {
 				res.end(response);
 			});
 
+		},
+
+		getSingleLog : function getSingleLog(req, res, next) {
+			console.log("In getSingleLog Controller");
+			console.log(JSON.stringify(req.query));
+			service.getSingleLog(req.query.logID, function(log){
+				res.end(JSON.stringify(log, null, 4));
+			});
 		}
+
 	};
 };

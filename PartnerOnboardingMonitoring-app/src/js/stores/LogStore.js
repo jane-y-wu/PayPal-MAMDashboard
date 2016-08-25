@@ -22,6 +22,11 @@ class LogStore extends EventEmitter {
         this.emit("sortChange");
         break;
       }
+      case "GET_SINGLE_LOG": {
+        this.singleLog = action.log;
+        this.emit("singleLogChange");
+        break;
+      }
     }
   }
 
@@ -31,6 +36,10 @@ class LogStore extends EventEmitter {
 
   getSortBy() {
     return this.sortBy;
+  }
+
+  getSingleLog() {
+    return this.singleLog;
   }
 }
 

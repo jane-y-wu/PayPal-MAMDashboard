@@ -67,6 +67,7 @@ export default class LogWrapper extends React.Component {
       };*/
       var parsedLog = {};
       parsedLog.rawLogsUrl = rawLogs[i].rawLogsURL;
+      parsedLog._id = rawLogs[i]._id;
       for (var j in rawLogs[i].metaData) {
         parsedLog[j] = rawLogs[i].metaData[j];
       }

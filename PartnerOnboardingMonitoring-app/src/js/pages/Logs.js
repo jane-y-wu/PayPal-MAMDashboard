@@ -10,6 +10,7 @@ import Dialog from 'material-ui/Dialog';
 import ArrowDropUp from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import Divider from 'material-ui/Divider';
+import NavLink from './NavLink';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -91,11 +92,7 @@ export default class Logs extends React.Component {
   render() {
 
     const actions = [
-      <FlatButton
-        label="See in Page"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />,
+      <NavLink to={"/singleLog/" + this.state.dialog._id}><FlatButton label="See in Page" primary={true} fullWidth={false}/></NavLink>,
       <FlatButton
         label="Close"
         primary={false}
