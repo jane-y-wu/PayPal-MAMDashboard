@@ -245,6 +245,11 @@ module.exports = function module() {
 			//callback(fakeDataObject);
 		}
 
+    getSingleLog : function getSingleLog(logID, callback) {
+      Log.find({'_id' : logID}, function(err, log){
+        callback(log);
+      });
+    }
 
 	};
 };

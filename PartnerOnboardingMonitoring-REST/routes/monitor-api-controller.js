@@ -152,6 +152,13 @@ module.exports = function module(app) {
 				res.end(response);
 			});
 
+		},
+
+		getSingleLog : function getSingleLog(req, res, next) {
+			service.getSingleLog(req.query.logID, function(log){
+				res.end(log);
+			});
 		}
+
 	};
 };
