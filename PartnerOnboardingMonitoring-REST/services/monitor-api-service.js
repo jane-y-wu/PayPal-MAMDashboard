@@ -229,6 +229,7 @@ module.exports = function module() {
 				//if(filters.length == 0) {
 					Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
 						//db.close();
+						//console.log("logs: " + JSON.stringify(logs));
 						callback(logs);
 					});
 				// } else {
@@ -242,8 +243,15 @@ module.exports = function module() {
 
 			//});
 			//callback(fakeDataObject);
-		}
+		},
 
+    getSingleLog : function getSingleLog(logID, callback) {
+      Log.find({'_id' : logID}, function(err, log){
+        if(err) console.log(err);
+	//console.log(JSON.stringify(log));
+	callback(log);
+      });
+    }
 
 	};
 };

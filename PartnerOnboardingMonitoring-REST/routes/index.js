@@ -23,5 +23,7 @@ module.exports = function module(app) {
       // partnerAccount
   app.get('/api/getErrorCount/', monitorApiController.getErrorCount);
 
+  app.get('/api/getSingleLog/', monitorApiController.getSingleLog);
+
   app.get('/api/test/', monitorApiController.test);
 };

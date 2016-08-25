@@ -35,7 +35,7 @@ export default class Layout extends React.Component {
     return (
       <div>
         <div style={datePickerStyle}>
-          <DateRange/>
+          <DateRange allowTime={true}/>
         </div>
         <div style={logTableStyle}>
           <MuiThemeProvider muiTheme={getMuiTheme()}>

@@ -9,6 +9,7 @@ import Toggle from 'material-ui/Toggle';
 import Dialog from 'material-ui/Dialog';
 import ArrowDropUp from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
+import Divider from 'material-ui/Divider';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -91,8 +92,13 @@ export default class Logs extends React.Component {
 
     const actions = [
       <FlatButton
-        label="Close"
+        label="See in Page"
         primary={true}
+        onTouchTap={this.handleClose}
+      />,
+      <FlatButton
+        label="Close"
+        primary={false}
         onTouchTap={this.handleClose}
       />
     ];
@@ -117,15 +123,26 @@ export default class Logs extends React.Component {
       width: "12%"
     }
 
-    const dialogCellStyle = {
-      height: "500px"
+    const smallTableStyle = {
+      padding: "10px"
+    }
+
+    const keyStyle = {
+      color: "grey"
+    }
+
+    const fieldStyle = {
+      width: "100%",
+      overflow: "auto",
+      wordWrap: "break-word",
+      color: "black"
     }
 
     return (
       <div>
         <MuiThemeProvider muiTheme={getMuiTheme()}>
           <div>
-            <Table fixedHeader={true} wrapperStyle={dialogCellStyle}>
+            <Table fixedHeader={true}>
               <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
                 <TableRow>
                   <TableHeaderColumn style={headerCellStyle} >
@@ -217,50 +234,20 @@ export default class Logs extends React.Component {
               open={this.state.showDialog}
               onRequestClose={this.handleClose}
               autoScrollBodyContent={true}
+              title={"Full Details"}
             >
               <div>
-              {this.state.dialogKeys.map( (key, index) => (
-                <div>
-                  <Table>
-                    <TableHeader displaySelectAll={false}>
-                      <TableRow>
-                        <TableHeaderColumn>{key}</TableHeaderColumn>
-                      </TableRow>
-                    </TableHeader>
-                  </Table>
-                  {this.state.dialog[key]}
-                </div>
-              ))}
-                {/*<Table>
-                  <TableHeader displaySelectAll={false}>
-                    <TableRow>
-                      <TableHeaderColumn>Raw Logs URL</TableHeaderColumn>
-                      <TableHeaderColumn>Machine</TableHeaderColumn>
-                      <TableHeaderColumn>Pool</TableHeaderColumn>
-                      <TableHeaderColumn>Data Center</TableHeaderColumn>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody displayRowCheckbox={false} >
-                    <TableRow>
-                      <TableRowColumn>{this.state.dialog.rawLogsURL}</TableRowColumn>
-                      <TableRowColumn>{this.state.dialog.Machine}</TableRowColumn>
-                      <TableRowColumn>{this.state.dialog.Pool}</TableRowColumn>
-                      <TableRowColumn>{this.state.dialog.Data_Center}</TableRowColumn>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-                <Table>
-                  <TableHeader displaySelectAll={false}>
-                    <TableRow>
-                      <TableHeaderColumn>Issue/Message</TableHeaderColumn>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody displayRowCheckbox={false} >
-                    <TableRow>
-                      <TableRowColumn>{this.state.dialog.issue_message}</TableRowColumn>
-                    </TableRow>
-                  </TableBody>
-                </Table>*/}
+                {this.state.dialogKeys.map( (key, index) => (
+                  <div style={smallTableStyle}>
+                    <div style={keyStyle}>
+                      {key}
+                    </div>
+                    <Divider />
+                    <div style={fieldStyle}>
+                      {this.state.dialog[key]}
+                    </div>
+                  </div>
+                ))}
               </div>
             </Dialog>
           </div>

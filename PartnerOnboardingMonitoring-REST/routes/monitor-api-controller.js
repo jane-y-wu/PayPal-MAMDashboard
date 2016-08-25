@@ -12,19 +12,19 @@ module.exports = function module(app) {
 
 			var date = new Date(2016, 7, 14, 2, 15);
 			if (req.query.id == 1) { // internal service error
-				
+
 				aggregation.storeCount(2, "INTERNAL_SERVICE_ERROR", date);
 				console.log(date);
 			}
 
 			else if (req.query.id == 2) { // validation error
-				
+
 				aggregation.storeCount(3, "VALIDATION_ERROR", date);
 				console.log(date);
 			}
 
 			else if (req.query.id == 3) { // service timeout
-				
+
 				aggregation.storeCount(2, "SERVICE_TIMEOUT", date);
 				console.log(date);
 			}
@@ -112,10 +112,10 @@ module.exports = function module(app) {
 
 				console.log(req.query.startDate);
 				var startDate = new Date(req.query.startDate);
-				startDate.setHours(startDate.getHours() + 7); // hacky way of doing it TODO fix so time zone isn't hardcoded in
+				startDate.setHours(startDate.getHours());
 				console.log("startDate: " + startDate);
 				var endDate = new Date(req.query.endDate);
-				endDate.setHours(endDate.getHours() + 7);
+				endDate.setHours(endDate.getHours());
 				console.log("endDate: " + endDate);
 
 				service.returnLogs(startDate, endDate, [], function(logs){
@@ -151,7 +151,16 @@ module.exports = function module(app) {
 			aggregation.getErrorCount(start, end, errorType, function (response) {
 				res.end(response);
 			});
-			
+
+		},
+
+		getSingleLog : function getSingleLog(req, res, next) {
+			console.log("In getSingleLog Controller");
+			console.log(JSON.stringify(req.query));
+			service.getSingleLog(req.query.logID, function(log){
+				res.end(JSON.stringify(log, null, 4));
+			});
 		}
+
 	};
 };
