@@ -83,6 +83,7 @@ module.exports = function module() {
 				if (!error && response.statusCode == 200) {
 					var details = JSON.parse(body);
 					if (details.records.length == 0) {
+						console.log(details);
 						console.log("No results!");
 					} else {
 						//var eventDetailURL = details.records[0].url;

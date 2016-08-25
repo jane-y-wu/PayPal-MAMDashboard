@@ -19,7 +19,7 @@ export function updateGraph(startDate, endDate, errorType) {
 		}
 	};
 
-	request.open('GET', c3url);
+	request.open('GET', url);
 	request.send();
 	
 }
