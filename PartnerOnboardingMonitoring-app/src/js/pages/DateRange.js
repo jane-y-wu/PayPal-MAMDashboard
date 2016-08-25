@@ -19,6 +19,8 @@ export default class DateRange extends React.Component {
       super();
       this.setStartDate = this.setStartDate.bind(this);
       this.setEndDate = this.setEndDate.bind(this);
+      this.setStartTime = this.setStartTime.bind(this);
+      this.setEndTime = this.setEndTime.bind(this);
       this.attemptRefreshLogs = this.attemptRefreshLogs.bind(this);
       this.refreshLogs = this.refreshLogs.bind(this);
       this.disableFuture = this.disableFuture.bind(this);
@@ -63,15 +65,19 @@ export default class DateRange extends React.Component {
     }
 
     setStartDate(event, date) {
-      this.setState({
-        startDate: date,
-      });
+      var hours = date.getHours();
+      var mins = date.getMinutes();
+      this.state.startDate = date;
+      this.state.startDate.setHours(hours);
+      this.state.startDate.setMinutes(mins);
     }
 
     setEndDate(event, date) {
-      this.setState({
-        endDate: date,
-      });
+      var hours = date.getHours();
+      var mins = date.getMinutes();
+      this.state.endDate = date;
+      this.state.endDate.setHours(hours);
+      this.state.endDate.setMinutes(mins);
     }
 
     handleRequestCloseSnack() {
@@ -84,12 +90,14 @@ export default class DateRange extends React.Component {
       return date > moment().toDate();
     }
 
-    setStartTime() {
-      //
+    setStartTime(event, date) {
+      this.state.startDate.setHours(date.getHours());
+      this.state.startDate.setMinutes(date.getMinutes());
     }
 
-    setEndTime() {
-      //
+    setEndTime(event, date) {
+      this.state.endDate.setHours(date.getHours());
+      this.state.endDate.setMinutes(date.getMinutes());
     }
 
 
@@ -142,11 +150,13 @@ export default class DateRange extends React.Component {
                 autoOk={true}
                 shouldDisableDate={this.disableFuture}
               />
-              {/*}<TimePicker
+              {this.props.allowTime ? <TimePicker
                 textFieldStyle={datePickerTextStyle}
                 format="24hr"
                 hintText="Start Time"
-              />*/}
+                onChange={this.setStartTime}
+                autoOk={true}
+              /> : ""}
             </div>
           </Paper>
           <Paper style={paperStyle} zDepth={0}>
@@ -162,11 +172,13 @@ export default class DateRange extends React.Component {
                 autoOk={true}
                 shouldDisableDate={this.disableFuture}
               />
-              {/*}<TimePicker
+              {this.props.allowTime ? <TimePicker
                 textFieldStyle={datePickerTextStyle}
                 format="24hr"
                 hintText="End Time"
-              />*/}
+                onChange={this.setEndTime}
+                autoOk={true}
+              /> : ""}
             </div>
           </Paper>
           <RaisedButton label="refresh" onTouchTap={this.attemptRefreshLogs} style={paperStyle}/>
