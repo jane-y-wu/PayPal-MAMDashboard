@@ -9,6 +9,7 @@ import Toggle from 'material-ui/Toggle';
 import Dialog from 'material-ui/Dialog';
 import ArrowDropUp from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
+import Divider from 'material-ui/Divider';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -235,18 +236,19 @@ export default class Logs extends React.Component {
               autoScrollBodyContent={true}
               title={"Full Details"}
             >
-            <div>
-              {this.state.dialogKeys.map( (key, index) => (
-                <div style={smallTableStyle}>
-                  <div style={keyStyle}>
-                    {key}
+              <div>
+                {this.state.dialogKeys.map( (key, index) => (
+                  <div style={smallTableStyle}>
+                    <div style={keyStyle}>
+                      {key}
+                    </div>
+                    <Divider />
+                    <div style={fieldStyle}>
+                      {this.state.dialog[key]}
+                    </div>
                   </div>
-                  <div style={fieldStyle}>
-                    {this.state.dialog[key]}
-                  </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
             </Dialog>
           </div>
         </MuiThemeProvider>
