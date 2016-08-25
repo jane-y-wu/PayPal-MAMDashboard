@@ -230,7 +230,7 @@ module.exports = function module() {
 				//if(filters.length == 0) {
 					Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
 						//db.close();
-						console.log("logs: " + JSON.stringify(logs));
+						//console.log("logs: " + JSON.stringify(logs));
 						callback(logs);
 					});
 				// } else {
