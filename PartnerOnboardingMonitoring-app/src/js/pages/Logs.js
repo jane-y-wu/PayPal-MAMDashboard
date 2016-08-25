@@ -91,8 +91,13 @@ export default class Logs extends React.Component {
 
     const actions = [
       <FlatButton
-        label="Close"
+        label="See in Page"
         primary={true}
+        onTouchTap={this.handleClose}
+      />,
+      <FlatButton
+        label="Close"
+        primary={false}
         onTouchTap={this.handleClose}
       />
     ];
@@ -117,8 +122,19 @@ export default class Logs extends React.Component {
       width: "12%"
     }
 
-    const dialogCellStyle = {
-      height: "500px"
+    const smallTableStyle = {
+      padding: "10px"
+    }
+
+    const keyStyle = {
+      color: "grey"
+    }
+
+    const fieldStyle = {
+      width: "100%",
+      overflow: "auto",
+      wordWrap: "break-word",
+      color: "black"
     }
 
     return (
@@ -217,21 +233,20 @@ export default class Logs extends React.Component {
               open={this.state.showDialog}
               onRequestClose={this.handleClose}
               autoScrollBodyContent={true}
+              title={"Full Details"}
             >
-              <div>
+            <div>
               {this.state.dialogKeys.map( (key, index) => (
-                <div>
-                  <Table>
-                    <TableHeader displaySelectAll={false} adjustForCheckbox={false}>
-                      <TableRow>
-                        <TableHeaderColumn>{key}</TableHeaderColumn>
-                      </TableRow>
-                    </TableHeader>
-                  </Table>
-                  {this.state.dialog[key]}
+                <div style={smallTableStyle}>
+                  <div style={keyStyle}>
+                    {key}
+                  </div>
+                  <div style={fieldStyle}>
+                    {this.state.dialog[key]}
+                  </div>
                 </div>
               ))}
-              </div>
+            </div>
             </Dialog>
           </div>
         </MuiThemeProvider>

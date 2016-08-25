@@ -18,18 +18,31 @@ export default class DateRange extends React.Component {
       super();
       this.setStartDate = this.setStartDate.bind(this);
       this.setEndDate = this.setEndDate.bind(this);
-      var defaultStartDate = moment().subtract(6, 'days').toDate();
-      this.state = {
-        startDate: moment().subtract(6, 'days').toDate(),
-        endDate: moment().toDate(),
-        defaultStartDate: defaultStartDate,
-        defaultEndDate: moment().toDate(),
-      }
       this.refreshLogs = this.refreshLogs.bind(this);
+      var defaultStartDate = moment().subtract(6, 'days').toDate();
+      defaultStartDate.setHours(0);
+      defaultStartDate.setMinutes(0);
+      defaultStartDate.setSeconds(0);
+      defaultStartDate.setMilliseconds(0);
+      var defaultEndDate = moment().toDate();
+      defaultEndDate.setHours(23);
+      defaultEndDate.setMinutes(59);
+      defaultEndDate.setSeconds(59);
+      defaultEndDate.setMilliseconds(999);
+      this.state = {
+        startDate: defaultStartDate,
+        endDate: defaultEndDate,
+        defaultStartDate: defaultStartDate,
+        defaultEndDate: defaultEndDate,
+      }
+    }
+
+    componentWillMount() {
+      LogActions.getLogs(new Date(this.state.defaultStartDate).toISOString(), new Date(this.state.defaultEndDate).toISOString());
     }
 
     refreshLogs() {
-      LogActions.getLogs();
+      LogActions.getLogs(new Date(this.state.startDate).toISOString(), new Date(this.state.endDate).toISOString());
       GraphActions.updateGraph(new Date(this.state.startDate).toISOString(), new Date(this.state.endDate).toISOString());
     }
 
@@ -88,9 +101,11 @@ export default class DateRange extends React.Component {
                 style={datePickerStyle}
                 textFieldStyle={datePickerTextStyle}
                 onChange={this.setStartDate}
-                floatingLabelText="Start Date"
+                floatingLabelText="Start Date (Inclusive)"
                 maxDate={this.maxDate}
                 defaultDate={this.state.defaultStartDate}
+                container="inline"
+                autoOk={true}
               />
               {/*}<TimePicker
                 textFieldStyle={datePickerTextStyle}
@@ -105,9 +120,11 @@ export default class DateRange extends React.Component {
                 style={datePickerStyle}
                 textFieldStyle={datePickerTextStyle}
                 onChange={this.setEndDate}
-                floatingLabelText="End Date"
+                floatingLabelText="End Date (Inclusive)"
                 maxDate={this.maxDate}
                 defaultDate={this.state.defaultEndDate}
+                container="inline"
+                autoOk={true}
               />
               {/*}<TimePicker
                 textFieldStyle={datePickerTextStyle}
