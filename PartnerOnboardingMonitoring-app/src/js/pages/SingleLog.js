@@ -19,9 +19,11 @@ export default class SingleLog extends React.Component {
   }
 
   componentWillMount() {
+    this.state.logID = this.props.params.logID;
     this.setState({
-      logID: this.props.params.logID
     })
+    console.log("Log ID: " + this.state.logID);
+    console.log(this.props.params);
     LogStore.on("singleLogChange", this.getLog);
     LogActions.getSingleLog(this.state.logID);
   }
