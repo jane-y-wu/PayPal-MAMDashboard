@@ -139,7 +139,7 @@ module.exports = function module() {
 									localLog.rawLogsURL = jsonURL;
 									localLog.metaData.Pool = pool;
 									localLog.metaData.Machine = machine;
-									localLog.Data_Center = record.values["Data-Center"]
+									localLog.metaData.Data_Center = record.values["Data-Center"];
 									// Parse Class and Full_date from messageClass
 									localLog.payload.Class = currRecord.messageClass[0];
 									var dateMatch = eventDetailURL.match("datetime=(.*) ");
@@ -229,7 +229,6 @@ module.exports = function module() {
 				//if(filters.length == 0) {
 					Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
 						//db.close();
-						console.log("logs: " + JSON.stringify(logs));
 						callback(logs);
 					});
 				// } else {

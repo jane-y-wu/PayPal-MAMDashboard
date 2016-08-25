@@ -128,10 +128,10 @@ module.exports = function module(app) {
 
 				console.log(req.query.startDate);
 				var startDate = new Date(req.query.startDate);
-				startDate.setHours(startDate.getHours() + 7); // hacky way of doing it TODO fix so time zone isn't hardcoded in
+				startDate.setHours(startDate.getHours()); // hacky way of doing it TODO fix so time zone isn't hardcoded in
 				console.log("startDate: " + startDate);
 				var endDate = new Date(req.query.endDate);
-				endDate.setHours(endDate.getHours() + 7);
+				endDate.setHours(endDate.getHours());
 				console.log("endDate: " + endDate);
 
 			service.returnLogs(startDate, endDate, req.body.filters, function(logs){
