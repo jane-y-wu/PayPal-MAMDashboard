@@ -50,92 +50,77 @@ module.exports = function module() {
 
 			console.log("in store count : " + errorNum + " " + errorName + " " + time);
 
-			//db = mongoose.createConnection(url /*, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'}*/);
-			//mongoose.connect(url);
+			// TODO parse out date
+			var year = time.getFullYear();
+			var month = time.getMonth() + 1;
+			var day = time.getDay();
+			var minute = time.getMinutes();
+			var second = time.getSeconds();
 
-			//db.on('error', console.error);
-			//db.once('open', function() {
+			//var currentDate = new Date(year, month, day);
+			var timestamp = new Date(year, month, day, minute, second);
 
-				// TODO parse out date
-				var year = time.getFullYear();
-				var month = time.getMonth() + 1;
-				var day = time.getDay();
-				var minute = time.getMinutes();
-				var second = time.getSeconds();
+			var weekNum = [year, getWeekNumber(time)];
+			console.log("week number : " + weekNum);
 
-				//var currentDate = new Date(year, month, day);
-				var timestamp = new Date(year, month, day, minute, second);
+			DailyCount.find({date : time, errorType : errorName}, function(err, results) {
 
-				var weekNum = [year, getWeekNumber(time)];
-				console.log("week number : " + weekNum);
-
-				DailyCount.find({date : time, errorType : errorName}, function(err, results) {
-
-					if (!results.length) { // there is no document for the day
+				if (!results.length) { // there is no document for the day
 
 
-						var doc = new DailyCount({date : time,
-													errorType: errorName,
-													errorCount: errorNum});
+					var doc = new DailyCount({date : time,
+												errorType: errorName,
+												errorCount: errorNum});
 
-						console.log(doc);
+					console.log(doc);
 
-						var store = new DailyCount(doc);
+					var store = new DailyCount(doc);
 
-						store.save(function(err, result){
-							console.log(result);
-							console.log("saved");
-							//db.close();
-						})
+					store.save(function(err, result){
+						console.log(result);
+						console.log("saved");
+					})
 
-					}
-					else {
+				}
+				else {
 
-						DailyCount.update({date : time, errorType : errorName}, {$inc: {errorCount: errorNum}}, function(err, results) {
-							console.log("updating");
-							console.log(results);
+					DailyCount.update({date : time, errorType : errorName}, {$inc: {errorCount: errorNum}}, function(err, results) {
+						console.log("updating");
+						console.log(results);
+					})
 
-							//db.close();
-						})
+				}
 
-					}
+			});
 
-				});
+			WeeklyCount.find({weekNumber : weekNum, errorType : errorName}, function(err, results) {
 
-				WeeklyCount.find({weekNumber : weekNum, errorType : errorName}, function(err, results) {
-
-					if (!results.length) { // there is no document for the week
+				if (!results.length) { // there is no document for the week
 
 
-						var doc = new WeeklyCount({weekNumber : weekNum,
-													errorType: errorName,
-													errorCount: errorNum});
+					var doc = new WeeklyCount({weekNumber : weekNum,
+												errorType: errorName,
+												errorCount: errorNum});
 
-						console.log(doc);
+					console.log(doc);
 
-						var store = new WeeklyCount(doc);
+					var store = new WeeklyCount(doc);
 
-						store.save(function(err, result){
-							console.log(result);
-							console.log("saved");
-							//db.close();
-						})
+					store.save(function(err, result){
+						console.log(result);
+						console.log("saved");
+					})
 
-					}
-					else {
+				}
+				else {
 
-						WeeklyCount.update({weekNumber : weekNum, errorType : errorName}, {$inc: {errorCount: errorNum}}, function(err, results) {
-							console.log("updating");
-							console.log(results);
+					WeeklyCount.update({weekNumber : weekNum, errorType : errorName}, {$inc: {errorCount: errorNum}}, function(err, results) {
+						console.log("updating");
+						console.log(results);
+					})
 
-							//db.close();
-						})
-
-					}
-				})
-
-
-			//});
+				}
+			})
 
 		},
 
@@ -144,72 +129,90 @@ module.exports = function module() {
 			var dates = [];
 			var dataset = [];
 			var total = [];
+			var emptyDataset = [];
 
 			var responseObj = new Object();
 
 			var start = moment(startDate).toDate();
 			var end = moment(endDate).toDate();
 
-			//db = mongoose.createConnection(url);
-			//mongoose.connect(url);
-			//console.log('getErrorCount DB CONNECTS!!!!');
-			//db.on('error', console.error);
-			//db.once('open', function() {
+			var curr = moment(startDate);
 
-				console.log(start + " " + end + " " + errorType);
+			console.log('end is ' + end + ' curr is ' + curr.toDate());
 
-				if (errorType === "undefined") { // search all three
+			while (curr.toDate() <= end) {
+
+				dates.push(curr.format(form));
+				curr.add(1, 'day');
+				emptyDataset.push(0);
+
+			}
+
+			console.log(dates + emptyDataset);
+
+			console.log(start + " " + end + " " + errorType);
+
+			if (errorType === "undefined") { // search all three
 
 
-					async.each(errorNames, function(eachErr, cb) {
-						console.log(eachErr);
-						DailyCount.find({ date : {$gte: start, $lte: end} , errorType : eachErr }, null, {sort : {date : 1}}, function (err, results) {
-		      				console.log('inside find');
-							if (!err) {
+				async.each(errorNames, function(eachErr, cb) {
+					console.log(eachErr);
+					DailyCount.find({ date : {$gte: start, $lte: end} , errorType : eachErr }, null, {sort : {date : 1}}, function (err, results) {
+	      				console.log('inside find');
+						if (!err) {
 
-								dates = [];
-								dataset = [];
+							dataset = []; // reset dataset for each error
 
-								console.log("results are " + results);
-		      
-								//store the error count
-								results.forEach(function (dailyCt) {
-		      
-									console.log(dailyCt.errorCount + dailyCt.date);
-									dates.push(moment(dailyCt.date).format(form));
-									dataset.push(dailyCt.errorCount);
+							console.log("results are " + results);
 
-								});
-		      
-							} else {
-								console.log("the error is " + err);
+							var dailyCt = 0;
+
+							if (results.length != 0) {
+
+								for (var i = 0; i < dates.length; i++) {
+									if (dates[i] === moment(results[dailyCt].date).format(form)) {
+										dataset.push(results[dailyCt].errorCount);
+										dailyCt++;
+									}
+									else { // there is no error count for that day, push a 0
+										dataset.push(0); 
+									}
+								}
 							}
 
-							responseObj[eachErr] = dataset;
+							else {
+								dataset = emptyDataset;
+							}
 
-							cb();
-
-						})
-
-					}, function(err) {
-
-						responseObj.labels = dates;
-						//db.close();
-						for (var i = 0; i < responseObj.labels.length; i++) { 
-						    total.push(responseObj.VALIDATION_ERROR[i] + responseObj.INTERNAL_SERVICE_ERROR[i] + responseObj.SERVICE_TIMEOUT[i]);
+	      
+						} else {
+							console.log("the error is " + err);
 						}
-						responseObj.totalData = total;
-						callback(JSON.stringify(responseObj));
+
+						responseObj[eachErr] = dataset;
+
+						cb();
 
 					})
 
-				} else {
-					//db.close();
-				}
+				}, function(err) {
 
+					responseObj.labels = dates;
 
+					// calculate total
+					for (var i = 0; i < responseObj.labels.length; i++) { 
+					    total.push(responseObj.VALIDATION_ERROR[i] + responseObj.INTERNAL_SERVICE_ERROR[i] + responseObj.SERVICE_TIMEOUT[i]);
+					}
 
-			//});
+					responseObj.totalData = total;
+					console.log(responseObj);
+					callback(JSON.stringify(responseObj));
+
+				})
+
+			} else {
+				
+			}
 			
 		}
 	}
