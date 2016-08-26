@@ -51,7 +51,7 @@ export default class SingleLog extends React.Component {
     this.state.singleLog = parsedLog;
 
     var keys = []
-    for (var i in this.state.singleLog) keys.push(i);
+    for (var i in this.state.singleLog) if(i != "_id") keys.push(i);
     this.state.logKeys = keys;
     this.setState({});
   }
