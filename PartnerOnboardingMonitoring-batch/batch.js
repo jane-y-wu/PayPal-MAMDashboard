@@ -13,7 +13,7 @@ var option = process.argv[2];
 
 // for testing purposes: option a to use alex's C3, m for madhav's
 if (option == 'a') {
-	httpCallbackURL = alexC3 + ":3003/api/queryready/?id=$id&status=$status";
+	httpCallbackURL = alexC3 + ":3004/api/queryready/?id=$id&status=$status";
 }
 else if (option == 'm') {
 	httpCallbackURL = madhavC3 + ":3003/api/queryready/?id=$id&status=$status";

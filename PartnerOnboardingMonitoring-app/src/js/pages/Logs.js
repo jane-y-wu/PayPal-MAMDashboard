@@ -55,7 +55,7 @@ export default class Logs extends React.Component {
     this.state.dialog = this.props.logData[index];
     console.log(this.state.dialog);
     var keys = [];
-    for (var i in this.props.logData[index]) keys.push(i);
+    for (var i in this.props.logData[index]) if(i != "_id")  keys.push(i);
     this.state.dialogKeys = keys;
     console.log(this.state.dialogKeys);
     this.setState({showDialog: true});
@@ -92,7 +92,7 @@ export default class Logs extends React.Component {
   render() {
 
     const actions = [
-      <NavLink to={"/singleLog/" + this.state.dialog._id}><FlatButton label="See in Page" primary={true} fullWidth={false}/></NavLink>,
+      <NavLink to={"/singleLog/" + this.state.dialog._id}><FlatButton label="See in Page" primary={true}/></NavLink>,
       <FlatButton
         label="Close"
         primary={false}
