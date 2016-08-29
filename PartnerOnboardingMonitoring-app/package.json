@@ -15,7 +15,6 @@
     "chart.js": "^2.2.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "flux": "^2.1.1",
-    "fuse.js": "^2.5.0",
     "history": "^1.17.0",
     "lodash": "^4.15.0",
     "material-ui": "^0.15.4",

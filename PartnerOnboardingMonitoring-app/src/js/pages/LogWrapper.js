@@ -19,13 +19,14 @@ export default class LogWrapper extends React.Component {
       parsedLogs: [{errName: "loading"}],
       sortBy: "dateObj",
       sortDirection: 1,
-      filteredLogs: []
+      filteredLogs: [],
     };
   }
 
   componentWillMount() {
     LogStore.on("change", this.getLogs);
     LogStore.on("sortChange", this.reSortLogs);
+    //LogStore.on("filterLogs", this.filterLogs);
     LogActions.getLogs();
   }
 
@@ -110,6 +111,13 @@ export default class LogWrapper extends React.Component {
       //console.log(parsedLog);
     }
     this.state.parsedLogs.sort(this.sortLogs);
+    var keys = _.keys(this.state.parsedLogs[0]);
+    console.log(keys);
+    this.state.fuse = new Fuse(this.state.parsedLogs, {
+      treshold: 0.0,
+      shouldSort: false,
+      keys: keys
+    });
     this.filterLogs("");
     this.setState({
     });

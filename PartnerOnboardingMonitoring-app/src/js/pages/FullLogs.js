@@ -20,7 +20,10 @@ export default class Layout extends React.Component {
     this.handleChangeSearchBy = this.handleChangeSearchBy.bind(this);
     this.state = {
       searchText: "",
-      searchBy: "All"
+      searchBy: "All",
+      otherSearchBy: "",
+      searchByOther: false,
+      trueSearchBy: "All"
     }
   }
 
@@ -30,8 +33,22 @@ export default class Layout extends React.Component {
 
   handleChangeSearchBy = (event, index, value) => {
     this.state.searchBy = value;
+    if (value == "Other"){
+      this.state.searchByOther = true;
+      this.state.trueSearchBy = this.state.otherSearchBy;
+    } else {
+      this.state.searchByOther = false;
+      this.state.trueSearchBy = value;
+    }
     this.setState({});
-  }
+  };
+
+  handleChangeSearchByOther = (event) => {
+    this.setState({
+      otherSearchBy: event.target.value,
+      trueSearchBy: event.target.value
+    })
+  };
 
   render() {
 
@@ -76,13 +93,20 @@ export default class Layout extends React.Component {
               <MenuItem value={"Class"} primaryText="Class" />
               <MenuItem value={"Type"} primaryText="Type" />
               <MenuItem value={"Status"} primaryText="Status" />
+              <MenuItem value={"Other"} primaryText="Other" />
             </DropDownMenu>
+            <TextField
+              hintText="Other Search Key"
+              value={this.state.otherSearchBy}
+              onChange={this.handleChangeSearchByOther}
+              disabled={!this.state.searchByOther}
+            />
           </div>
         </MuiThemeProvider>
         <div style={logTableStyle}>
           <MuiThemeProvider muiTheme={getMuiTheme()}>
             <Paper>
-              <LogWrapper logsToShow={-1} fullLogs={true} searchText={this.state.searchText} searchBy={this.state.searchBy}/>
+              <LogWrapper logsToShow={-1} fullLogs={true} searchText={this.state.searchText} searchBy={this.state.trueSearchBy}/>
             </Paper>
           </MuiThemeProvider>
         </div>
