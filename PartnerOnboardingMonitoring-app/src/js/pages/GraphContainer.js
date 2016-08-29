@@ -86,9 +86,7 @@ export default class GraphContainer extends React.Component {
   constructor() {
     super();
     this.changeState = this.changeState.bind(this);
-
     GraphActions.updateGraph(moment().subtract(6, 'days').startOf('day').toISOString(), moment().toISOString());
-    //GraphStore.on('change', this.changeState);
     this.state = {
       chartData : chartData,
     }
