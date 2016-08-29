@@ -165,7 +165,7 @@ export default class Logs extends React.Component {
                     {this.props.sortBy == "Pool" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
                   <TableHeaderColumn style={headerCellStyle}>
-                    <FlatButton label={"Data_Center"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Data_Center")}/>
+                    <FlatButton label={"Data Center"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Data_Center")}/>
                     {this.props.sortBy == "Data_Center" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
                     {this.props.sortBy == "Data_Center" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>

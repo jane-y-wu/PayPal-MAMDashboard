@@ -1,5 +1,6 @@
 import React from 'react';
 import _ from 'lodash';
+import Fuse from 'fuse.js';
 
 import Logs from './Logs';
 
@@ -34,21 +35,33 @@ export default class LogWrapper extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.searchText) {
+    if (nextProps.searchText !== this.props.searchText || nextProps.searchBy !== this.props.searchBy) {
+      this.state.searchBy = nextProps.searchBy;
+      this.setState({});
       this.filterLogs(nextProps.searchText);
     }
   }
 
   filterLogs(searchTerm) {
+    console.log(this.state.searchBy);
+    var filterFn = function(i){
+      for (var j in i) {
+        if (i[j].toString().indexOf(searchTerm) !== -1) return true;
+      }
+      return false;
+    };
+    if (this.state.searchBy !== "All") {
+      var searchBy = this.state.searchBy;
+      filterFn = function(i) {
+        if (i[searchBy].toString().indexOf(searchTerm) !== -1) return true;
+        return false;
+      }
+    }
+
     if (searchTerm == "") {
       this.state.filteredLogs = this.state.parsedLogs;
     } else {
-      this.state.filteredLogs = _.filter(this.state.parsedLogs, function(i){
-        for (var j in i) {
-          if (i[j].toString().indexOf(searchTerm) !== -1) return true;
-        }
-        return false;
-      });
+      this.state.filteredLogs = _.filter(this.state.parsedLogs, filterFn);
     }
     this.setState({});
   }

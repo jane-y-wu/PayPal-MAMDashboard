@@ -48,7 +48,7 @@ export default class Layout extends React.Component {
           <MuiThemeProvider muiTheme={getMuiTheme()}>
             <div>
               <Paper>
-                <LogWrapper logsToShow={LOGS_TO_SHOW} fullLogs={true}/>
+                <LogWrapper logsToShow={LOGS_TO_SHOW} fullLogs={true} searchBy={"All"}/>
               </Paper>
               <NavLink to="/fullLogs"><RaisedButton label="Full Logs" fullWidth={true}/></NavLink>
             </div>
