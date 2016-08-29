@@ -47,11 +47,11 @@ export default class Statistics extends React.Component {
     super();
     this.changeState = this.changeState.bind(this);
     GraphActions.updateGraph(moment().subtract(6, 'days').startOf('day').toISOString(), moment().toISOString());
+
     this.state = {
       chartData : chartData,
     }
   }
-
 
   componentWillMount() {
     GraphStore.on("change", this.changeState);
@@ -106,6 +106,7 @@ export default class Statistics extends React.Component {
          <div id="pie-container" className="row">
                 <div width="100%">
                     <PieChart data={this.state.chartData} options={pieOptions} width="1200" height="500" redraw/>
+
                 </div>
          </div>
       </div>
