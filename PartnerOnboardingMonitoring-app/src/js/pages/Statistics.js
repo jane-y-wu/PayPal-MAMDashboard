@@ -1,122 +1,111 @@
 var React = require('react');
 var DatePicker = require('react-datepicker');
 var PieChart = require('react-chartjs').Pie;
-//var Chart = require('chartjs'); 
 var moment = require('moment');
 
+import DateRange from "./DateRange";
 import * as GraphActions from "../actions/GraphActions";
 import GraphStore from "../stores/GraphStore";
 
-// var chartData = {
-//     labels: [
-//         "Red",
-//         "Blue",
-//         "Yellow"
-//     ],
-//     datasets: [
-//         {
-//             data: [300, 50, 100],
-//             backgroundColor: [
-//                 "#FF6384",
-//                 "#36A2EB",
-//                 "#FFCE56"
-//             ],
-//             hoverBackgroundColor: [
-//                 "#FF6384",
-//                 "#36A2EB",
-//                 "#FFCE56"
-//             ]
-//         }]
-// }
-
  var chartData = [
-              {
-                  value: 300,
-                  color:"#F7464A",
-                  highlight: "#FF5A5E",
-                  label: "Red"
-              },
-              {
-                  value: 50,
-                  color: "#46BFBD",
-                  highlight: "#5AD3D1",
-                  label: "Green"
-              },
-              {
-                  value: 100,
-                  color: "#FDB45C",
-                  highlight: "#FFC870",
-                  label: "Yellow"
-              },
-              {
-                  value: 40,
-                  color: "#949FB1",
-                  highlight: "#A8B3C5",
-                  label: "Grey"
-              },
-              {
-                  value: 120,
-                  color: "#4D5360",
-                  highlight: "#616774",
-                  label: "Dark Grey"
-              }
-          ];
+    {
+        value: 300,
+        color:"#C8D7E3",
+        highlight: "#DDE6ED",
+        label: "INTERNAL_SERVICE_ERROR"
+    },
+    {
+        value: 50,
+        color: "#98B1C4",
+        highlight: "#AEC1D0",
+        label: "VALIDATION_ERROR"
+    },
+    {
+        value: 100,
+        color: "#2F4E6F",
+        highlight: "#3D668F",
+        label: "SERVICE_TIMEOUT"
+    }
+];
 
-var styles = {
-  pieContainer: {
-    //
-  }
-}
 
-var options = {
-
-}
+var pieOptions = {
+  animatable: true,
+  segmentShowStroke : true,
+  segmentStrokeColor : "#fff",
+  segmentStrokeWidth : 2,
+  percentageInnerCutout : 0,
+  animationSteps : 100,
+  animationEasing : "easeOutBounce",
+  animateRotate : true,
+  legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<segments.length; i++){%><li><span style=\"background-color:<%=segments[i].fillColor%>\"></span><%if(segments[i].label){%><%=segments[i].label%><%}%></li><%}%></ul>"
+};
 
 export default class Statistics extends React.Component {
 
   constructor() {
     super();
-    //this.changeState = this.changeState.bind(this);
-    //GraphActions.updateGraph(moment().subtract(6, 'days').startOf('day').toISOString(), moment().toISOString());
-    
+    this.changeState = this.changeState.bind(this);
+    GraphActions.updateGraph(moment().subtract(6, 'days').startOf('day').toISOString(), moment().toISOString());
     this.state = {
       chartData : chartData,
     }
   }
 
-  // componentWillMount() {
-  //   GraphStore.on("change", this.changeState);
-  // }
 
-  // componentWillUnmount() {
-  //   GraphStore.removeListener("change", this.changeState);
-  // }
+  componentWillMount() {
+    GraphStore.on("change", this.changeState);
+  }
 
-  // changeState() {
+  componentWillUnmount() {
+    GraphStore.removeListener("change", this.changeState);
+  }
 
-  //   var response = GraphStore.returnCount();
-  //   response = JSON.parse(response);
+  changeState() {
 
-  //   //console.log(response);
+    var response = GraphStore.returnCount();
+    response = JSON.parse(response);
 
-  //   chartData.labels = response.labels;
-  //   chartData.datasets[0].data = response.INTERNAL_SERVICE_ERROR;
-  //   chartData.datasets[1].data = response.VALIDATION_ERROR;
-  //   chartData.datasets[2].data = response.SERVICE_TIMEOUT;
-  //   chartData.datasets[3].data = response.totalData;
+    var getSum = function(arr) {
 
-  //   this.setState({chartData : chartData});
+      var total = 0;
 
-  // }
+      for (var i = 0; i < arr.length; i++) {
+        total += arr[i];
+      }
+
+      return total;
+    }
+
+    var iseTotal = getSum(response.INTERNAL_SERVICE_ERROR);
+    var veTotal = getSum(response.VALIDATION_ERROR);
+    var stTotal = getSum(response.SERVICE_TIMEOUT);
+
+    chartData[0].value = iseTotal;
+    chartData[1].value = veTotal;
+    chartData[2].value = stTotal;
+
+    this.setState({chartData : chartData});
+
+  }
 
   render () {
-  	console.log('at least it rendering');
-    return(
 
+    const datePickerStyle = {
+      marginLeft: "5%",
+      float: "left",
+      marginTop: "2%",
+      width: "100%"
+    }
+
+    return(
       <div>
+        <div style={datePickerStyle}>
+          <DateRange allowTime={false}/>
+        </div>
          <div id="pie-container" className="row">
-                <div style={styles.pieContainer} width="100%">
-                    <PieChart data={this.state.chartData} options={options} redraw/>
+                <div width="100%">
+                    <PieChart data={this.state.chartData} options={pieOptions} width="1200" height="500" redraw/>
                 </div>
          </div>
       </div>
