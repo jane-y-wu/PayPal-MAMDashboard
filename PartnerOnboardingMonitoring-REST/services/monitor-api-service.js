@@ -57,26 +57,6 @@ var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT
 module.exports = function module() {
 
 	return {
-		processCalResult : function processCalResult(id, callback) {
-			// do your processing here
-			callback(null, {
-				"response" : "ok"
-			});
-		},
-
-		addLogCategory : function addLogCategory(id, callback) {
-			// do your processing here
-			callback(null, {
-				"response" : "ok"
-			});
-		},
-
-		getAllCalLogs : function getAllCalLogs(callback) {
-			// do your processing here
-			callback(null, {
-				"payload" : [ "payload1", "payload2" ]
-			});
-		},
 
 		getDetails : function getDetails(jobID, callback) {
 			request(sherlockEndpoint + jobID + "/output", function (error, response, body){
@@ -97,10 +77,7 @@ module.exports = function module() {
 			});
 		},
 
-		getRawLogs : function getRawLogs(details, callback) {
-			// mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});
-			// db.on('error', console.error);
-			// db.once('open', function() {
+		getRawLogs : function getRawLogs(details, callback) { // TODO: decompose by using a closure
 
 				var numErrors = details.records.length;
 				var errorType;
@@ -127,9 +104,6 @@ module.exports = function module() {
 							}
 							while (recordStack.length > 0) {
 								var currRecord = recordStack.pop();
-								//var currRecord = currRecordArr[0]
-								//if (!currRecord) console.log(currRecordArr);
-								//console.log(currRecord);
 								if (currRecord["@Subclasstype"] == "calblockresponse") {
 									for (var i in currRecord["calActivitesResp"]) {
 										recordStack.push(currRecord["calActivitesResp"][i]);
@@ -154,13 +128,9 @@ module.exports = function module() {
 									localLog.payload.Status = parseInt(currRecord.status);
 									localLog.payload.Name = currRecord.name;
 									// Parse key value pairs in data for rest of fields
-									// for (var j in currRecord) {
-									// 	localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
-									// }
 									var payloadSegments = currRecord.data.split("&");
-									//console.log(payloadSegments);
 
-									for (var i in payloadSegments) { // skip duration field
+									for (var i in payloadSegments) {
 										var split = payloadSegments[i].split("=");
 										switch(split[0]) {
 											case "Status":
@@ -179,8 +149,7 @@ module.exports = function module() {
 									date = localLog.payload["Full_Date"];
 
 									// Save to queue of toStores
-									var toStore = new Log(localLog); // CREATE A QUEUE OF ITEMS OUT OF LOOP AND ADD. OUT OF LOOP ASYNC EACH.
-									//console.log("toStore: " + JSON.stringify(toStore, null, 4));
+									var toStore = new Log(localLog);
 									toStores.push(toStore);
 
 								} else if (currRecord["@Subclasstype"] != "calrecordbean" && currRecord["@Subclasstype"] != "calblockresponse") {
@@ -199,20 +168,11 @@ module.exports = function module() {
 								if(err) console.log(err);
 								console.log("Inserted Document: " + JSON.stringify(result));
 								asyncCallback2();
-
-								// Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
-								// 	console.log("mongodb query returned!");
-								// 	if (err) console.log(err);
-								// 	console.log(JSON.stringify(result, null, 4));
-								// 	async2Callback();
-								// });
 							});
 						}, function(err) {
 							asyncCallback();
 						});
-					}/*, function(err){
-						//
-					}*/);
+					}/*, function(err){}*/);
 				}, function(err){
 						console.log(numErrors + " " + errorType + " " + date);
 						callback(numErrors, errorType, date);
@@ -221,36 +181,16 @@ module.exports = function module() {
 
 		returnLogs : function returnLogs(startDate, endDate, filters, callback) {
 
-			// console.log("filters: " + filters);
-			//
-
-			//db.on('error', console.error);
-			//db.once('open', function() {
-
-				//if(filters.length == 0) {
-					Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
-						//db.close();
-						//console.log("logs: " + JSON.stringify(logs));
-						callback(logs);
-					});
-				// } else {
-				// 	Log.find(filters, function(err, logs){
-				// 		db.close();
-				// 		callback(logs);
-				// 	});
-				// }
-
-				//callback(fakeDataObject);
-
-			//});
-			//callback(fakeDataObject);
+			Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
+				if (err) console.log(err);
+				callback(logs);
+			});
 		},
 
     getSingleLog : function getSingleLog(logID, callback) {
       Log.find({'_id' : logID}, function(err, log){
         if(err) console.log(err);
-	//console.log(JSON.stringify(log));
-	callback(log);
+				callback(log);
       });
     }
 
