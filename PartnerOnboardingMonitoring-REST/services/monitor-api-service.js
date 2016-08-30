@@ -246,7 +246,7 @@ module.exports = function module() {
 		},
 
     getSingleLog : function getSingleLog(logID, callback) {
-      Log.find({'_id' : logID}, function(err, log){
+      Log.findOne({'_id' : logID}, function(err, log){
         if(err) console.log(err);
 	//console.log(JSON.stringify(log));
 	callback(log);
