@@ -35,7 +35,6 @@ module.exports = function module(app) {
   	getDetails : function getDetailsClosure(req, res, next) {
   		// This is a closure, which allows you to pass in any of these functions in a callback when calling a function in
   		// monitor-api-services.
-  		console.log("in get details");
 
     	var getDetails = function(req, res, next) { // Starts here. Calls service.getDetails with onGetDetails as a callback
     		if (req.query.status == "SUBMITTED") {

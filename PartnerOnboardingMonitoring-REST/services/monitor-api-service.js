@@ -77,7 +77,11 @@ module.exports = function module() {
 			});
 		},
 
-		getRawLogs : function getRawLogs(details, callback) { // TODO: decompose by using a closure
+		testFn : function testFn() {
+			console.log("Test Function Called");
+		}
+
+		getRawLogs : function getRawLogs(details, callback) { // TODO: decompose
 
 				var numErrors = details.records.length;
 				var errorType;
