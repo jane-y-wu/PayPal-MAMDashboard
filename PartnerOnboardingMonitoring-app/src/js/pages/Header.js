@@ -32,7 +32,7 @@ export default class Header extends React.Component {
           <Drawer open={this.state.open} docked={false} open={this.state.open} onRequestChange={(open) => this.setState({open})}>
             <NavLink to="/"><MenuItem onTouchTap={this.handleClose}>Home</MenuItem></NavLink>
             <NavLink to="/fullLogs"><MenuItem onTouchTap={this.handleClose}>Logs</MenuItem></NavLink>
-            <MenuItem onTouchTap={this.handleClose}>Statistics</MenuItem>
+            <NavLink to="/statistics"><MenuItem onTouchTap={this.handleClose}>Statistics</MenuItem></NavLink>
           </Drawer>
         </MuiThemeProvider>
         {this.props.children}

@@ -23,7 +23,7 @@ class LogStore extends EventEmitter {
         break;
       }
       case "GET_SINGLE_LOG": {
-        this.singleLog = actions.log;
+        this.singleLog = action.log;
         this.emit("singleLogChange");
         break;
       }

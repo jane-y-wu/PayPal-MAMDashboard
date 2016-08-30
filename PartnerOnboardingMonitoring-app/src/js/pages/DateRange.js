@@ -65,16 +65,16 @@ export default class DateRange extends React.Component {
     }
 
     setStartDate(event, date) {
-      var hours = date.getHours();
-      var mins = date.getMinutes();
+      var hours = this.state.startDate.getHours();
+      var mins = this.state.startDate.getMinutes();
       this.state.startDate = date;
       this.state.startDate.setHours(hours);
       this.state.startDate.setMinutes(mins);
     }
 
     setEndDate(event, date) {
-      var hours = date.getHours();
-      var mins = date.getMinutes();
+      var hours = this.state.endDate.getHours();
+      var mins = this.state.endDate.getMinutes();
       this.state.endDate = date;
       this.state.endDate.setHours(hours);
       this.state.endDate.setMinutes(mins);

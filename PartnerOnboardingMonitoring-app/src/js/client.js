@@ -7,6 +7,7 @@ import Layout from "./pages/Layout";
 import Header from "./pages/Header";
 import FullLogs from "./pages/FullLogs";
 import SingleLog from "./pages/SingleLog";
+import Statistics from "./pages/Statistics";
 
 injectTapEventPlugin();
 
@@ -16,6 +17,7 @@ ReactDOM.render((
       <IndexRoute component={Layout}/>
       <Route path="fullLogs" component={FullLogs}/>
       <Route path="singleLog/:logID" component={SingleLog}/>
+      <Route path="statistics" component={Statistics}/>
     </Route>
   </Router>
 ), document.getElementById('app'));

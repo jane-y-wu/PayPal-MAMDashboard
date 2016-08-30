@@ -10,6 +10,7 @@ import Dialog from 'material-ui/Dialog';
 import ArrowDropUp from 'material-ui/svg-icons/navigation/arrow-drop-up';
 import ArrowDropDown from 'material-ui/svg-icons/navigation/arrow-drop-down';
 import Divider from 'material-ui/Divider';
+import NavLink from './NavLink';
 
 import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
@@ -54,7 +55,7 @@ export default class Logs extends React.Component {
     this.state.dialog = this.props.logData[index];
     console.log(this.state.dialog);
     var keys = [];
-    for (var i in this.props.logData[index]) keys.push(i);
+    for (var i in this.props.logData[index]) if(i != "_id")  keys.push(i);
     this.state.dialogKeys = keys;
     console.log(this.state.dialogKeys);
     this.setState({showDialog: true});
@@ -91,11 +92,7 @@ export default class Logs extends React.Component {
   render() {
 
     const actions = [
-      <FlatButton
-        label="See in Page"
-        primary={true}
-        onTouchTap={this.handleClose}
-      />,
+      <NavLink to={"/singleLog/" + this.state.dialog._id}><FlatButton label="See in Page" primary={true}/></NavLink>,
       <FlatButton
         label="Close"
         primary={false}
@@ -168,7 +165,7 @@ export default class Logs extends React.Component {
                     {this.props.sortBy == "Pool" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>
                   <TableHeaderColumn style={headerCellStyle}>
-                    <FlatButton label={"Data_Center"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Data_Center")}/>
+                    <FlatButton label={"Data Center"} labelStyle={labelStyle} onTouchTap={this.updateSortBy.bind(this, "Data_Center")}/>
                     {this.props.sortBy == "Data_Center" && this.props.sortDirection == 1 ? <ArrowDropUp/> : ""}
                     {this.props.sortBy == "Data_Center" && this.props.sortDirection == -1 ? <ArrowDropDown/> : ""}
                   </TableHeaderColumn>

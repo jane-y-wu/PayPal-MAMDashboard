@@ -1,4 +1,6 @@
 import React from 'react';
+import _ from 'lodash';
+import Fuse from 'fuse.js';
 
 import Logs from './Logs';
 
@@ -11,23 +13,58 @@ export default class LogWrapper extends React.Component {
     this.getLogs = this.getLogs.bind(this);
     this.sortLogs = this.sortLogs.bind(this);
     this.reSortLogs = this.reSortLogs.bind(this);
+    this.filterLogs = this.filterLogs.bind(this);
     this.state = {
       LOGS_TO_SHOW: props.logsToShow,
       parsedLogs: [{errName: "loading"}],
       sortBy: "dateObj",
-      sortDirection: 1
+      sortDirection: 1,
+      filteredLogs: [],
     };
   }
 
   componentWillMount() {
     LogStore.on("change", this.getLogs);
     LogStore.on("sortChange", this.reSortLogs);
+    //LogStore.on("filterLogs", this.filterLogs);
     LogActions.getLogs();
   }
 
   componentWillUnmount() {
     LogStore.removeListener("change", this.getLogs);
     LogStore.removeListener("sortChange", this.reSortLogs);
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.searchText !== this.props.searchText || nextProps.searchBy !== this.props.searchBy) {
+      this.state.searchBy = nextProps.searchBy;
+      this.setState({});
+      this.filterLogs(nextProps.searchText);
+    }
+  }
+
+  filterLogs(searchTerm) {
+    console.log(this.state.searchBy);
+    var filterFn = function(i){
+      for (var j in i) {
+        if (i[j].toString().indexOf(searchTerm) !== -1) return true;
+      }
+      return false;
+    };
+    if (this.state.searchBy !== "All") {
+      var searchBy = this.state.searchBy;
+      filterFn = function(i) {
+        if (i[searchBy].toString().indexOf(searchTerm) !== -1) return true;
+        return false;
+      }
+    }
+
+    if (searchTerm == "") {
+      this.state.filteredLogs = this.state.parsedLogs;
+    } else {
+      this.state.filteredLogs = _.filter(this.state.parsedLogs, filterFn);
+    }
+    this.setState({});
   }
 
   sortLogs(a, b) {
@@ -51,20 +88,8 @@ export default class LogWrapper extends React.Component {
   getLogs() {
     var rawLogs = JSON.parse(LogStore.getAll());
     this.state.parsedLogs = [];
-    console.log(this.state.LOGS_TO_SHOW);
     for (var i in rawLogs) {
       if (i >= this.state.LOGS_TO_SHOW && this.state.LOGS_TO_SHOW > 0) break;
-      /*var parsedLog = {
-        errName: rawLogs[i].payload.Name,
-        // fullDate: rawLogs[i].payload.Full_Date,
-        issue_message: rawLogs[i].payload.issue,
-        rawLogsURL : rawLogs[i].rawLogsURL,
-        Machine: rawLogs[i].metaData.Machine,
-        Pool: rawLogs[i].metaData.Pool,
-        Data_Center: rawLogs[i].metaData.Data_Center,
-        corr_id_: rawLogs[i].payload.corr_id_,
-        operation: rawLogs[i].payload.operation,
-      };*/
       var parsedLog = {};
       parsedLog.rawLogsUrl = rawLogs[i].rawLogsURL;
       parsedLog._id = rawLogs[i]._id;
@@ -83,17 +108,24 @@ export default class LogWrapper extends React.Component {
       parsedLog.fullDate += dateObj.getMinutes();
       //parsedLog.fullDate = dateObj.toLocaleString();
       this.state.parsedLogs.push(parsedLog);
-      console.log(parsedLog);
+      //console.log(parsedLog);
     }
     this.state.parsedLogs.sort(this.sortLogs);
+    var keys = _.keys(this.state.parsedLogs[0]);
+    console.log(keys);
+    this.state.fuse = new Fuse(this.state.parsedLogs, {
+      treshold: 0.0,
+      shouldSort: false,
+      keys: keys
+    });
+    this.filterLogs("");
     this.setState({
     });
-    console.log(this.state.parsedLogs);
   }
 
   render() {
     return(
-      <Logs logsToShow={this.state.LOGS_TO_SHOW} logData={this.state.parsedLogs} sortBy={this.state.sortBy} sortDirection={this.state.sortDirection}/>
+      <Logs logsToShow={this.state.LOGS_TO_SHOW} logData={this.state.filteredLogs} sortBy={this.state.sortBy} sortDirection={this.state.sortDirection}/>
     )
   }
 }
