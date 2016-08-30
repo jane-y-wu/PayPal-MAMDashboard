@@ -170,13 +170,23 @@ module.exports = function module() {
 							if (results.length != 0) {
 
 								for (var i = 0; i < dates.length; i++) {
-									if (dates[i] === moment(results[dailyCt].date).format(form)) {
+									console.log(dates.length);
+									console.log("dailyCt is " + dailyCt + " results " + results[dailyCt]);
+
+									if (!results[dailyCt]) {
+										dataset.push(0);
+										dailyCt++;
+									}
+
+									else if (dates[i] === moment(results[dailyCt].date).format(form)) {
 										dataset.push(results[dailyCt].errorCount);
 										dailyCt++;
 									}
 									else { // there is no error count for that day, push a 0
 										dataset.push(0); 
 									}
+
+
 								}
 							}
 
