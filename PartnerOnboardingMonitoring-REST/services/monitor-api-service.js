@@ -118,7 +118,7 @@ module.exports = function module() {
 							console.log("Error fetching logs. Status Code: " + response.statusCode + " Error: " + console.log(error));
 						}
 
-						storeLogs(toStores);
+						storeLogs(toStores, asyncCallback);
 
 					});
 				}, function(err){
@@ -172,7 +172,7 @@ module.exports = function module() {
 				toStores.push(toStore);
 			};
 
-			var storeLogs = function(toStores) {
+			var storeLogs = function(toStores, asyncCallback){
 				async.each(toStores, function(toStore, asyncCallback2) {
 					// Add all toStores to MongoDB
 					//console.log("toStore: " + toStore);
@@ -191,6 +191,8 @@ module.exports = function module() {
 
 		returnLogs : function returnLogs(startDate, endDate, filters, callback) {
 			console.log("Return Logs Service Side");
+			console.log(startDate);
+			console.log(endDate);
 			Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
 				if (err){
 					console.log("error retrieving logs from mongo");

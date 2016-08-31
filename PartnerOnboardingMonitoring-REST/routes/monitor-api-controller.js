@@ -93,9 +93,15 @@ module.exports = function module(app) {
 				endDate.setHours(endDate.getHours());
 				console.log("endDate: " + endDate);
 
-			service.returnLogs(startDate, endDate, req.body.filters, function(logs){
-				res.end(JSON.stringify(logs, null, 4));
-			});
+			if (startDate === undefined || endDate === undefined) {
+				console.log("Invalid Date");
+				res.end();
+			} else {
+
+				service.returnLogs(startDate, endDate, req.body.filters, function(logs){
+					res.end(JSON.stringify(logs, null, 4));
+				});
+			}
 		},
 
 		getErrorCount : function getErrorCount(req, res, next) {
@@ -105,7 +111,7 @@ module.exports = function module(app) {
 			var end = req.query.endDate;
 			var errorType = req.query.error;
 
-			//console.log("start is " + start + " and end is " + end);
+			console.log("start is " + start + " and end is " + end);
 
 			aggregation.getErrorCount(start, end, errorType, function (response) {
 				res.end(response);
