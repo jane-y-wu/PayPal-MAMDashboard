@@ -85,13 +85,13 @@ module.exports = function module(app) {
 		returnLogsFiltered : function returnLogsFiltered(req, res, next) {
 			console.log("returnLogsFiltered called!");
 
-				console.log(req.query.startDate);
-				var startDate = new Date(req.query.startDate);
-				startDate.setHours(startDate.getHours()); // hacky way of doing it TODO fix so time zone isn't hardcoded in
-				console.log("startDate: " + startDate);
-				var endDate = new Date(req.query.endDate);
-				endDate.setHours(endDate.getHours());
-				console.log("endDate: " + endDate);
+			console.log(req.query.startDate);
+			var startDate = new Date(req.query.startDate);
+			startDate.setHours(startDate.getHours()); // hacky way of doing it TODO fix so time zone isn't hardcoded in
+			console.log("startDate: " + startDate);
+			var endDate = new Date(req.query.endDate);
+			endDate.setHours(endDate.getHours());
+			console.log("endDate: " + endDate);
 
 			service.returnLogs(startDate, endDate, req.body.filters, function(logs){
 				res.end(JSON.stringify(logs, null, 4));
@@ -105,7 +105,7 @@ module.exports = function module(app) {
 			var end = req.query.endDate;
 			var errorType = req.query.error;
 
-			//console.log("start is " + start + " and end is " + end);
+			console.log("start is " + start + " and end is " + end);
 
 			aggregation.getErrorCount(start, end, errorType, function (response) {
 				res.end(response);
