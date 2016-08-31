@@ -22,4 +22,3 @@ require('./routes')(app);
 http.createServer(app).listen(app.get('port'), function onListening() {
 	console.log('Express server listening on port ' + app.get('port'));
 });
-
