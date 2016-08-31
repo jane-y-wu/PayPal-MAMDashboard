@@ -79,7 +79,7 @@ module.exports = function module() {
 
 		testFn : function testFn() {
 			console.log("Test Function Called");
-		}
+		},
 
 		getRawLogs : function getRawLogs(details, callback) { // TODO: decompose
 
@@ -184,7 +184,7 @@ module.exports = function module() {
 		},
 
 		returnLogs : function returnLogs(startDate, endDate, filters, callback) {
-
+			testFn();
 			Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
 				if (err) console.log(err);
 				callback(logs);
