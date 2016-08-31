@@ -48,7 +48,7 @@ module.exports = function module() {
 			    return Math.ceil((((d-new Date(d.getFullYear(),0,1))/8.64e7)+1)/7);
 			}
 
-			console.log("in store count : " + errorNum + " " + errorName + " " + time);
+			//console.log("in store count : " + errorNum + " " + errorName + " " + time);
 
 			// TODO parse out date
 			var year = time.getFullYear();
@@ -61,7 +61,7 @@ module.exports = function module() {
 			var timestamp = new Date(year, month, day, minute, second);
 
 			var weekNum = [year, getWeekNumber(time)];
-			console.log("week number : " + weekNum);
+			//console.log("week number : " + weekNum);
 
 			DailyCount.find({date : time, errorType : errorName}, function(err, results) {
 
@@ -72,21 +72,21 @@ module.exports = function module() {
 												errorType: errorName,
 												errorCount: errorNum});
 
-					console.log(doc);
+					//console.log(doc);
 
 					var store = new DailyCount(doc);
 
 					store.save(function(err, result){
-						console.log(result);
-						console.log("saved");
+						//console.log(result);
+						//console.log("saved");
 					})
 
 				}
 				else {
 
 					DailyCount.update({date : time, errorType : errorName}, {$inc: {errorCount: errorNum}}, function(err, results) {
-						console.log("updating");
-						console.log(results);
+						//console.log("updating");
+						//console.log(results);
 					})
 
 				}
@@ -102,21 +102,21 @@ module.exports = function module() {
 												errorType: errorName,
 												errorCount: errorNum});
 
-					console.log(doc);
+					//console.log(doc);
 
 					var store = new WeeklyCount(doc);
 
 					store.save(function(err, result){
-						console.log(result);
-						console.log("saved");
+						//console.log(result);
+						//console.log("saved");
 					})
 
 				}
 				else {
 
 					WeeklyCount.update({weekNumber : weekNum, errorType : errorName}, {$inc: {errorCount: errorNum}}, function(err, results) {
-						console.log("updating");
-						console.log(results);
+						//console.log("updating");
+						//console.log(results);
 					})
 
 				}
@@ -138,7 +138,7 @@ module.exports = function module() {
 
 			var curr = moment(startDate);
 
-			console.log('end is ' + end + ' curr is ' + curr.toDate());
+			//console.log('end is ' + end + ' curr is ' + curr.toDate());
 
 			while (curr.toDate() <= end) {
 
@@ -148,30 +148,30 @@ module.exports = function module() {
 
 			}
 
-			console.log(dates + emptyDataset);
+			//console.log(dates + emptyDataset);
 
-			console.log(start + " " + end + " " + errorType);
+			//console.log(start + " " + end + " " + errorType);
 
 			if (errorType === "undefined") { // search all three
 
 
 				async.each(errorNames, function(eachErr, cb) {
-					console.log(eachErr);
+					//console.log(eachErr);
 					DailyCount.find({ date : {$gte: start, $lte: end} , errorType : eachErr }, null, {sort : {date : 1}}, function (err, results) {
-	      				console.log('inside find');
+	      				//console.log('inside find');
 						if (!err) {
 
 							dataset = []; // reset dataset for each error
 
-							console.log("results are " + results);
+							//console.log("results are " + results);
 
 							var dailyCt = 0;
 
 							if (results.length != 0) {
 
 								for (var i = 0; i < dates.length; i++) {
-									console.log(dates.length);
-									console.log("dailyCt is " + dailyCt + " results " + results[dailyCt]);
+									//console.log(dates.length);
+									//console.log("dailyCt is " + dailyCt + " results " + results[dailyCt]);
 
 									if (!results[dailyCt]) {
 										dataset.push(0);
@@ -183,7 +183,7 @@ module.exports = function module() {
 										dailyCt++;
 									}
 									else { // there is no error count for that day, push a 0
-										dataset.push(0); 
+										dataset.push(0);
 									}
 
 
@@ -194,9 +194,9 @@ module.exports = function module() {
 								dataset = emptyDataset;
 							}
 
-	      
+
 						} else {
-							console.log("the error is " + err);
+							//console.log("the error is " + err);
 						}
 
 						responseObj[eachErr] = dataset;
@@ -210,20 +210,20 @@ module.exports = function module() {
 					responseObj.labels = dates;
 
 					// calculate total
-					for (var i = 0; i < responseObj.labels.length; i++) { 
+					for (var i = 0; i < responseObj.labels.length; i++) {
 					    total.push(responseObj.VALIDATION_ERROR[i] + responseObj.INTERNAL_SERVICE_ERROR[i] + responseObj.SERVICE_TIMEOUT[i]);
 					}
 
 					responseObj.totalData = total;
-					console.log(responseObj);
+					//console.log(responseObj);
 					callback(JSON.stringify(responseObj));
 
 				})
 
 			} else {
-				
+
 			}
-			
+
 		}
 	}
 }

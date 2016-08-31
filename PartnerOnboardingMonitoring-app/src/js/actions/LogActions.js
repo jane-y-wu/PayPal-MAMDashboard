@@ -16,6 +16,7 @@ export function getLogs(startDate, endDate) {
       console.log('success', request.responseText);
       dispatcher.dispatch({type: "UPDATE_LOGS", logs: request.responseText});
     } else {
+      console.log("error");
       console.warn('error');
     }
   };
