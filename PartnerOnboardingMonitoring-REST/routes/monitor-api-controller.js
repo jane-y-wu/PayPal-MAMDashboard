@@ -105,7 +105,7 @@ module.exports = function module(app) {
 			var end = req.query.endDate;
 			var errorType = req.query.error;
 
-			console.log("start is " + start + " and end is " + end);
+			//console.log("start is " + start + " and end is " + end);
 
 			aggregation.getErrorCount(start, end, errorType, function (response) {
 				res.end(response);
@@ -114,7 +114,7 @@ module.exports = function module(app) {
 		},
 
 		getSingleLog : function getSingleLog(req, res, next) {
-			console.log(JSON.stringify(req.query));
+			//console.log(JSON.stringify(req.query));
 			service.getSingleLog(req.query.logID, function(log){
 				res.end(JSON.stringify(log, null, 4));
 			});
