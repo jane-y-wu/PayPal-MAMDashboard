@@ -131,6 +131,8 @@ module.exports = function module() {
 				async.each(details.records, function(record, asyncCallback){
 					var eventDetailURL = record.url; //this is logview url
 					var jsonURL = eventDetailURL.replace("logviewui", "logview");
+					console.log(record);
+					console.log(JSON.stringify(record, null, 4));
 
 					request(jsonURL, function(error, response, body){
 						// In response.calBlockResp:
@@ -292,9 +294,10 @@ module.exports = function module() {
 		},*/
 
 		returnLogs : function returnLogs(startDate, endDate, filters, callback) {
-			testFn();
+			console.log("return logs service side");
 			Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
 				if (err) console.log(err);
+				console.log(logs);
 				callback(logs);
 			});
 		},
