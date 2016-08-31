@@ -6,6 +6,8 @@ var logsURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/ap
 var singleLogURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getSingleLog/?'
 
 export function getLogs(startDate, endDate) {
+  console.log(startDate);
+  console.log(endDate);
   var request = new XMLHttpRequest();
   request.onreadystatechange = (e) => {
     if (request.readyState !== 4) {

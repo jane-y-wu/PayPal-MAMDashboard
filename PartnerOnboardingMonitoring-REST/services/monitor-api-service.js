@@ -77,9 +77,10 @@ module.exports = function module() {
 		getRawLogs : function getRawLogsClosure(details, callback) {
 
 			var getRawLogs = function(details, callback) {
-				var numErrors = details.records.length;
-				var errorType;
-				var date;
+				var aggregateData = {};
+				aggregateData.numErrors = details.records.length;
+				aggregateData.errorType;
+				aggregateData.date;
 
 				async.each(details.records, function(record, asyncCallback){
 					var eventDetailURL = record.url; //this is logview url
@@ -109,7 +110,7 @@ module.exports = function module() {
 										recordStack.push(currRecord["calActivitesResp"][i]);
 									}
 								} else if (currRecord["@Subclasstype"] == "calrecordbean" && errorNames.indexOf(currRecord["name"]) >= 0) {
-									parseLog(toStores, currRecord, jsonURL, pool, machine, record, errorType, date);
+									parseLog(toStores, currRecord, jsonURL, pool, machine, record, aggregateData);
 								} else if (currRecord["@Subclasstype"] != "calrecordbean" && currRecord["@Subclasstype"] != "calblockresponse") {
 									console.log("Unknown subclasstype: " + currRecord["@Subclasstype"]);
 								}
@@ -122,12 +123,12 @@ module.exports = function module() {
 
 					});
 				}, function(err){
-						console.log(numErrors + " " + errorType + " " + date);
-						callback(numErrors, errorType, date);
+						console.log(aggregateData.numErrors + " " + aggregateData,errorType + " " + aggregateData.date);
+						callback(aggregateData.numErrors, aggregateData.errorType, aggregateData.date);
 				});
 			};
 
-			var parseLog = function(toStores, currRecord, jsonURL, pool, machine, record, errorType, date) {
+			var parseLog = function(toStores, currRecord, jsonURL, pool, machine, record, aggregateData) {
 				//console.log("currRecord: " + JSON.stringify(currRecord, null, 4));
 				var localLog = { metaData : {}, payload: {} };
 				localLog.rawLogsURL = jsonURL;
@@ -164,8 +165,8 @@ module.exports = function module() {
 					}
 				}
 
-				errorType = localLog.payload.Name;
-				date = localLog.payload["Full_Date"];
+				aggregateData.errorType = localLog.payload.Name;
+				aggregateData.date = localLog.payload["Full_Date"];
 
 				// Save to queue of toStores
 				var toStore = new Log(localLog);
