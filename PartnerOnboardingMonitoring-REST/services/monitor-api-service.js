@@ -123,7 +123,7 @@ module.exports = function module() {
 
 					});
 				}, function(err){
-						console.log(aggregateData.numErrors + " " + aggregateData,errorType + " " + aggregateData.date);
+						console.log(aggregateData.numErrors + " " + aggregateData.errorType + " " + aggregateData.date);
 						callback(aggregateData.numErrors, aggregateData.errorType, aggregateData.date);
 				});
 			};
@@ -191,15 +191,11 @@ module.exports = function module() {
 		},
 
 		returnLogs : function returnLogs(startDate, endDate, filters, callback) {
-			console.log("Return Logs Service Side");
-			console.log(startDate);
-			console.log(endDate);
 			Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
 				if (err){
 					console.log("error retrieving logs from mongo");
 					console.log(err);
 				}
-				console.log("Logs retrieved from mongo");
 				callback(logs);
 			});
 		},
