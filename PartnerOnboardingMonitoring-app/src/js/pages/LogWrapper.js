@@ -1,6 +1,5 @@
 import React from 'react';
 import _ from 'lodash';
-import Fuse from 'fuse.js';
 
 import Logs from './Logs';
 
@@ -44,7 +43,6 @@ export default class LogWrapper extends React.Component {
   }
 
   filterLogs(searchTerm) {
-    console.log(this.state.searchBy);
     var filterFn = function(i){
       for (var j in i) {
         if (i[j].toString().indexOf(searchTerm) !== -1) return true;
@@ -102,22 +100,12 @@ export default class LogWrapper extends React.Component {
       }
       var rawDate = rawLogs[i].payload.Full_Date;
       var dateObj = new Date(rawDate);
-      //parsedLog.dateObj = dateObj;
-      parsedLog.fullDate = dateObj.getMonth() + "/" + dateObj.getDay() + "/" + dateObj.getFullYear() + " " + dateObj.getHours() + ":";
+      parsedLog.fullDate = dateObj.getMonth() + "/" + dateObj.getDate() + "/" + dateObj.getFullYear() + " " + dateObj.getHours() + ":";
       if (dateObj.getMinutes() < 10) parsedLog.fullDate += "0";
       parsedLog.fullDate += dateObj.getMinutes();
-      //parsedLog.fullDate = dateObj.toLocaleString();
       this.state.parsedLogs.push(parsedLog);
-      //console.log(parsedLog);
     }
     this.state.parsedLogs.sort(this.sortLogs);
-    var keys = _.keys(this.state.parsedLogs[0]);
-    console.log(keys);
-    this.state.fuse = new Fuse(this.state.parsedLogs, {
-      treshold: 0.0,
-      shouldSort: false,
-      keys: keys
-    });
     this.filterLogs("");
     this.setState({
     });

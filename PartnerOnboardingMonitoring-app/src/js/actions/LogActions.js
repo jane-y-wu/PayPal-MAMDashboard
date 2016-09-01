@@ -6,8 +6,6 @@ var logsURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/ap
 var singleLogURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getSingleLog/?'
 
 export function getLogs(startDate, endDate) {
-  console.log(startDate);
-  console.log(endDate);
   var request = new XMLHttpRequest();
   request.onreadystatechange = (e) => {
     if (request.readyState !== 4) {
@@ -15,10 +13,9 @@ export function getLogs(startDate, endDate) {
     }
 
     if (request.status === 200) {
-      console.log('success', request.responseText);
+      console.log('Get Logs Success', request.responseText);
       dispatcher.dispatch({type: "UPDATE_LOGS", logs: request.responseText});
     } else {
-      console.log("error");
       console.warn('error');
     }
   };
@@ -39,7 +36,7 @@ export function getSingleLog(logID) {
     }
 
     if (request.status === 200) {
-      console.log('Single Log Success', request.responseText);
+      console.log('Get Single Log Success', request.responseText);
       dispatcher.dispatch({type: "GET_SINGLE_LOG", log: request.responseText});
     } else {
       console.warn('error');

@@ -60,16 +60,12 @@ module.exports = function module() {
 				if (!error && response.statusCode == 200) {
 					var details = JSON.parse(body);
 					if (details.records.length == 0) {
-						//console.log(details);
-						console.log("No results!");
+						console.log("Query with jobID " + jobID + " returned with no results!");
 					} else {
-						//var eventDetailURL = details.records[0].url;
-						//var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs");
 						callback(details);
 					}
 				} else {
-					console.log("Connection error when getting details: " + response.statusCode);
-					console.log(sherlockEndpoint + jobID + "/output");
+					console.log("Connection error when getting details. Status code: " + response.statusCode + " Request URL: " + sherlockEndpoint + jobID + "/output");
 				}
 			});
 		},
@@ -121,13 +117,11 @@ module.exports = function module() {
 
 					});
 				}, function(err){
-						console.log(aggregateData.numErrors + " " + aggregateData,errorType + " " + aggregateData.date);
 						callback(aggregateData.numErrors, aggregateData.errorType, aggregateData.date);
 				});
 			};
 
 			var parseLog = function(toStores, currRecord, jsonURL, pool, machine, record, aggregateData) {
-				//console.log("currRecord: " + JSON.stringify(currRecord, null, 4));
 				var localLog = { metaData : {}, payload: {} };
 				localLog.rawLogsURL = jsonURL;
 				localLog.metaData.Pool = pool;
@@ -174,10 +168,8 @@ module.exports = function module() {
 			var storeLogs = function(toStores) {
 				async.each(toStores, function(toStore, asyncCallback2) {
 					// Add all toStores to MongoDB
-					//console.log("toStore: " + toStore);
 					toStore.save(function(err, result){
 						if(err) console.log(err);
-						//console.log("Inserted Document: " + JSON.stringify(result));
 						asyncCallback2();
 					});
 				}, function(err) {
