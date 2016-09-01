@@ -46,14 +46,18 @@ module.exports = function module(app) {
 
 		returnLogsFiltered : function returnLogsFiltered(req, res, next) {
 
-			var startDate = new Date(req.query.startDate);
-			startDate.setHours(startDate.getHours()); // hacky way of doing it TODO fix so time zone isn't hardcoded in
-			var endDate = new Date(req.query.endDate);
-			endDate.setHours(endDate.getHours());
+			if (typeof req.query.startDate === 'undefined' || typeof req.query.endDate === 'undefined') {
+				res.end([]);
+			} else {
+				var startDate = new Date(req.query.startDate);
+				//startDate.setHours(startDate.getHours());
+				var endDate = new Date(req.query.endDate);
+				//endDate.setHours(endDate.getHours());
 
-			service.returnLogs(startDate, endDate, req.body.filters, function(logs){
-				res.end(JSON.stringify(logs, null, 4));
-			});
+				service.returnLogs(startDate, endDate, req.body.filters, function(logs){
+					res.end(JSON.stringify(logs, null, 4));
+				});
+			}
 		},
 
 		getErrorCount : function getErrorCount(req, res, next) {
