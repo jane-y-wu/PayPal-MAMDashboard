@@ -6,6 +6,7 @@ var fs = require('fs');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
 var app = express();
+var request = require('request');
 
 
 describe('Server', function(){
@@ -92,72 +93,40 @@ describe('Server', function(){
 
   describe('/getLogs', function() {
     it('should return empty array if no start date provided', function(done){
-      http.get('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?endDate=2016-07-29T11:00:00', function(res){
-        var data = '';
-
-        res.on('data', function (chunk) {
-          data += chunk;
-        });
-
-        res.on('end', function () {
-          assert.equal([], data);
-          done();
-        });
+      request.post('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?endDate=2016-07-29T11:00:00', function (error, response, body){
+        assert.equal('[]', body);
+        done();
       });
     });
 
     it('should return empty array if no end date provided', function(done){
-      http.get('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?startDate=2016-07-26T02:45:00', function(res){
-        var data = '';
-
-        res.on('data', function (chunk) {
-          data += chunk;
-        });
-
-        res.on('end', function () {
-          assert.equal([], data);
-          done();
-        });
+      request.post('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?startDate=2016-07-26T02:45:00', function(error, response, body){
+        assert.equal('[]', body);
+        done();
       });
     });
 
     it('should return empty array if start date is after end date', function(done){
-      http.get('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?startDate=2016-07-29T02:45:00&endDate=2016-07-26T11:00:00', function(res){
-        var data = '';
-
-        res.on('data', function (chunk) {
-          data += chunk;
-        });
-
-        res.on('end', function () {
-          assert.equal([], data);
-          done();
-        });
+      request.post('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?startDate=2016-07-29T02:45:00&endDate=2016-07-26T11:00:00', function(error, response, body){
+        assert.equal('[]', body);
+        done();
       });
     });
 
     it('should return empty array if start date or end date are formatted incorrectly', function(done){
-      http.get('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?startDate=2016-07-2602:45:00&endDate=2016-07-29T000', function(res){
-        var data = '';
+      request.post('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?startDate=2016-07-2602:45:00&endDate=2016-07-29T000', function(error, response, body){
+        assert.equal('[]', body);
+        done();
+      });
+    });
 
-        res.on('data', function (chunk) {
-          data += chunk;
-        });
-
-        res.on('end', function () {
-          assert.equal([], data);
-          done();
-        });
+    it('should status code 200', function(done){
+      request.post('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?startDate=2016-08-27T07:00:00.000Z&endDate=2016-09-03T06:59:59.999Z', function (error, response, body){
+        assert.equal(200, response.statusCode);
+        done();
       });
     });
 
   });
 
 })
-
-
-
-// if ('development' === app.get('env')) {
-// 	app.use(errorHandler);
-// 	app.locals.pretty = true;
-// }
