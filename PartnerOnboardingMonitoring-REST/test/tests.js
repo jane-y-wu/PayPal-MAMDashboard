@@ -60,7 +60,6 @@ describe('Server', function(){
 
     it('should return Unknown Status when gibberish query param provided', function(done){
       http.get('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/queryready/?id=123&status=gibberish', function(res){
-        assert.equal(200, res.statusCode);
         var data = '';
 
         res.on('data', function (chunk) {
@@ -76,7 +75,6 @@ describe('Server', function(){
 
     it('should return No job id when no id query param provided', function(done){
       http.get('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/queryready/?status=gibberish', function(res){
-        assert.equal(200, res.statusCode);
         var data = '';
 
         res.on('data', function (chunk) {
@@ -89,8 +87,72 @@ describe('Server', function(){
         });
       });
     });
+  });
+
+
+  describe('/getLogs', function() {
+    it('should return empty array if no start date provided', function(done){
+      http.get('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?endDate=2016-07-29T11:00:00', function(res){
+        var data = '';
+
+        res.on('data', function (chunk) {
+          data += chunk;
+        });
+
+        res.on('end', function () {
+          assert.equal([], data);
+          done();
+        });
+      });
+    });
+
+    it('should return empty array if no end date provided', function(done){
+      http.get('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?startDate=2016-07-26T02:45:00', function(res){
+        var data = '';
+
+        res.on('data', function (chunk) {
+          data += chunk;
+        });
+
+        res.on('end', function () {
+          assert.equal([], data);
+          done();
+        });
+      });
+    });
+
+    it('should return empty array if start date is after end date', function(done){
+      http.get('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?startDate=2016-07-29T02:45:00&endDate=2016-07-26T11:00:00', function(res){
+        var data = '';
+
+        res.on('data', function (chunk) {
+          data += chunk;
+        });
+
+        res.on('end', function () {
+          assert.equal([], data);
+          done();
+        });
+      });
+    });
+
+    it('should return empty array if start date or end date are formatted incorrectly', function(done){
+      http.get('http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?startDate=2016-07-2602:45:00&endDate=2016-07-29T000', function(res){
+        var data = '';
+
+        res.on('data', function (chunk) {
+          data += chunk;
+        });
+
+        res.on('end', function () {
+          assert.equal([], data);
+          done();
+        });
+      });
+    });
 
   });
+
 })
 
 
