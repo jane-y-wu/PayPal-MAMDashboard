@@ -18,13 +18,14 @@ export default class LogWrapper extends React.Component {
       parsedLogs: [{errName: "loading"}],
       sortBy: "dateObj",
       sortDirection: 1,
-      filteredLogs: []
+      filteredLogs: [],
     };
   }
 
   componentWillMount() {
     LogStore.on("change", this.getLogs);
     LogStore.on("sortChange", this.reSortLogs);
+    //LogStore.on("filterLogs", this.filterLogs);
     LogActions.getLogs();
   }
 
@@ -34,21 +35,32 @@ export default class LogWrapper extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.searchText) {
+    if (nextProps.searchText !== this.props.searchText || nextProps.searchBy !== this.props.searchBy) {
+      this.state.searchBy = nextProps.searchBy;
+      this.setState({});
       this.filterLogs(nextProps.searchText);
     }
   }
 
   filterLogs(searchTerm) {
+    var filterFn = function(i){
+      for (var j in i) {
+        if (i[j].toString().indexOf(searchTerm) !== -1) return true;
+      }
+      return false;
+    };
+    if (this.state.searchBy !== "All") {
+      var searchBy = this.state.searchBy;
+      filterFn = function(i) {
+        if (i[searchBy].toString().indexOf(searchTerm) !== -1) return true;
+        return false;
+      }
+    }
+
     if (searchTerm == "") {
       this.state.filteredLogs = this.state.parsedLogs;
     } else {
-      this.state.filteredLogs = _.filter(this.state.parsedLogs, function(i){
-        for (var j in i) {
-          if (i[j].toString().indexOf(searchTerm) !== -1) return true;
-        }
-        return false;
-      });
+      this.state.filteredLogs = _.filter(this.state.parsedLogs, filterFn);
     }
     this.setState({});
   }
@@ -88,13 +100,10 @@ export default class LogWrapper extends React.Component {
       }
       var rawDate = rawLogs[i].payload.Full_Date;
       var dateObj = new Date(rawDate);
-      //parsedLog.dateObj = dateObj;
-      parsedLog.fullDate = dateObj.getMonth() + "/" + dateObj.getDay() + "/" + dateObj.getFullYear() + " " + dateObj.getHours() + ":";
+      parsedLog.fullDate = dateObj.getMonth() + "/" + dateObj.getDate() + "/" + dateObj.getFullYear() + " " + dateObj.getHours() + ":";
       if (dateObj.getMinutes() < 10) parsedLog.fullDate += "0";
       parsedLog.fullDate += dateObj.getMinutes();
-      //parsedLog.fullDate = dateObj.toLocaleString();
       this.state.parsedLogs.push(parsedLog);
-      //console.log(parsedLog);
     }
     this.state.parsedLogs.sort(this.sortLogs);
     this.filterLogs("");

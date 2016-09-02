@@ -49,66 +49,40 @@ var logSchema = new mongoose.Schema({
 //var Log = mongoose.model('Log', logSchema);
 var Log = db.model('Log', logSchema);
 
-var fakeData = require('./fakeData.js');
-var fakeDataObject = fakeData.fakeDataObject;
-
 var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"/*, "HEADERS_STATUS_DELIVERED"*/];
 
 module.exports = function module() {
 
 	return {
-		processCalResult : function processCalResult(id, callback) {
-			// do your processing here
-			callback(null, {
-				"response" : "ok"
-			});
-		},
-
-		addLogCategory : function addLogCategory(id, callback) {
-			// do your processing here
-			callback(null, {
-				"response" : "ok"
-			});
-		},
-
-		getAllCalLogs : function getAllCalLogs(callback) {
-			// do your processing here
-			callback(null, {
-				"payload" : [ "payload1", "payload2" ]
-			});
-		},
 
 		getDetails : function getDetails(jobID, callback) {
 			request(sherlockEndpoint + jobID + "/output", function (error, response, body){
 				if (!error && response.statusCode == 200) {
 					var details = JSON.parse(body);
 					if (details.records.length == 0) {
-						console.log(details);
-						console.log("No results!");
+						console.log("Query with jobID " + jobID + " returned with no results!");
 					} else {
-						//var eventDetailURL = details.records[0].url;
-						//var rawLogsURL = eventDetailURL.replace("eventDetail", "rawLogs");
 						callback(details);
 					}
 				} else {
-					console.log("Connection error when getting details: " + response.statusCode);
-					console.log(sherlockEndpoint + jobID + "/output");
+					console.log("Connection error when getting details. Status code: " + response.statusCode + " Request URL: " + sherlockEndpoint + jobID + "/output");
 				}
 			});
 		},
 
-		getRawLogs : function getRawLogs(details, callback) {
-			// mongoose.connect(url, {user: 'root', pass: 'fKMjMPjgF2jMQEdRx323euyqZMqzpCNB!KB6'});
-			// db.on('error', console.error);
-			// db.once('open', function() {
+		getRawLogs : function getRawLogsClosure(details, callback) {
 
-				var numErrors = details.records.length;
-				var errorType;
-				var date;
+			var getRawLogs = function(details, callback) {
+				var aggregateData = {};
+				aggregateData.numErrors = details.records.length;
+				aggregateData.errorType;
+				aggregateData.date;
 
 				async.each(details.records, function(record, asyncCallback){
 					var eventDetailURL = record.url; //this is logview url
 					var jsonURL = eventDetailURL.replace("logviewui", "logview");
+					console.log(record);
+					console.log(JSON.stringify(record, null, 4));
 
 					request(jsonURL, function(error, response, body){
 						// In response.calBlockResp:
@@ -127,62 +101,12 @@ module.exports = function module() {
 							}
 							while (recordStack.length > 0) {
 								var currRecord = recordStack.pop();
-								//var currRecord = currRecordArr[0]
-								//if (!currRecord) console.log(currRecordArr);
-								//console.log(currRecord);
 								if (currRecord["@Subclasstype"] == "calblockresponse") {
 									for (var i in currRecord["calActivitesResp"]) {
 										recordStack.push(currRecord["calActivitesResp"][i]);
 									}
 								} else if (currRecord["@Subclasstype"] == "calrecordbean" && errorNames.indexOf(currRecord["name"]) >= 0) {
-									console.log("currRecord: " + JSON.stringify(currRecord, null, 4));
-									var localLog = { metaData : {}, payload: {} };
-									localLog.rawLogsURL = jsonURL;
-									localLog.metaData.Pool = pool;
-									localLog.metaData.Machine = machine;
-									localLog.metaData.Data_Center = record.values["Data-Center"];
-									// Parse Class and Full_date from messageClass
-									localLog.payload.Class = currRecord.messageClass[0];
-									var dateMatch = eventDetailURL.match("datetime=(.*) ");
-									var calendarDate = dateMatch[1];
-									var time = currRecord.messageClass.substring(1);
-									var fullDate = calendarDate + 'T' + time.substring(0, 8);
-									var fullDateDashes = fullDate.replace(/\//g, "-");
-									localLog.payload["Full_Date"] = new Date(fullDateDashes);
-									// Parse Type, Status and Name from currRecord
-									localLog.payload.Type = currRecord.type; // TODO parse from record instead of currRecord
-									localLog.payload.Status = parseInt(currRecord.status);
-									localLog.payload.Name = currRecord.name;
-									// Parse key value pairs in data for rest of fields
-									// for (var j in currRecord) {
-									// 	localLog.payload[Object.keys(currRecord)[j]] = currRecord[j];
-									// }
-									var payloadSegments = currRecord.data.split("&");
-									//console.log(payloadSegments);
-
-									for (var i in payloadSegments) { // skip duration field
-										var split = payloadSegments[i].split("=");
-										switch(split[0]) {
-											case "Status":
-												localLog.payload[split[0]] = parseInt(split[1]);
-												break;
-											case "isLoginable":
-											case "hasPartnerRelationships":
-												localLog.payload[split[0]] = (split[1] === 'true');
-												break;
-											default:
-											localLog.payload[split[0]] = split[1];
-										}
-									}
-
-									errorType = localLog.payload.Name;
-									date = localLog.payload["Full_Date"];
-
-									// Save to queue of toStores
-									var toStore = new Log(localLog); // CREATE A QUEUE OF ITEMS OUT OF LOOP AND ADD. OUT OF LOOP ASYNC EACH.
-									//console.log("toStore: " + JSON.stringify(toStore, null, 4));
-									toStores.push(toStore);
-
+									parseLog(toStores, currRecord, jsonURL, pool, machine, record, aggregateData);
 								} else if (currRecord["@Subclasstype"] != "calrecordbean" && currRecord["@Subclasstype"] != "calblockresponse") {
 									console.log("Unknown subclasstype: " + currRecord["@Subclasstype"]);
 								}
@@ -191,66 +115,87 @@ module.exports = function module() {
 							console.log("Error fetching logs. Status Code: " + response.statusCode + " Error: " + console.log(error));
 						}
 
+						storeLogs(toStores, asyncCallback);
 
-						async.each(toStores, function(toStore, asyncCallback2) {
-							// Add all toStores to MongoDB
-							console.log("toStore: " + toStore);
-							toStore.save(function(err, result){
-								if(err) console.log(err);
-								console.log("Inserted Document: " + JSON.stringify(result));
-								asyncCallback2();
-
-								// Log.findOne({ 'payload.Type' : 't'}, function (err, result) {
-								// 	console.log("mongodb query returned!");
-								// 	if (err) console.log(err);
-								// 	console.log(JSON.stringify(result, null, 4));
-								// 	async2Callback();
-								// });
-							});
-						}, function(err) {
-							asyncCallback();
-						});
-					}/*, function(err){
-						//
-					}*/);
+					});
 				}, function(err){
-						console.log(numErrors + " " + errorType + " " + date);
-						callback(numErrors, errorType, date);
+						callback(aggregateData.numErrors, aggregateData.errorType, aggregateData.date);
 				});
+			};
+
+			var parseLog = function(toStores, currRecord, jsonURL, pool, machine, record, aggregateData) {
+				var localLog = { metaData : {}, payload: {} };
+				localLog.rawLogsURL = jsonURL;
+				localLog.metaData.Pool = pool;
+				localLog.metaData.Machine = machine;
+				localLog.metaData.Data_Center = record.values["Data-Center"];
+				// Parse Full_date from messageClass
+				localLog.payload.Class = record.values.Class;
+				var dateMatch = jsonURL.match("datetime=(.*) ");
+				var calendarDate = dateMatch[1];
+				var time = currRecord.messageClass.substring(1);
+				var fullDate = calendarDate + 'T' + time.substring(0, 8);
+				var fullDateDashes = fullDate.replace(/\//g, "-");
+				localLog.payload["Full_Date"] = new Date(fullDateDashes);
+				// Parse Type, Status and Name from currRecord
+				localLog.payload.Type = record.values.Type; // TODO parse from record instead of currRecord
+				localLog.payload.Status = parseInt(currRecord.status);
+				localLog.payload.Name = currRecord.name;
+				// Parse key value pairs in data for rest of fields
+				var payloadSegments = currRecord.data.split("&");
+
+				for (var i in payloadSegments) {
+					var split = payloadSegments[i].split("=");
+					switch(split[0]) {
+						case "Status":
+							localLog.payload[split[0]] = parseInt(split[1]);
+							break;
+						case "isLoginable":
+						case "hasPartnerRelationships":
+							localLog.payload[split[0]] = (split[1] === 'true');
+							break;
+						default:
+						localLog.payload[split[0]] = split[1];
+					}
+				}
+
+				aggregateData.errorType = localLog.payload.Name;
+				aggregateData.date = localLog.payload["Full_Date"];
+
+				// Save to queue of toStores
+				var toStore = new Log(localLog);
+				toStores.push(toStore);
+			};
+
+			var storeLogs = function(toStores, asyncCallback){
+				async.each(toStores, function(toStore, asyncCallback2) {
+					// Add all toStores to MongoDB
+					toStore.save(function(err, result){
+						if(err) console.log(err);
+						asyncCallback2();
+					});
+				}, function(err) {
+					asyncCallback();
+				});
+			};
+
+			return getRawLogs(details, callback);
 		},
 
 		returnLogs : function returnLogs(startDate, endDate, filters, callback) {
-
-			// console.log("filters: " + filters);
-			//
-
-			//db.on('error', console.error);
-			//db.once('open', function() {
-
-				//if(filters.length == 0) {
-					Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
-						//db.close();
-						//console.log("logs: " + JSON.stringify(logs));
-						callback(logs);
-					});
-				// } else {
-				// 	Log.find(filters, function(err, logs){
-				// 		db.close();
-				// 		callback(logs);
-				// 	});
-				// }
-
-				//callback(fakeDataObject);
-
-			//});
-			//callback(fakeDataObject);
+			Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
+				if (err){
+					console.log("error retrieving logs from mongo");
+					console.log(err);
+				}
+				callback(logs);
+			});
 		},
 
     getSingleLog : function getSingleLog(logID, callback) {
-      Log.find({'_id' : logID}, function(err, log){
+      Log.findOne({'_id' : logID}, function(err, log){
         if(err) console.log(err);
-	//console.log(JSON.stringify(log));
-	callback(log);
+				callback(log);
       });
     }
 
