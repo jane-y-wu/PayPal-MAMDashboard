@@ -100,7 +100,7 @@ export default class LogWrapper extends React.Component {
       }
       var rawDate = rawLogs[i].payload.Full_Date;
       var dateObj = new Date(rawDate);
-      parsedLog.fullDate = dateObj.getMonth() + "/" + dateObj.getDate() + "/" + dateObj.getFullYear() + " " + dateObj.getHours() + ":";
+      parsedLog.fullDate = dateObj.getMonth()+1 + "/" + dateObj.getDate() + "/" + dateObj.getFullYear() + " " + dateObj.getHours() + ":";
       if (dateObj.getMinutes() < 10) parsedLog.fullDate += "0";
       parsedLog.fullDate += dateObj.getMinutes();
       this.state.parsedLogs.push(parsedLog);

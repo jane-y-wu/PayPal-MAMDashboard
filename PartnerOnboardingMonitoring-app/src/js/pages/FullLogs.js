@@ -58,6 +58,7 @@ export default class Layout extends React.Component {
 
     const logTableStyle = {
       marginTop: 0,
+      marginBottom: "3%",
       float: "left",
     }
 

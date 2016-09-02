@@ -11,7 +11,7 @@ var request = require('request');
 
 describe('Server', function(){
   before(function() {
-    app.set('port', process.env.PORT || 3004);
+    /*app.set('port', process.env.PORT || 3004);
     app.use(bodyParser.urlencoded({ extended: true }));
     app.use(bodyParser.json());
 
@@ -19,7 +19,7 @@ describe('Server', function(){
 
     http.createServer(app).listen(app.get('port'), function onListening() {
     	console.log('Express server listening on port ' + app.get('port'));
-    });
+    });*/ 
   });
   describe('/queryready', function(){
     it('should return 200 when no status query param provided', function(done){
