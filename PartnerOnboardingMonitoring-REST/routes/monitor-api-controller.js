@@ -46,8 +46,9 @@ module.exports = function module(app) {
 
 		returnLogsFiltered : function returnLogsFiltered(req, res, next) {
 
+			console.log("In return logs filtered");
 			if (typeof req.query.startDate === 'undefined' || typeof req.query.endDate === 'undefined') {
-				res.end([]);
+				res.end('[]');
 			} else {
 				var startDate = new Date(req.query.startDate);
 				//startDate.setHours(startDate.getHours());

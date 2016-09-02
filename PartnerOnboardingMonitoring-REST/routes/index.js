@@ -6,12 +6,14 @@ module.exports = function module(app) {
 
   app.post('/*',function(req,res,next){
       res.header('Access-Control-Allow-Origin' , '*' );
+	console.log(req.url);
       next();
   });
 
   app.get('/*',function(req,res,next){
       res.header('Access-Control-Allow-Origin' , '*' );
-      next();
+      console.log(req.url);
+	next();
   });
 
   app.get('/api/queryready/', monitorApiController.getDetails);

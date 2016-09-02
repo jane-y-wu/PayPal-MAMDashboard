@@ -81,6 +81,8 @@ module.exports = function module() {
 				async.each(details.records, function(record, asyncCallback){
 					var eventDetailURL = record.url; //this is logview url
 					var jsonURL = eventDetailURL.replace("logviewui", "logview");
+					console.log(record);
+					console.log(JSON.stringify(record, null, 4));
 
 					request(jsonURL, function(error, response, body){
 						// In response.calBlockResp:
@@ -113,7 +115,7 @@ module.exports = function module() {
 							console.log("Error fetching logs. Status Code: " + response.statusCode + " Error: " + console.log(error));
 						}
 
-						storeLogs(toStores);
+						storeLogs(toStores, asyncCallback);
 
 					});
 				}, function(err){
@@ -165,7 +167,7 @@ module.exports = function module() {
 				toStores.push(toStore);
 			};
 
-			var storeLogs = function(toStores) {
+			var storeLogs = function(toStores, asyncCallback){
 				async.each(toStores, function(toStore, asyncCallback2) {
 					// Add all toStores to MongoDB
 					toStore.save(function(err, result){
@@ -182,7 +184,10 @@ module.exports = function module() {
 
 		returnLogs : function returnLogs(startDate, endDate, filters, callback) {
 			Log.find({'payload.Full_Date' : { $gte:startDate, $lte: endDate}}, function(err, logs){
-				if (err) console.log(err);
+				if (err){
+					console.log("error retrieving logs from mongo");
+					console.log(err);
+				}
 				callback(logs);
 			});
 		},

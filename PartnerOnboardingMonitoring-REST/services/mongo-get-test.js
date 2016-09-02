@@ -67,14 +67,14 @@ db.once('open', function() {
 	toStore.save(function(err, result){
 		if(err) console.log(err);
 		console.log("Inserted Document: " + JSON.stringify(result));
-		db.close();
+		//db.close();
 
-		// Log.findOne({ rawLogsURL : "www.fakeurl.com"}, function (err, result) {
-		// 	console.log("mongodb query returned!");
-		// 	if (err) console.log(err);
-		// 	console.log(JSON.stringify(result, null, 4));
-		// 	db.close();
-		// });
+		Log.find({ rawLogsURL : "www.fakeurl.com"}, function (err, result) {
+		 	console.log("mongodb query returned!");
+		 	if (err) console.log(err);
+		 	console.log(JSON.stringify(result, null, 4));
+		 	db.close();
+		});
 
 	});
 
