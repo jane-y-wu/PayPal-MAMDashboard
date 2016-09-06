@@ -1,7 +1,7 @@
 import dispatcher from "../dispatcher";
 
-var logsURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?'
-var singleLogURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getSingleLog/?'
+var serverURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com';
+var portNo = '3004';
 
 export function getLogs(startDate, endDate) {
   var request = new XMLHttpRequest();
@@ -18,7 +18,7 @@ export function getLogs(startDate, endDate) {
     }
   };
 
-  request.open('POST', logsURL + 'startDate=' + startDate + '&endDate=' + endDate);
+  request.open('POST', serverURL + ':' + portNo + '/api/getLogs/?' + 'startDate=' + startDate + '&endDate=' + endDate);
   request.send();
 }
 
@@ -41,6 +41,6 @@ export function getSingleLog(logID) {
     }
   };
 
-  request.open('GET', singleLogURL + "logID=" + logID);
+  request.open('GET', serverURL + ':' + portNo + '/api/getSingleLog/?logID=' + logID);
   request.send();
 }

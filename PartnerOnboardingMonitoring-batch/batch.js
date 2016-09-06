@@ -8,6 +8,8 @@ var errorCodes = 0; // number of times CAL returns an error code
 var nullResponse = 0; // number of times the response is null
 var alexC3 = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com'; // for testing purposes
 var madhavC3 = 'http://partner-onboarding-monitor-9745.ccg21.dev.paypalcorp.com';
+var serverURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com';
+var portNo = '3004';
 var httpCallbackURL;
 var option = process.argv[2];
 
@@ -19,7 +21,7 @@ else if (option == 'm') {
 	httpCallbackURL = madhavC3 + ":3003/api/queryready/?id=$id&status=$status";
 }
 else { // default
-    httpCallbackURL = madhavC3 + ":3003/api/queryready/?id=$id&status=$status";
+    httpCallbackURL = serverURL + ":" + portNo + "api/queryready/?id=$id&status=$status";
 }
 
 console.log(httpCallbackURL);
