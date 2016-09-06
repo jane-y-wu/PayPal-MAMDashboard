@@ -42,7 +42,7 @@ var logSchema = new mongoose.Schema({
 
 var Log = db.model('Log', logSchema);
 
-var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"];
+var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"/*, add additional search terms here */];
 
 module.exports = function module() {
 

@@ -3,7 +3,7 @@ var schedule = require('node-schedule');
 var async = require('async');
 var moment = require('moment');
 var jobID; // string to hold job ID
-var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT'/*, 'HEADERS_STATUS_DELIVERED'*/]; // expressions to search for in the CAL log
+var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT'/*, add additional search terms here */]; // expressions to search for in the CAL log
 var errorCodes = 0; // number of times CAL returns an error code
 var nullResponse = 0; // number of times the response is null
 var alexC3 = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com'; // for testing purposes
@@ -79,38 +79,23 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
 		if (response) {
 
 			if (!error && response.statusCode == 200) { // no errors
-
 				console.log("Job ID : " + body); // prints out job ID
 				jobID = body; // store job ID
-
 				console.log(startTime);
 				console.log(endTime);
-
-			}
-
-            else {
-
+			}  else {
 				if (errorCodes < 3) { // while there has not been three error codes returned yet
 					console.log(response.statusCode); // error code
 					errorCodes++; // give up after three times
 					console.log("error code trying again : " + errorCodes);
 					submitRequest(start, end , searchArray); // resubmit request
 				}
-
 			}
+		} else if (nullResponse < 3) { // if response is null
+			// same as error codes
+			nullResponse++;
+			console.log("null trying again : " + nullResponse);
+			submitRequest(start, end , searchArray);
 		}
-
-		else { // if response is null
-
-			if (nullResponse < 3 ) { // same as error codes
-
-				nullResponse++;
-				console.log("null trying again : " + nullResponse);
-				submitRequest(start, end , searchArray);
-			}
-
-
-		}
-	}
-
-)};
+	});
+};
