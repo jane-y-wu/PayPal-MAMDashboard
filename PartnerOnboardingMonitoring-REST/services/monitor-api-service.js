@@ -2,16 +2,10 @@
 var request = require('request'); // require request
 var sherlockEndpoint = "http://calhadoop-vip-a.slc.paypal.com/regex/request/"; // generic sherlock search endpoint url
 var mongoose = require('mongoose');
-//var db = mongoose.connection;
 var db = require('../../models/db.js');
-//var url = 'mongodb://root:ej+yFtAR^mEjKB?6AhK7Xrm_prM?aK32Xx94@10.25.39.2:27017';
-//var url = 'mongodb://10.25.39.2:27017/admin';
-var url = 'localhost:27017';
 mongoose.Promise = global.Promise;
-//var url = 'mongodb://partner-self-service-6103.ccg21.dev.paypalcorp.com:12345/';
 var assert = require('assert');
 var async = require('async');
-//var Log = require('../../models/log').Log;
 
 var logSchema = new mongoose.Schema({
 	rawLogsURL : String,
@@ -46,10 +40,9 @@ var logSchema = new mongoose.Schema({
 	}
 });
 
-//var Log = mongoose.model('Log', logSchema);
 var Log = db.model('Log', logSchema);
 
-var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"/*, "HEADERS_STATUS_DELIVERED"*/];
+var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"/*, add additional search terms here */];
 
 module.exports = function module() {
 
