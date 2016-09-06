@@ -1,7 +1,5 @@
 import dispatcher from "../dispatcher";
 
-// var url1 = 'http://localhost:3003/api/getLogs/?startDate=2016-07-26T02:45:00&endDate=2016-07-29T11:00:00'
-// var url2 = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?startDate=2016-08-23T02:45:00&endDate=2016-08-29T11:00:00'
 var logsURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getLogs/?'
 var singleLogURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com:3004/api/getSingleLog/?'
 
