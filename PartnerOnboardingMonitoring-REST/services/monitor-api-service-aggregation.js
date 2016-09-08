@@ -9,7 +9,7 @@ var url = 'localhost:27017';
 //var url = 'mongodb://10.25.39.2:27017/admin';
 mongoose.Promise = global.Promise;
 var async = require('async');
-var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"];
+var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"/*, add additional search terms here */];
 //mongoose.connect(url);
 
 var form = 'MMM Do YYYY'; // format of date string

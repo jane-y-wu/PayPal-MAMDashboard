@@ -108,6 +108,8 @@ If you want to actually start up the service and have it run indefinitely, you c
 
 More information about managing pm2 processes can be found [here](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
+Finally, navigate to `http://localhost:8080/` if you are running the app locally, or to the appropriate URL otherwise. By default the Client runs on port 8080. This is coded in `PartnerOnboardingMonitoring-app/node_modules/webpack-dev-server/bin/webpack-dev-server.js`.
+
 ## Customizing/Extending the App
 
 09/06/2016
@@ -120,7 +122,7 @@ To customize the errors pulled from CAL and stored in the MongoDB, first modify 
 
 	var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT'/*, add additional search terms here */]; 
 	
-Then modify `PartnerOnboardingMonitoring-REST/services/monitor-api-service.js` :
+Then modify `PartnerOnboardingMonitoring-REST/services/monitor-api-service.js` and `PartnerOnboardingMonitoring-REST/services/monitor-api-service-aggregation.js`:
 	
 	var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"/*, add additional search terms here */];
 	
