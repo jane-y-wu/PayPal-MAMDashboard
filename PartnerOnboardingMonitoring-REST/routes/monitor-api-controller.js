@@ -78,6 +78,11 @@ module.exports = function module(app) {
 			service.getSingleLog(req.query.logID, function(log){
 				res.end(JSON.stringify(log, null, 4));
 			});
+		},
+
+		testOnline: function testOnline(req, res, next) {
+			console.log("test online called");
+			res.end("Online!");
 		}
 
 	};

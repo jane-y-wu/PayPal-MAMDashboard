@@ -25,4 +25,6 @@ module.exports = function module(app) {
 
   app.get('/api/getSingleLog/', monitorApiController.getSingleLog);
 
+  app.get('/api/testOnline/', monitorApiController.testOnline);
+
 };
