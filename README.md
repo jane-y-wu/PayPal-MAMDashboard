@@ -102,13 +102,13 @@ If you want to actually start up the service and have it run indefinitely, you c
 1. `cd PartnerOnboardingMonitoring-REST`
 2. `pm2 start app.js`
 3. `cd PartnerOnboardingMonitoring-app`
-4. `pm2 start ./node_modules/webpack-dev-server/bin/webpack-dev-server.js -- --content-base src --inline --hot`
+4. `pm2 start ./node_modules/webpack-dev-server/bin/webpack-dev-server.js -- --content-base src --inline --hot --host 0.0.0.0`
 5. `cd PartnerOnboardingMonitoring-batch`
 6. `pm2 batch.js`
 
 More information about managing pm2 processes can be found [here](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
-Finally, navigate to `http://localhost:8080/` if you are running the app locally, or to the appropriate URL otherwise. By default the Client runs on port 8080. This is coded in `PartnerOnboardingMonitoring-app/node_modules/webpack-dev-server/bin/webpack-dev-server.js`.
+Finally, navigate to `http://localhost:8080/` if you are running the app locally, or to the appropriate URL otherwise. By default the Client runs on port 8080. This can be adjusted by adding a `--port [PORT NUMBER]` option when starting the Client.
 
 ## Customizing/Extending the App
 
