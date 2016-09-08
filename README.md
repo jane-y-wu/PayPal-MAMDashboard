@@ -84,17 +84,29 @@ The Client interacts only with the Service. It does this through API calls in th
 
 ### Starting it up
  
+If you wish to run the application manually, you just need to make sure all 4 components will are running.
 
-To run the full application, all 4 components will need to be running.
-
-1. cd `PartnerOnboardingMonitoring-REST`
-2. node app.js
-3. cd `PartnerOnboardingMonitoring-app`
-4. npm start
-5. cd `PartnerOnboardingMonitoring-batch`
-6. node batch.js
+1. `cd PartnerOnboardingMonitoring-REST`
+2. `node app.js`
+3. `cd PartnerOnboardingMonitoring-app`
+4. `npm start`
+5. `cd PartnerOnboardingMonitoring-batch`
+6. `node batch.js`
 
 If you choose to connect to your own MongoDB, make sure that is running too.
+
+If you want to actually start up the service and have it run indefinitely, you can use a tool called PM2. Assuming you have node installed, you can install pm2 globally on your machine.
+
+	npm install -g pm2
+
+1. `cd PartnerOnboardingMonitoring-REST`
+2. `pm2 start app.js`
+3. `cd PartnerOnboardingMonitoring-app`
+4. `pm2 start ./node_modules/webpack-dev-server/bin/webpack-dev-server.js -- --content-base src --inline --hot`
+5. `cd PartnerOnboardingMonitoring-batch`
+6. `pm2 batch.js`
+
+More information about managing pm2 processes can be found [here](http://pm2.keymetrics.io/docs/usage/quick-start/).
 
 ## Customizing/Extending the App
 
