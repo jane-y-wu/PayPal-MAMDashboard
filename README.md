@@ -4,7 +4,7 @@ A monitoring dashboard fo MAM API. PartnerOnboardingMonitoring is a Summer inter
 
 ## Requirements
 
-The app runs using NodeJS, so you will need to install Node before you can install and run the app. 
+The app runs using NodeJS, so you will need to install Node before you can install and run the app. We are running on node V0.12.2
 
 ## Installation
 
