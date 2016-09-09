@@ -9,6 +9,9 @@ var nullResponse = 0; // number of times the response is null
 var serverURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com';
 var portNo = '3004';
 var option = process.argv[2];
+var httpCallback = serverURL + ":" + portNo + "/api/queryready/?id=$id&status=$status";
+
+console.log(httpCallback);
 
 var rule = new schedule.RecurrenceRule();
 rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
@@ -52,7 +55,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
         	"regexs": searchArray,
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": serverURL,
+        	"httpCallback": httpCallback,
         	"email":"janwu@paypal.com"
 		}
 	},
