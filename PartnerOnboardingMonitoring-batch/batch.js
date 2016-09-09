@@ -9,7 +9,7 @@ var nullResponse = 0; // number of times the response is null
 var serverURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com';
 var portNo = '3004';
 var option = process.argv[2];
-var httpCallback = serverURL + ":" + portNo + "/api/queryready/?id=$id&status=$status";
+var httpCallbackURL = serverURL + ":" + portNo + "/api/queryready/?id=$id&status=$status";
 
 console.log(httpCallback);
 
@@ -54,7 +54,7 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
         	"regexs": searchArray,
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": httpCallback,
+        	"httpCallback": httpCallbackURL,
         	"email":"janwu@paypal.com"
 		}
 	},
