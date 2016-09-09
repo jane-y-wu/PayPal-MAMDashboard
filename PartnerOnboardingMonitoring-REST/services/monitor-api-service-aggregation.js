@@ -23,7 +23,7 @@ var dailyCount = new mongoose.Schema({
 });
 
 var weeklyCount = new mongoose.Schema({
-	weekNumber: {type: Object},
+	weekNumber: {type: Object}, //TODO change to number
 	errorType: {type: String},
 	errorCount: {type: Number},
 })
