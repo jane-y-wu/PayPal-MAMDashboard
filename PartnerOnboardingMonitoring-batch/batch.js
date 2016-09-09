@@ -6,25 +6,9 @@ var jobID; // string to hold job ID
 var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT'/*, add additional search terms here */]; // expressions to search for in the CAL log
 var errorCodes = 0; // number of times CAL returns an error code
 var nullResponse = 0; // number of times the response is null
-var alexC3 = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com'; // for testing purposes
-var madhavC3 = 'http://partner-onboarding-monitor-9745.ccg21.dev.paypalcorp.com';
 var serverURL = 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com';
 var portNo = '3004';
-var httpCallbackURL;
 var option = process.argv[2];
-
-// for testing purposes: option a to use alex's C3, m for madhav's
-if (option == 'a') {
-	httpCallbackURL = alexC3 + ":3004/api/queryready/?id=$id&status=$status";
-}
-else if (option == 'm') {
-	httpCallbackURL = madhavC3 + ":3003/api/queryready/?id=$id&status=$status";
-}
-else { // default
-    httpCallbackURL = serverURL + ":" + portNo + "api/queryready/?id=$id&status=$status";
-}
-
-console.log(httpCallbackURL);
 
 var rule = new schedule.RecurrenceRule();
 rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
@@ -43,7 +27,6 @@ function run() { // runs all the needed functions
 		submitRequest(startTime, endTime, searchString);
 		},
 		function(err) {});
-	//submitRequest(startTime, endTime);
 
 	nullResponse = 0;
 	errorCodes = 0;
@@ -52,7 +35,6 @@ function run() { // runs all the needed functions
 function submitRequest(start, end, searchString) { // submit 3 queries for 3 different errors. create list of errors to loop through
 
     var searchArray = [searchString];
-    console.log('submitting request : ' + searchArray);
 
     request.post(
     	'http://calhadoop-vip-a.slc.paypal.com/regex/request',
@@ -67,10 +49,10 @@ function submitRequest(start, end, searchString) { // submit 3 queries for 3 dif
 			"dataCenter":"all",
         	"machine":"",
         	"sampling":"100",
-        	"regexs": /*["ResponseCode=200"], */searchArray,
+        	"regexs": searchArray,
         	"isTransactionSearch":"false",
         	"searchMode":"simple",
-        	"httpCallback": httpCallbackURL/* + ":3003/api/queryready/?id=$id&status=$status"*/,
+        	"httpCallback": serverURL,
         	"email":"janwu@paypal.com"
 		}
 	},

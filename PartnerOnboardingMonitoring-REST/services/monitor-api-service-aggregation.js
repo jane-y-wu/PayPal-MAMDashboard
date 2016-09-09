@@ -23,13 +23,10 @@ var dailyCount = new mongoose.Schema({
 });
 
 var weeklyCount = new mongoose.Schema({
-	weekNumber: {type: Object},
+	weekNumber: {type: String},
 	errorType: {type: String},
 	errorCount: {type: Number},
 })
-
-// var DailyCount = mongoose.model('DailyCount', dailyCount);
-// var WeeklyCount = mongoose.model('WeeklyCount', weeklyCount);
 
 var DailyCount = db.model('DailyCount', dailyCount);
 var WeeklyCount = db.model('WeeklyCount', weeklyCount);
@@ -51,16 +48,9 @@ module.exports = function module() {
 			//console.log("in store count : " + errorNum + " " + errorName + " " + time);
 
 			// TODO parse out date
-			var year = time.getFullYear();
-			var month = time.getMonth() + 1;
-			var day = time.getDay();
-			var minute = time.getMinutes();
-			var second = time.getSeconds();
+			// var year = time.getFullYear();
 
-			//var currentDate = new Date(year, month, day);
-			var timestamp = new Date(year, month, day, minute, second);
-
-			var weekNum = [year, getWeekNumber(time)];
+			var weekNum = time.getFullYear() + ", " getWeekNumber(time);
 			//console.log("week number : " + weekNum);
 
 			DailyCount.find({date : time, errorType : errorName}, function(err, results) {
