@@ -4,15 +4,15 @@ A monitoring dashboard fo MAM API. PartnerOnboardingMonitoring is a Summer inter
 
 ## Requirements
 
-The app runs using NodeJS, so you will need to install Node before you can install and run the app. 
+The app runs using NodeJS, so you will need to install Node before you can install and run the app. We are running on node V0.12.2
 
 ## Installation
 
-1. cd `PartnerOnboardingMonitoring/PartnerOnboardingMonitoring-REST`
+1. cd `PartnerOnboardingMonitoring-REST`
 2. npm install
-3. cd `PartnerOnboardingMonitoring/PartnerOnboardingMonitoring-app`
+3. cd `PartnerOnboardingMonitoring-app`
 4. npm install
-5. cd `PartnerOnboardingMonitoring/PartnerOnboardingMonitoring-batch`
+5. cd `PartnerOnboardingMonitoring-batch`
 6. npm install
 7. cd `PartnerOnboardingMonitoring\models`
 8. npm install
@@ -32,7 +32,7 @@ To run the app, you will need to make sure that the 4 components outlined above 
 
 ##### Service 
 
-Located in `PartnerOnboardingMonitoring/PartnerOnboardingMonitoring-REST`
+Located in `PartnerOnboardingMonitoring-REST`
 
 The actual URL the service is located at depends on where you are running the code from. For example, when we run our service from our own C3 instance, it is located at the URL 'http://partner-self-service-6103.ccg21.dev.paypalcorp.com'. The service port number is configured in the `app.js` file:
 
@@ -54,7 +54,7 @@ Replace the URL with your own MongoDB url, and 'user' and 'pass' with your own u
 
 ##### Batch
 
-Located in `PartnerOnboardingMonitoring/PartnerOnboardingMonitoring-batch`
+Located in `PartnerOnboardingMonitoring-batch`
 
 Now that you know your Service's URL and port number, you attach this to CAL request sent through the batch process. in `batch.js`, modify the following lines of code to point towards your own Service's location:
 
@@ -74,7 +74,7 @@ Additionally, insert your own email address into the request:
 	
 ##### Client
 
-Located in `PartnerOnboardingMonitoring/PartnerOnboardingMonitoring-app`
+Located in `PartnerOnboardingMonitoring-app`
 
 The Client interacts only with the Service. It does this through API calls in the file `src/js/actions/LogActions.js`. Modify the following lines of code to point towrads your own Service's location:
 
@@ -84,17 +84,31 @@ The Client interacts only with the Service. It does this through API calls in th
 
 ### Starting it up
  
+If you wish to run the application manually, you just need to make sure all 4 components will are running.
 
-To run the full application, all 4 components will need to be running.
-
-1. cd `PartnerOnboardingMonitoring/PartnerOnboardingMonitoring-REST`
-2. node app.js
-3. cd `PartnerOnboardingMonitoring/PartnerOnboardingMonitoring-app`
-4. npm start
-5. cd `PartnerOnboardingMonitoring/PartnerOnboardingMonitoring-batch`
-6. node batch.js
+1. `cd PartnerOnboardingMonitoring-REST`
+2. `node app.js`
+3. `cd PartnerOnboardingMonitoring-app`
+4. `npm start`
+5. `cd PartnerOnboardingMonitoring-batch`
+6. `node batch.js`
 
 If you choose to connect to your own MongoDB, make sure that is running too.
+
+If you want to actually start up the service and have it run indefinitely, you can use a tool called PM2. Assuming you have node installed, you can install pm2 globally on your machine.
+
+	npm install -g pm2
+
+1. `cd PartnerOnboardingMonitoring-REST`
+2. `pm2 start app.js`
+3. `cd PartnerOnboardingMonitoring-app`
+4. `pm2 start ./node_modules/webpack-dev-server/bin/webpack-dev-server.js -- --content-base src --inline --hot --host 0.0.0.0`
+5. `cd PartnerOnboardingMonitoring-batch`
+6. `pm2 batch.js`
+
+More information about managing pm2 processes can be found [here](http://pm2.keymetrics.io/docs/usage/quick-start/).
+
+Finally, navigate to `http://localhost:8080/` if you are running the app locally, or to the appropriate URL otherwise. By default the Client runs on port 8080. This can be adjusted by adding a `--port [PORT NUMBER]` option when starting the Client.
 
 ## Customizing/Extending the App
 
@@ -108,8 +122,16 @@ To customize the errors pulled from CAL and stored in the MongoDB, first modify 
 
 	var regexsField = ['INTERNAL_SERVICE_ERROR', 'VALIDATION_ERROR', 'SERVICE_TIMEOUT'/*, add additional search terms here */]; 
 	
-Then modify `PartnerOnboardingMonitoring/PartnerOnboardingMonitoring-REST/services/monitor-api-service.js` :
+Then modify `PartnerOnboardingMonitoring-REST/services/monitor-api-service.js` and `PartnerOnboardingMonitoring-REST/services/monitor-api-service-aggregation.js`:
 	
 	var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"/*, add additional search terms here */];
 	
+
+## Testing
+
+We've also included a test suite for the Service. Note that this is only for testing the API endpoints of the Service, and does not test the Batch or the Client. To run the tests, first install Mocha:
+
+	npm install -g mocha
+
+Then navigate to `PartnerOnboardingMonitoring-REST/test` and run `mocha tests.js`. Additional tests can be added in the `tests.js` file.
 

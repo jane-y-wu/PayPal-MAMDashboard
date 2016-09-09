@@ -25,8 +25,6 @@ export default class LogWrapper extends React.Component {
   componentWillMount() {
     LogStore.on("change", this.getLogs);
     LogStore.on("sortChange", this.reSortLogs);
-    //LogStore.on("filterLogs", this.filterLogs);
-    LogActions.getLogs();
   }
 
   componentWillUnmount() {

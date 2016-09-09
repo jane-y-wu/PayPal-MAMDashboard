@@ -5,7 +5,7 @@ var db = require('../../models/db.js');
 var mongodb = require('mongodb');
 mongoose.Promise = global.Promise;
 var async = require('async');
-var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"];
+var errorNames = ["VALIDATION_ERROR", "INTERNAL_SERVICE_ERROR", "SERVICE_TIMEOUT"/*, add additional search terms here */];
 
 var form = 'MMM Do YYYY'; // format of date string
 

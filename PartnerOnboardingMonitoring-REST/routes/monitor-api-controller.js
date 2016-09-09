@@ -20,7 +20,7 @@ module.exports = function module(app) {
 	    			console.log("Query with job id: " + req.query.id + " succeeded.");
 	    			res.end("Status: SUCCEEDED");
 
-			    	service.getDetails(req.query.id, function onGetDetails(details) {
+			    	service.getDetails(req.query.id, function onGetDetails(details) { // TODO: remove unnecessary bounce
 			      		getRawLogs(details);
 			    	});
 					} else {
@@ -78,6 +78,11 @@ module.exports = function module(app) {
 			service.getSingleLog(req.query.logID, function(log){
 				res.end(JSON.stringify(log, null, 4));
 			});
+		},
+
+		testOnline: function testOnline(req, res, next) {
+			console.log("test online called");
+			res.end("Online!");
 		}
 
 	};
