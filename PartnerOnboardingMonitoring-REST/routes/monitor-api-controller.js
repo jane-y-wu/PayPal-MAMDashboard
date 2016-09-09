@@ -20,7 +20,7 @@ module.exports = function module(app) {
 	    			console.log("Query with job id: " + req.query.id + " succeeded.");
 	    			res.end("Status: SUCCEEDED");
 
-			    	service.getDetails(req.query.id, function onGetDetails(details) {
+			    	service.getDetails(req.query.id, function onGetDetails(details) { // TODO: remove unnecessary bounce
 			      		getRawLogs(details);
 			    	});
 					} else {

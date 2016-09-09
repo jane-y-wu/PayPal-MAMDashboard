@@ -29,8 +29,8 @@ console.log(httpCallbackURL);
 var rule = new schedule.RecurrenceRule();
 rule.minute = 1; // runs every hour; one minute past the new hour for a slight delay
 
-//var interval = schedule.scheduleJob(rule, run);
-run();
+var interval = schedule.scheduleJob(rule, run);
+//run();
 
 function run() { // runs all the needed functions
 
