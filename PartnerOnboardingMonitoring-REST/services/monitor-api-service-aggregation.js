@@ -50,7 +50,7 @@ module.exports = function module() {
 			// TODO parse out date
 			// var year = time.getFullYear();
 
-			var weekNum = time.getFullYear() + ", " getWeekNumber(time);
+			var weekNum = time.getFullYear() + ", " + getWeekNumber(time);
 			//console.log("week number : " + weekNum);
 
 			DailyCount.find({date : time, errorType : errorName}, function(err, results) {
